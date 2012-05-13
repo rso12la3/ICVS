@@ -12,8 +12,14 @@ public class Repository
 		
 	}
 	
+	public CloneRequestOperation cloneRequest()
+	{
+		return new CloneRequestOperation();
+	}
+	
 	public CloneOperation clone()
 	{
+		// bierze liste z ostatniego commita
 		
 	}
 	
@@ -37,11 +43,24 @@ public class Repository
 		
 	}
 	
-	public void update()
+	public void update(ArrayList<CommitOperation> commitOperationList)
 	{
 		
 	}
 	
+	public UpdateRequestOperation updateRequest()
+	{
+		
+	}
 	
+	public void add(final ArrayList<String> fileList)
+	{
+		//odwolanie do workingcopy
+	}
+	
+	public void delete(final ArrayList<String> fileList)
+	{
+		
+	}
 	
 }
