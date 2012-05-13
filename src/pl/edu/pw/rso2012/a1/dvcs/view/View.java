@@ -15,7 +15,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.DeleteEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PullEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PushEvent;
-import pl.edu.pw.rso2012.a1.dvcs.model.repository.Repository;
+import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListener;
@@ -41,11 +41,10 @@ public class View extends JFrame {
 		
 		WindowUtils.setNativeLookAndFeel();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(Constants.WINDOW_MIN_WIDTH,
-				Constants.WINDOWS_MIN_HEIGHT));
+		setMinimumSize(new Dimension(Constants.WINDOW_MIN_WIDTH, Constants.WINDOWS_MIN_HEIGHT));
 		
-		WindowUtils.setWindowSizeAndLocation(this, Toolkit.getDefaultToolkit()
-				.getScreenSize(), Constants.WINDOW_TO_SCREEN_SIZE);
+		WindowUtils.setWindowSizeAndLocation(this, Toolkit.getDefaultToolkit().getScreenSize(),
+				Constants.WINDOW_TO_SCREEN_SIZE);
 		
 		mMenuBar = new MenuBarComp();
 		mMenuBar.setListener(mMenuBarListener);
@@ -62,13 +61,13 @@ public class View extends JFrame {
 		mController = controller;
 	}
 	
-	public void showSelectRepositoryView(List<Repository> repositories) {
+	public void showSelectRepositoryView(List<String> repositories) {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
 		mMenuBar.setEnabled(true);
 	}
 	
-	public void showRepositoryFolderView(Repository repository) {
+	public void showRepositoryFolderView(List<File> files, String repositoryName) {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
 		mMenuBar.setEnabled(true);
@@ -88,12 +87,8 @@ public class View extends JFrame {
 			int ret = repositoryPane.showDialog(View.this, "Create");
 			switch (ret) {
 			case CreateRepositoryPane.APPROVE_OPTION:
-				ApplicationEvent event = new CreateEvent(
-						repositoryPane.getName(),
-						repositoryPane.getServerUrl(),
-						repositoryPane.getUsername(),
-						repositoryPane.getPassword(),
-						repositoryPane.getDirectory());
+				ApplicationEvent event = new CreateEvent(repositoryPane.getName(), repositoryPane.getServerUrl(),
+						repositoryPane.getUsername(), repositoryPane.getPassword(), repositoryPane.getDirectory());
 				mController.onEvent(event);
 				break;
 			}
@@ -107,12 +102,8 @@ public class View extends JFrame {
 			int ret = repositoryPane.showDialog(View.this, "Clone");
 			switch (ret) {
 			case CreateRepositoryPane.APPROVE_OPTION:
-				ApplicationEvent event = new CloneEvent(
-						repositoryPane.getName(),
-						repositoryPane.getServerUrl(),
-						repositoryPane.getUsername(),
-						repositoryPane.getPassword(),
-						repositoryPane.getDirectory());
+				ApplicationEvent event = new CloneEvent(repositoryPane.getName(), repositoryPane.getServerUrl(),
+						repositoryPane.getUsername(), repositoryPane.getPassword(), repositoryPane.getDirectory());
 				mController.onEvent(event);
 				break;
 			}

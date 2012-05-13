@@ -24,8 +24,9 @@ public class ShowRepositoryHandler extends ApplicationHandler {
 	public void handle(final ApplicationEvent event)
 			throws HandlerNotImplementedException {
 		
-		controller.getView().showRepositoryFolderView(
-				((ShowRepositoryEvent) event).getRepository());
+		ShowRepositoryEvent repositoryEvent = (ShowRepositoryEvent) event;
+		
+		controller.getView().showRepositoryFolderView(repositoryEvent.getFiles(), repositoryEvent.getRepositoryName());
 	}
 	
 }

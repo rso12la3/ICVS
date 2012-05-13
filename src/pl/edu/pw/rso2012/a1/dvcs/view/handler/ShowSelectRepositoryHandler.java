@@ -24,8 +24,10 @@ public class ShowSelectRepositoryHandler extends ApplicationHandler {
 	public void handle(final ApplicationEvent event)
 			throws HandlerNotImplementedException {
 		
+		ShowSelectRepositoryEvent repositoryEvent = (ShowSelectRepositoryEvent) event;
+		
 		controller.getView().showSelectRepositoryView(
-				((ShowSelectRepositoryEvent) event).getRepositories());
+				repositoryEvent.getRepositoriesNames());
 	}
 	
 }

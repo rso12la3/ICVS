@@ -26,9 +26,13 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.DeleteHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.MergeHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.PullHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.PushHandler;
+import pl.edu.pw.rso2012.a1.dvcs.view.event.ShowRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.view.event.ShowSelectRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.view.handler.ShowRepositoryHandler;
+import pl.edu.pw.rso2012.a1.dvcs.view.handler.ShowSelectRepositoryHandler;
 
 /**
- * Mapa odwzorowuj¹ca zdarzenie ({@link ApplicationEvent}) na odpowiedni handler ({@link ApplicationHandler})
+ * Mapa odwzorowujï¿½ca zdarzenie ({@link ApplicationEvent}) na odpowiedni handler ({@link ApplicationHandler})
  * 
  * @author Grzegorz Sancewicz
  * @email g.sancewicz@stud.elka.pw.edu.pl
@@ -58,6 +62,10 @@ public class HandlerMap
         eventHandlerMap.put(MergeEvent.class,   new MergeHandler(controller));
         eventHandlerMap.put(PullEvent.class,    new PullHandler(controller));
         eventHandlerMap.put(PushEvent.class,    new PushHandler(controller));
+        
+        // Widok
+        eventHandlerMap.put(ShowRepositoryEvent.class, new ShowRepositoryHandler(controller));
+        eventHandlerMap.put(ShowSelectRepositoryEvent.class, new ShowSelectRepositoryHandler(controller));
         
         // Operacje cykliczne
         eventHandlerMap.put(CheckPullRequestEvent.class,    new CheckPullRequestHandler(controller));
