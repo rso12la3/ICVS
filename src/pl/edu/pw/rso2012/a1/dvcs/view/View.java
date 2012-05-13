@@ -9,7 +9,9 @@ import javax.swing.JFrame;
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.AddEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.CloneEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CommitEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.DeleteEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PullEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PushEvent;
@@ -54,9 +56,8 @@ public class View extends JFrame {
 		setVisible(true);
 	}
 	
-	public void setController(Controller controller){
-		if(controller == null)
-			throw new NullPointerException();
+	public void setController(Controller controller) {
+		if (controller == null) throw new NullPointerException();
 		
 		mController = controller;
 	}
@@ -82,11 +83,39 @@ public class View extends JFrame {
 		@Override
 		public void onCreateRepositoryClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
+			
+			CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+			int ret = repositoryPane.showDialog(View.this, "Create");
+			switch (ret) {
+			case CreateRepositoryPane.APPROVE_OPTION:
+				ApplicationEvent event = new CreateEvent(
+						repositoryPane.getName(),
+						repositoryPane.getServerUrl(),
+						repositoryPane.getUsername(),
+						repositoryPane.getPassword(),
+						repositoryPane.getDirectory());
+				mController.onEvent(event);
+				break;
+			}
 		}
 		
 		@Override
 		public void onCloneRepositoryClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
+			
+			CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+			int ret = repositoryPane.showDialog(View.this, "Clone");
+			switch (ret) {
+			case CreateRepositoryPane.APPROVE_OPTION:
+				ApplicationEvent event = new CloneEvent(
+						repositoryPane.getName(),
+						repositoryPane.getServerUrl(),
+						repositoryPane.getUsername(),
+						repositoryPane.getPassword(),
+						repositoryPane.getDirectory());
+				mController.onEvent(event);
+				break;
+			}
 		}
 		
 		@Override

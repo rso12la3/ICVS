@@ -7,7 +7,7 @@ package pl.edu.pw.rso2012.a1.dvcs.view;
  */
 public interface Constants {
 	
-	public static final String APP_NAME = "Javersion";
+	public static final String APP_NAME = "RSO 2012 - DVCS";
 	
 	public static final float WINDOW_TO_SCREEN_SIZE = 0.7f;
 	
