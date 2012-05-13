@@ -11,6 +11,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.CloneEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CommitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.DeleteEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.ExitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.MergeEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PullEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PushEvent;
@@ -23,6 +24,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.CloneHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.CommitHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.CreateHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.DeleteHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ExitHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.MergeHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.PullHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.PushHandler;
@@ -32,7 +34,7 @@ import pl.edu.pw.rso2012.a1.dvcs.view.handler.ShowRepositoryHandler;
 import pl.edu.pw.rso2012.a1.dvcs.view.handler.ShowSelectRepositoryHandler;
 
 /**
- * Mapa odwzorowuj�ca zdarzenie ({@link ApplicationEvent}) na odpowiedni handler ({@link ApplicationHandler})
+ * Mapa odwzorowująca zdarzenie ({@link ApplicationEvent}) na odpowiedni handler ({@link ApplicationHandler})
  * 
  * @author Grzegorz Sancewicz
  * @email g.sancewicz@stud.elka.pw.edu.pl
@@ -67,14 +69,17 @@ public class HandlerMap
         eventHandlerMap.put(ShowRepositoryEvent.class, new ShowRepositoryHandler(controller));
         eventHandlerMap.put(ShowSelectRepositoryEvent.class, new ShowSelectRepositoryHandler(controller));
         
+        // Główne
+        eventHandlerMap.put(ExitEvent.class, new ExitHandler(controller));
+        
         // Operacje cykliczne
-        eventHandlerMap.put(CheckPullRequestEvent.class,    new CheckPullRequestHandler(controller));
+        eventHandlerMap.put(CheckPullRequestEvent.class, new CheckPullRequestHandler(controller));
         eventHandlerMap.put(CheckPullResponseEvent.class, new CheckPullResponseHandler(controller));
     }
 
     public ApplicationHandler get(final ApplicationEvent event) throws NoHandlerException
     {
-        final ApplicationHandler handler = eventHandlerMap.get(event);
+        final ApplicationHandler handler = eventHandlerMap.get(event.getClass());
         if(handler==null)
         {
             throw new NoHandlerException(event);

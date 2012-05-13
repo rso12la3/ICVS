@@ -43,7 +43,7 @@ public class Controller {
         {
             try
             {
-                final ApplicationEvent event = getEventQueue().take();
+                final ApplicationEvent event = eventQueue.take();
                 final ApplicationHandler applicationHandler = handlerMap.get(event); 
                 applicationHandler.handle(event);
             }
@@ -66,6 +66,7 @@ public class Controller {
            
         }
         schedule.kill();
+        view.dispose();
     }
     
     public View getView(){

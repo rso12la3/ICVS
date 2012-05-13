@@ -2,6 +2,8 @@ package pl.edu.pw.rso2012.a1.dvcs.view;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -13,6 +15,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.CloneEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CommitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.DeleteEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.ExitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PullEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PushEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
@@ -40,7 +43,14 @@ public class View extends JFrame {
 		super(Constants.APP_NAME);
 		
 		WindowUtils.setNativeLookAndFeel();
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent we) {
+				ApplicationEvent event = new ExitEvent();
+				mController.onEvent(event);
+			}
+		});
 		setMinimumSize(new Dimension(Constants.WINDOW_MIN_WIDTH, Constants.WINDOWS_MIN_HEIGHT));
 		
 		WindowUtils.setWindowSizeAndLocation(this, Toolkit.getDefaultToolkit().getScreenSize(),
@@ -118,8 +128,8 @@ public class View extends JFrame {
 		public void onExitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			dispose();
-			System.exit(0);
+			ApplicationEvent event = new ExitEvent();
+			mController.onEvent(event);
 		}
 		
 		@Override
