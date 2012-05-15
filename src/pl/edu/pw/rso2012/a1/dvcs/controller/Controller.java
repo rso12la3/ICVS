@@ -7,38 +7,32 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedExcep
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.NoHandlerException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.mapper.HandlerMap;
-import pl.edu.pw.rso2012.a1.dvcs.controller.schedule.Schedule;
 import pl.edu.pw.rso2012.a1.dvcs.model.Model;
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.view.View;
 
-/**
- * @author Grzegorz Sancewicz
- * @email g.sancewicz@stud.elka.pw.edu.pl
- * 
- */
 public class Controller {
     
     private final Model model;
     private final View view;
     private final LinkedBlockingQueue<ApplicationEvent> eventQueue;
-    private boolean applicationEnd;
+    private boolean applicationEnd = false;
  
     private final HandlerMap handlerMap;
-    private final Schedule schedule;
 
     public Controller()
     {
-        model = new Model();
-        view = new View();
-        view.setController(this);
         handlerMap = new HandlerMap(this);
         eventQueue = new LinkedBlockingQueue<ApplicationEvent>();
-        schedule = new Schedule(this);
-        applicationEnd = false;
+        model = new Model(eventQueue);
+        view = new View();
+        view.setController(this);
+        Configuration.getInstance();
     }
 
     public void run()
     {
+        model.start();
         while(!isApplicationEnd())
         {
             try
@@ -49,64 +43,50 @@ public class Controller {
             }
             catch(final InterruptedException e)
             {
-                //nie uda�o si� pobra� eventu
                 e.printStackTrace();
                 endApplication();
             }
             catch(final NoHandlerException e)
             {
-                //nie uda�o si� znalezc handlera
                 e.printStackTrace();
             }
             catch(final HandlerNotImplementedException e)
             {
-                //metoda handle znalezionego handlera nie zostala zaimplementowana
                 e.printStackTrace();
             }
            
         }
-        schedule.kill();
         view.dispose();
+        model.stop();
     }
     
-    public View getView(){
+    public View getView()
+    {
     	return view;
     }
 
-    /**
-     * @return the model
-     */
     public Model getModel()
     {
         return model;
     }
-
-    /**
-     * @return the applicationEnd
-     */
+    
     private boolean isApplicationEnd()
     {
         return applicationEnd;
     }   
-    /**
-     * Ko�czy dzia�anie aplikacji
-     */
+    
     public void endApplication()
     {
         this.applicationEnd = true;
     }
 
-    /**
-     * @return the eventQueue
-     */
     public LinkedBlockingQueue<ApplicationEvent> getEventQueue()
     {
         return eventQueue;
     }
     
-    public void onEvent(ApplicationEvent event){
+    public void onEvent(ApplicationEvent event)
+    {
     	eventQueue.offer(event);
     }
-
-    
 }

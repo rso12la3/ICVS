@@ -4,7 +4,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 
 /**
  * @author Grzegorz Sancewicz
- * @email g.sancewicz@stud.elka.pw.edu.pl
  * 
  */
 public class HandlerNotImplementedException extends Exception
@@ -13,6 +12,6 @@ public class HandlerNotImplementedException extends Exception
 
     public HandlerNotImplementedException(final ApplicationHandler handler)
     {
-        super("Handler " + handler.getClass().getSimpleName() + " nie zosta³ jeszcze zaimplementowany.");
+        super("Handler " + handler.getClass().getSimpleName() + " nie zostaï¿½ jeszcze zaimplementowany.");
     }
 }

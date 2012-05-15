@@ -15,9 +15,9 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.CloneEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CommitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.DeleteEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.ExitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PullEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.PushEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.application.ExitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
@@ -58,7 +58,7 @@ public class View extends JFrame {
 		
 		mMenuBar = new MenuBarComp();
 		mMenuBar.setListener(mMenuBarListener);
-		mMenuBar.setEnabled(false);
+		mMenuBar.setEnabled(true);
 		setJMenuBar(mMenuBar);
 		
 		pack();

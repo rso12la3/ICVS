@@ -3,11 +3,6 @@
  */
 package pl.edu.pw.elka.rso;
 
-/**
- * @author Grzegorz Sancewicz
- * @email g.sancewicz@stud.elka.pw.edu.pl
- * 
- */
 public class Message
 {
     

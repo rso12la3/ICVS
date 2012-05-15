@@ -10,7 +10,6 @@ import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
 
 /**
  * @author Grzegorz Sancewicz
- * @email g.sancewicz@stud.elka.pw.edu.pl
  * 
  */
 public class ObjectArchiver

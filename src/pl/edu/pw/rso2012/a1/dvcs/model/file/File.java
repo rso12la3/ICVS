@@ -7,7 +7,6 @@ import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
 
 /**
  * @author Grzegorz Sancewicz
- * @email g.sancewicz@stud.elka.pw.edu.pl
  * 
  */
 public class File
