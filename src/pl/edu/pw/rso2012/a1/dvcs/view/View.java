@@ -4,20 +4,22 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.AddEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.CloneEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.CommitEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.CreateEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.DeleteEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.PullEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.PushEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.application.ExitEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
@@ -85,6 +87,8 @@ public class View extends JFrame {
 	
 	/*************** MENU LISTENER ***************/
 	
+	// TODO: refactor invoke later commands
+	
 	private MenuBarListener mMenuBarListener = new MenuBarListenerAdapter() {
 		
 		private final String TAG = MenuBarListener.class.getSimpleName();
@@ -93,30 +97,43 @@ public class View extends JFrame {
 		public void onCreateRepositoryClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
-			int ret = repositoryPane.showDialog(View.this, "Create");
-			switch (ret) {
-			case CreateRepositoryPane.APPROVE_OPTION:
-				ApplicationEvent event = new CreateEvent(repositoryPane.getName(), repositoryPane.getServerUrl(),
-						repositoryPane.getUsername(), repositoryPane.getPassword(), repositoryPane.getDirectory());
-				mController.onEvent(event);
-				break;
-			}
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+					int ret = repositoryPane.showDialog(View.this, "Create");
+					switch (ret) {
+					case CreateRepositoryPane.APPROVE_OPTION:
+						ApplicationEvent event = new CreateEvent(repositoryPane.getUsername(),
+								repositoryPane.getPassword(), repositoryPane.getDirectory());
+						mController.onEvent(event);
+						break;
+					}
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
 		}
 		
 		@Override
 		public void onCloneRepositoryClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
-			int ret = repositoryPane.showDialog(View.this, "Clone");
-			switch (ret) {
-			case CreateRepositoryPane.APPROVE_OPTION:
-				ApplicationEvent event = new CloneEvent(repositoryPane.getName(), repositoryPane.getServerUrl(),
-						repositoryPane.getUsername(), repositoryPane.getPassword(), repositoryPane.getDirectory());
-				mController.onEvent(event);
-				break;
-			}
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+					int ret = repositoryPane.showDialog(View.this, "Clone");
+					switch (ret) {
+					case CreateRepositoryPane.APPROVE_OPTION:
+						ApplicationEvent event = new CloneRequestEvent(repositoryPane.getUsername());
+						mController.onEvent(event);
+						break;
+					}
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
 		}
 		
 		@Override
@@ -136,23 +153,49 @@ public class View extends JFrame {
 		public void onPullClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new PullEvent();
-			mController.onEvent(event);
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+					int ret = repositoryPane.showDialog(View.this, "Clone");
+					switch (ret) {
+					case CreateRepositoryPane.APPROVE_OPTION:
+						ApplicationEvent event = new PullRequestEvent(repositoryPane.getUsername());
+						mController.onEvent(event);
+						break;
+					}
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
 		}
 		
 		@Override
 		public void onPushClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new PushEvent();
-			mController.onEvent(event);
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+					int ret = repositoryPane.showDialog(View.this, "Clone");
+					switch (ret) {
+					case CreateRepositoryPane.APPROVE_OPTION:
+						ApplicationEvent event = new PushRequestEvent(repositoryPane.getUsername());
+						mController.onEvent(event);
+						break;
+					}
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
 		}
 		
 		@Override
 		public void onCommitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new CommitEvent();
+			ApplicationEvent event = new CommitFilesEvent(new ArrayList<String>());
 			mController.onEvent(event);
 		}
 		
@@ -160,7 +203,7 @@ public class View extends JFrame {
 		public void onAddClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new AddEvent();
+			ApplicationEvent event = new AddFilesEvent(new ArrayList<String>());
 			mController.onEvent(event);
 		}
 		
@@ -168,7 +211,7 @@ public class View extends JFrame {
 		public void onDeleteClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new DeleteEvent();
+			ApplicationEvent event = new DeleteFilesEvent(new ArrayList<String>());
 			mController.onEvent(event);
 		}
 		

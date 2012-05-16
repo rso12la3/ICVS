@@ -12,9 +12,9 @@ public class CreateEvent  extends ApplicationEvent
     private final String email, password;
     private final File baseDirectory;
     
-    public CreateEvent(final String username, final String password, final File baseDirectory) {
+    public CreateEvent(final String email, final String password, final File baseDirectory) {
         super();
-        this.email = username;
+        this.email = email;
         this.password = password;
         this.baseDirectory = baseDirectory;
     }
