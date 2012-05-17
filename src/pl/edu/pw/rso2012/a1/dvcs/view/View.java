@@ -134,7 +134,7 @@ public class View extends JFrame {
 			
 			SwingUtilities.invokeLater(command);
 		}
-
+		
 		@Override
 		public void onPullClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
@@ -194,7 +194,7 @@ public class View extends JFrame {
 			
 			SwingUtilities.invokeLater(command);
 		}
-
+		
 		@Override
 		public void onExitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
@@ -228,4 +228,15 @@ public class View extends JFrame {
 		}
 		
 	};
+	
+	public void showError(final String errorMessage) {
+		Runnable command = new Runnable() {
+			@Override
+			public void run() {
+				JOptionPane.showMessageDialog(View.this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		};
+		
+		SwingUtilities.invokeLater(command);
+	}
 }

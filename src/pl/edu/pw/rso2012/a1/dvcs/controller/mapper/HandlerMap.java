@@ -14,6 +14,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowRepositoryEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowSelectRepositoryEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.NoHandlerException;
@@ -28,6 +29,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.UpdateHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.CloneRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PushRequestHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowErrorHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowRepositoryHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowSelectRepositoryHandler;
 
@@ -67,6 +69,7 @@ public class HandlerMap
         // Widok
         eventHandlerMap.put(ShowRepositoryEvent.class, new ShowRepositoryHandler(controller));
         eventHandlerMap.put(ShowSelectRepositoryEvent.class, new ShowSelectRepositoryHandler(controller));
+        eventHandlerMap.put(ShowErrorEvent.class, new ShowErrorHandler(controller));
         
         // Główne
         eventHandlerMap.put(ExitEvent.class, new ExitHandler(controller));
