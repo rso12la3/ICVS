@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
@@ -17,7 +18,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
@@ -25,6 +25,7 @@ import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListenerAdapter;
+import pl.edu.pw.rso2012.a1.dvcs.view.utils.TextUtils;
 import pl.edu.pw.rso2012.a1.dvcs.view.utils.WindowUtils;
 
 /**
@@ -87,8 +88,6 @@ public class View extends JFrame {
 	
 	/*************** MENU LISTENER ***************/
 	
-	// TODO: refactor invoke later commands
-	
 	private MenuBarListener mMenuBarListener = new MenuBarListenerAdapter() {
 		
 		private final String TAG = MenuBarListener.class.getSimpleName();
@@ -104,8 +103,8 @@ public class View extends JFrame {
 					int ret = repositoryPane.showDialog(View.this, "Create");
 					switch (ret) {
 					case CreateRepositoryPane.APPROVE_OPTION:
-						ApplicationEvent event = new CreateEvent(repositoryPane.getUsername(),
-								repositoryPane.getPassword(), repositoryPane.getDirectory());
+						ApplicationEvent event = new CreateEvent(repositoryPane.getEmailAddress(),
+								repositoryPane.getPassword(), repositoryPane.getBaseDirectory());
 						mController.onEvent(event);
 						break;
 					}
@@ -122,23 +121,17 @@ public class View extends JFrame {
 			Runnable command = new Runnable() {
 				@Override
 				public void run() {
-					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
-					int ret = repositoryPane.showDialog(View.this, "Clone");
-					switch (ret) {
-					case CreateRepositoryPane.APPROVE_OPTION:
-						ApplicationEvent event = new CloneRequestEvent(repositoryPane.getUsername());
+					String email = (String) JOptionPane.showInputDialog(View.this, "Type email address to clone:",
+							"Clone", JOptionPane.PLAIN_MESSAGE, null, null, null);
+					
+					if (!TextUtils.isEmpty(email)) {
+						ApplicationEvent event = new PullRequestEvent(email);
 						mController.onEvent(event);
-						break;
 					}
 				}
 			};
 			
 			SwingUtilities.invokeLater(command);
-		}
-		
-		@Override
-		public void onCloseRepositoryClicked() {
-			Log.o(TAG, Log.getCurrentMethodName());
 		}
 		
 		@Override
@@ -156,13 +149,12 @@ public class View extends JFrame {
 			Runnable command = new Runnable() {
 				@Override
 				public void run() {
-					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
-					int ret = repositoryPane.showDialog(View.this, "Clone");
-					switch (ret) {
-					case CreateRepositoryPane.APPROVE_OPTION:
-						ApplicationEvent event = new PullRequestEvent(repositoryPane.getUsername());
+					String email = (String) JOptionPane.showInputDialog(View.this, "Type email address to pull from:",
+							"Pull", JOptionPane.PLAIN_MESSAGE, null, null, null);
+					
+					if (!TextUtils.isEmpty(email)) {
+						ApplicationEvent event = new PullRequestEvent(email);
 						mController.onEvent(event);
-						break;
 					}
 				}
 			};
@@ -177,13 +169,12 @@ public class View extends JFrame {
 			Runnable command = new Runnable() {
 				@Override
 				public void run() {
-					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
-					int ret = repositoryPane.showDialog(View.this, "Clone");
-					switch (ret) {
-					case CreateRepositoryPane.APPROVE_OPTION:
-						ApplicationEvent event = new PushRequestEvent(repositoryPane.getUsername());
+					String email = (String) JOptionPane.showInputDialog(View.this, "Type email address to push to:",
+							"Push", JOptionPane.PLAIN_MESSAGE, null, null, null);
+					
+					if (!TextUtils.isEmpty(email)) {
+						ApplicationEvent event = new PushRequestEvent(email);
 						mController.onEvent(event);
-						break;
 					}
 				}
 			};

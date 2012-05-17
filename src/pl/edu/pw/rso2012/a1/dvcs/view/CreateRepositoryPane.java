@@ -19,6 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingUtilities;
 
+import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
+
 /**
  * 
  * @author Andrzej Makarewicz
@@ -26,6 +28,7 @@ import javax.swing.SwingUtilities;
  */
 public class CreateRepositoryPane extends JPanel {
 	
+	private static final String TAG = CreateRepositoryPane.class.getSimpleName();
 	private static final long serialVersionUID = 8183331439977906195L;
 	public static final int APPROVE_OPTION = 0, CANCEL_OPTION = 1,
 			ERROR_OPTION = -1;
@@ -36,10 +39,8 @@ public class CreateRepositoryPane extends JPanel {
 	//
 	protected int mReturn = ERROR_OPTION;
 	protected File mDirectory;
-	protected JLabel mNameLabel, mServerUrlLabel, mUsernameLabel, mPasswordLabel,
-			mDirectoryLabel;
-	protected JTextField mServerUrlField, mPasswordField, mUsernameField, mName,
-			mDirectoryField;
+	protected JLabel mEmailLabel, mPasswordLabel, mDirectoryLabel;
+	protected JTextField mPasswordField, mEmailField, mDirectoryField;
 	protected JButton mSelectDirectoryButton, mOkButton, mCancelButton;
 	
 	
@@ -48,67 +49,42 @@ public class CreateRepositoryPane extends JPanel {
 		initialize();
 	}
 	
-	public CreateRepositoryPane(boolean arg0) {
-		super(arg0);
+	public CreateRepositoryPane(boolean isDoubleBuffered) {
+		super(isDoubleBuffered);
 		initialize();
 	}
 	
-	public CreateRepositoryPane(LayoutManager arg0, boolean arg1) {
-		super(arg0, arg1);
+	public CreateRepositoryPane(LayoutManager layout, boolean isDoubleBuffered) {
+		super(layout, isDoubleBuffered);
 		initialize();
 	}
 	
-	public CreateRepositoryPane(LayoutManager arg0) {
-		super(arg0);
+	public CreateRepositoryPane(LayoutManager layout) {
+		super(layout);
 		initialize();
 	}
 	
 	private void initialize() {
 
-        mNameLabel = new JLabel();
-        mName = new JTextField();
-        mServerUrlLabel = new JLabel();
-        mServerUrlField = new JTextField();
-        mUsernameLabel = new JLabel();
-        mUsernameField = new JTextField();
-        mPasswordLabel = new JLabel();
-        mPasswordField = new JTextField();
-        mDirectoryLabel = new JLabel();
-        mSelectDirectoryButton = new JButton();
-        mDirectoryField = new JTextField();
-        mOkButton = new JButton();
-        mCancelButton = new JButton();
-
-        mNameLabel.setText("Repository name");
-
-        mName.setText("New repository");
-
-        mServerUrlLabel.setText("Server URL");
-
-        mServerUrlField.setText("");
+        mEmailLabel = new JLabel("Email address");
+        mEmailField = new JTextField();
         
-        mUsernameLabel.setText("Username");
-
-        mUsernameField.setText("");
-
-        mPasswordLabel.setText("Password");
-
-        mPasswordField.setText("");
-
-        mDirectoryLabel.setText("Local directory");
-
-        mSelectDirectoryButton.setText("...");
+        mPasswordLabel = new JLabel("Password");
+        mPasswordField = new JTextField();
+       
+        mDirectoryLabel = new JLabel("Base directory");
+        mDirectoryField = new JTextField();
+        mDirectoryField.setEditable(false);
+        
+        mSelectDirectoryButton = new JButton("...");
         mSelectDirectoryButton.setActionCommand(ACTION_SELECT_DIR);
         mSelectDirectoryButton.addActionListener(mActionListener);
-
-        mDirectoryField.setText("");
-        mDirectoryField.setEditable(false);
-
-        mOkButton.setText("OK");
+        
+        mOkButton = new JButton("OK");
         mOkButton.setActionCommand(ACTION_OK);
         mOkButton.addActionListener(mActionListener);
 
-        mCancelButton.setText("Cancel");
+        mCancelButton = new JButton("Cancel");
         mCancelButton.setActionCommand(ACTION_CANCEL);
         mCancelButton.addActionListener(mActionListener);
 
@@ -117,38 +93,29 @@ public class CreateRepositoryPane extends JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addComponent(mEmailLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mEmailField))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(mPasswordLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mPasswordField, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(mDirectoryLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(mNameLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(mOkButton)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mName))
-                            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(mServerUrlLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mServerUrlField, GroupLayout.DEFAULT_SIZE, 312, Short.MAX_VALUE))
+                                .addComponent(mCancelButton)
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(mUsernameLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mUsernameField))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(mPasswordLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mPasswordField))
-                            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(mDirectoryLabel, GroupLayout.PREFERRED_SIZE, LABEL_DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(mDirectoryField)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mSelectDirectoryButton))))
-                    .addGroup(layout.createSequentialGroup()
-                    	.addContainerGap()
-                        .addComponent(mOkButton)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(mCancelButton)
-                        ))
+                                .addComponent(mSelectDirectoryButton)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -156,34 +123,24 @@ public class CreateRepositoryPane extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(mNameLabel)
-                    .addComponent(mName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(mServerUrlLabel)
-                    .addComponent(mServerUrlField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(mUsernameLabel)
-                    .addComponent(mUsernameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(mEmailLabel)
+                    .addComponent(mEmailField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(mPasswordLabel)
                     .addComponent(mPasswordField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(mDirectoryLabel)
-                        .addComponent(mDirectoryField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(mDirectoryLabel)
+                    .addComponent(mDirectoryField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(mSelectDirectoryButton))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(mOkButton)
                     .addComponent(mCancelButton))
-                .addContainerGap()
-                )
-                
+                .addContainerGap())
         );
+
     }
 	
 	protected JDialog createDialog(Component parent, String approveButtonText) throws HeadlessException {
@@ -202,14 +159,14 @@ public class CreateRepositoryPane extends JPanel {
 		return dialog;
 	}
 	
-	JDialog d;
+	JDialog dialog;
 	
 	public int showDialog(Component parent, String approveButtonText)
 			throws HeadlessException {
-		d = createDialog(parent, approveButtonText);
+		dialog = createDialog(parent, approveButtonText);
 		mReturn = ERROR_OPTION;
-		d.pack();
-		d.setVisible(true);
+		dialog.pack();
+		dialog.setVisible(true);
 		return mReturn;
 	}
 	
@@ -217,6 +174,8 @@ public class CreateRepositoryPane extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			Log.o(TAG, Log.getCurrentMethodName());
+			
 			switch (event.getActionCommand()) {
 			case ACTION_SELECT_DIR:
 				File dir = FilePickingHelper.openFolderChooser(SwingUtilities
@@ -228,33 +187,25 @@ public class CreateRepositoryPane extends JPanel {
 				break;
 			case ACTION_OK:
 				mReturn = APPROVE_OPTION;
-				d.setVisible(false);
+				dialog.setVisible(false);
 				break;
 			case ACTION_CANCEL:
 				mReturn = CANCEL_OPTION;
-				d.setVisible(false);
+				dialog.setVisible(false);
 				break;
 			}
 		}
 	};
 	
-	public File getDirectory() {
+	public File getBaseDirectory() {
 		return mDirectory;
-	}
-	
-	public String getRepositoryName() {
-		return mName.getText().trim();
-	}
-	
-	public String getServerUrl() {
-		return mServerUrlField.getText().trim();
 	}
 	
 	public String getPassword() {
 		return mPasswordField.getText().trim();
 	}
 	
-	public String getUsername() {
-		return mUsernameField.getText().trim();
+	public String getEmailAddress() {
+		return mEmailField.getText().trim();
 	}
 }

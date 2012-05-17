@@ -9,10 +9,13 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.mapper.HandlerMap;
 import pl.edu.pw.rso2012.a1.dvcs.model.Model;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
+import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.View;
 
 public class Controller {
     
+	private static final String TAG = Controller.class.getSimpleName();
+	
     private final Model model;
     private final View view;
     private final LinkedBlockingQueue<ApplicationEvent> eventQueue;
@@ -32,7 +35,7 @@ public class Controller {
 
     public void run()
     {
-        model.start();
+        //model.start();
         while(!isApplicationEnd())
         {
             try
@@ -57,7 +60,7 @@ public class Controller {
            
         }
         view.dispose();
-        model.stop();
+        //model.stop();
     }
     
     public View getView()
@@ -87,6 +90,8 @@ public class Controller {
     
     public void onEvent(ApplicationEvent event)
     {
+    	Log.o(TAG, Log.getCurrentMethodName());
+    	
     	eventQueue.offer(event);
     }
 }

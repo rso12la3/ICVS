@@ -22,8 +22,7 @@ public class MenuBarComp extends JMenuBar {
 	
 	protected static final String 
 			ACTION_CREATE_REPOSITORY = "CREATEREPOSITORY",
-			ACTION_CLONE_REPOSITORY = "CLONEREPOSITORY",
-			ACTION_CLOSE_REPOSITORY = "CLOSEREPOSITORY", 
+			ACTION_CLONE_REPOSITORY = "CLONEREPOSITORY", 
 			ACTION_EXIT = "EXIT",
 			ACTION_PULL = "PULL", 
 			ACTION_PUSH = "PUSH",
@@ -54,11 +53,6 @@ public class MenuBarComp extends JMenuBar {
 		mOpenProject.setActionCommand(ACTION_CLONE_REPOSITORY);
 		mOpenProject.addActionListener(mActionListener);
 		repository.add(mOpenProject);
-		
-		mCloseProject = new JMenuItem("Close repository");
-		mCloseProject.setActionCommand(ACTION_CLOSE_REPOSITORY);
-		mCloseProject.addActionListener(mActionListener);
-		repository.add(mCloseProject);
 		
 		repository.add(new JPopupMenu.Separator());
 		
@@ -113,9 +107,6 @@ public class MenuBarComp extends JMenuBar {
 			case ACTION_CLONE_REPOSITORY:
 				mListener.onCloneRepositoryClicked();
 				break;
-			case ACTION_CLOSE_REPOSITORY:
-				mListener.onCloseRepositoryClicked();
-				break;
 			case ACTION_EXIT:
 				mListener.onExitClicked();
 				break;
@@ -147,7 +138,6 @@ public class MenuBarComp extends JMenuBar {
 	public void setEnabled(boolean enabled) {
 		mNewProject.setEnabled(enabled);
 		mOpenProject.setEnabled(enabled);
-		mCloseProject.setEnabled(enabled);
 		mExit.setEnabled(true); // allways enabled
 		mPull.setEnabled(enabled);
 		mPush.setEnabled(enabled);

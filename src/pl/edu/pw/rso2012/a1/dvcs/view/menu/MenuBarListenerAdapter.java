@@ -20,12 +20,6 @@ public class MenuBarListenerAdapter implements MenuBarListener {
 	}
 	
 	@Override
-	public void onCloseRepositoryClicked() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
 	public void onExitClicked() {
 		// TODO Auto-generated method stub
 		
