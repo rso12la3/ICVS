@@ -12,6 +12,8 @@ public interface MenuBarListener {
 	
 	void onExitClicked();
 	
+	void onUpdateClicked();
+	
 	void onPullClicked();
 	
 	void onPushClicked();

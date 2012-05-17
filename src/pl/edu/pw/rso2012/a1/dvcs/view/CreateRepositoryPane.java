@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.HeadlessException;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -20,6 +21,7 @@ import javax.swing.LayoutStyle;
 import javax.swing.SwingUtilities;
 
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
+import pl.edu.pw.rso2012.a1.dvcs.view.utils.WindowUtils;
 
 /**
  * 
@@ -166,6 +168,7 @@ public class CreateRepositoryPane extends JPanel {
 		dialog = createDialog(parent, approveButtonText);
 		mReturn = ERROR_OPTION;
 		dialog.pack();
+		WindowUtils.setWindowSizeAndLocationToParent(dialog, parent.getSize(), parent.getLocation(), dialog.getSize());
 		dialog.setVisible(true);
 		return mReturn;
 	}

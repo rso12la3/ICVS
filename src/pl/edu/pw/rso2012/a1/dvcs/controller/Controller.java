@@ -9,7 +9,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.mapper.HandlerMap;
 import pl.edu.pw.rso2012.a1.dvcs.model.Model;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
-import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.View;
 
 public class Controller {
@@ -90,8 +89,6 @@ public class Controller {
     
     public void onEvent(ApplicationEvent event)
     {
-    	Log.o(TAG, Log.getCurrentMethodName());
-    	
     	eventQueue.offer(event);
     }
 }

@@ -18,6 +18,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
@@ -133,15 +134,7 @@ public class View extends JFrame {
 			
 			SwingUtilities.invokeLater(command);
 		}
-		
-		@Override
-		public void onExitClicked() {
-			Log.o(TAG, Log.getCurrentMethodName());
-			
-			ApplicationEvent event = new ExitEvent();
-			mController.onEvent(event);
-		}
-		
+
 		@Override
 		public void onPullClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
@@ -180,6 +173,34 @@ public class View extends JFrame {
 			};
 			
 			SwingUtilities.invokeLater(command);
+		}
+		
+		@Override
+		public void onUpdateClicked() {
+			Log.o(TAG, Log.getCurrentMethodName());
+			
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					String revision = (String) JOptionPane.showInputDialog(View.this, "Update to revision number:",
+							"Update", JOptionPane.PLAIN_MESSAGE, null, null, null);
+					
+					if (!TextUtils.isEmpty(revision)) {
+						ApplicationEvent event = new UpdateEvent(revision);
+						mController.onEvent(event);
+					}
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
+		}
+
+		@Override
+		public void onExitClicked() {
+			Log.o(TAG, Log.getCurrentMethodName());
+			
+			ApplicationEvent event = new ExitEvent();
+			mController.onEvent(event);
 		}
 		
 		@Override

@@ -24,6 +24,7 @@ public class MenuBarComp extends JMenuBar {
 			ACTION_CREATE_REPOSITORY = "CREATEREPOSITORY",
 			ACTION_CLONE_REPOSITORY = "CLONEREPOSITORY", 
 			ACTION_EXIT = "EXIT",
+			ACTION_UPDATE = "UPDATE",
 			ACTION_PULL = "PULL", 
 			ACTION_PUSH = "PUSH",
 			ACTION_COMMIT = "COMMIT", 
@@ -31,7 +32,7 @@ public class MenuBarComp extends JMenuBar {
 			ACTION_DELETE = "DELETE";
 	
 	protected MenuBarListener mListener;
-	protected JMenuItem mNewProject, mOpenProject, mCloseProject, mExit, mPull,
+	protected JMenuItem mNewProject, mOpenProject, mCloseProject, mExit, mUpdate, mPull,
 			mPush, mCommit, mAdd, mDelete;
 	
 	public MenuBarComp() {
@@ -64,6 +65,11 @@ public class MenuBarComp extends JMenuBar {
 		this.add(repository);
 		
 		JMenu synchronization = new JMenu("Synchronization");
+		
+		mUpdate = new JMenuItem("Update");
+		mUpdate.setActionCommand(ACTION_UPDATE);
+		mUpdate.addActionListener(mActionListener);
+		synchronization.add(mUpdate);
 		
 		mPull = new JMenuItem("Pull");
 		mPull.setActionCommand(ACTION_PULL);
@@ -110,6 +116,9 @@ public class MenuBarComp extends JMenuBar {
 			case ACTION_EXIT:
 				mListener.onExitClicked();
 				break;
+			case ACTION_UPDATE:
+				mListener.onUpdateClicked();
+				break;
 			case ACTION_PULL:
 				mListener.onPullClicked();
 				break;
@@ -139,6 +148,7 @@ public class MenuBarComp extends JMenuBar {
 		mNewProject.setEnabled(enabled);
 		mOpenProject.setEnabled(enabled);
 		mExit.setEnabled(true); // allways enabled
+		mUpdate.setEnabled(enabled);
 		mPull.setEnabled(enabled);
 		mPush.setEnabled(enabled);
 		mCommit.setEnabled(enabled);

@@ -1,8 +1,9 @@
 package pl.edu.pw.rso2012.a1.dvcs.view.utils;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Point;
 
-import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
@@ -26,7 +27,7 @@ public class WindowUtils {
 		}
 	}
 	
-	public static void setWindowSizeAndLocation(JFrame window,
+	public static void setWindowSizeAndLocation(Component window,
 			Dimension screenSize, Dimension windowSize) {
 		
 		window.setSize(windowSize);
@@ -37,7 +38,14 @@ public class WindowUtils {
 		window.setLocation(placementX, placementY);
 	}
 	
-	public static void setWindowSizeAndLocation(JFrame window,
+	public static void setWindowSizeAndLocationToParent(Component window, Dimension parentSize, Point parentLocation, Dimension windowSize){
+		parentSize.height += (2 * parentLocation.y);
+		parentSize.width += (2 * parentLocation.x);
+		
+		setWindowSizeAndLocation(window, parentSize, windowSize);
+	}
+	
+	public static void setWindowSizeAndLocation(Component window,
 			Dimension screenSize, float sizeRatio) {
 		Dimension windowSize = new Dimension(
 				(int) (screenSize.width * Constants.WINDOW_TO_SCREEN_SIZE),

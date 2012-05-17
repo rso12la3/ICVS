@@ -3,55 +3,34 @@ package pl.edu.pw.rso2012.a1.dvcs.view.menu;
 /**
  * 
  * @author Andrzej Makarewicz
- *
+ * 
  */
 public class MenuBarListenerAdapter implements MenuBarListener {
 	
 	@Override
-	public void onCreateRepositoryClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onCreateRepositoryClicked() {}
 	
 	@Override
-	public void onCloneRepositoryClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onCloneRepositoryClicked() {}
 	
 	@Override
-	public void onExitClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onExitClicked() {}
 	
 	@Override
-	public void onPullClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onUpdateClicked() {}
 	
 	@Override
-	public void onPushClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onPullClicked() {}
 	
 	@Override
-	public void onCommitClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onPushClicked() {}
 	
 	@Override
-	public void onAddClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onCommitClicked() {}
 	
 	@Override
-	public void onDeleteClicked() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onAddClicked() {}
+	
+	@Override
+	public void onDeleteClicked() {}
 }
