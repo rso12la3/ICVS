@@ -32,7 +32,7 @@ public class MenuBarComp extends JMenuBar {
 			ACTION_DELETE = "DELETE";
 	
 	protected MenuBarListener mListener;
-	protected JMenuItem mNewProject, mOpenProject, mCloseProject, mExit, mUpdate, mPull,
+	protected JMenuItem mCreate, mClone, mCloseProject, mExit, mUpdate, mPull,
 			mPush, mCommit, mAdd, mDelete;
 	
 	public MenuBarComp() {
@@ -45,15 +45,15 @@ public class MenuBarComp extends JMenuBar {
 		
 		JMenu repository = new JMenu("Repository");
 		
-		mNewProject = new JMenuItem("Create repository");
-		mNewProject.setActionCommand(ACTION_CREATE_REPOSITORY);
-		mNewProject.addActionListener(mActionListener);
-		repository.add(mNewProject);
+		mCreate = new JMenuItem("Create repository");
+		mCreate.setActionCommand(ACTION_CREATE_REPOSITORY);
+		mCreate.addActionListener(mActionListener);
+		repository.add(mCreate);
 		
-		mOpenProject = new JMenuItem("Clone repository");
-		mOpenProject.setActionCommand(ACTION_CLONE_REPOSITORY);
-		mOpenProject.addActionListener(mActionListener);
-		repository.add(mOpenProject);
+		mClone = new JMenuItem("Clone repository");
+		mClone.setActionCommand(ACTION_CLONE_REPOSITORY);
+		mClone.addActionListener(mActionListener);
+		repository.add(mClone);
 		
 		repository.add(new JPopupMenu.Separator());
 		
@@ -144,9 +144,19 @@ public class MenuBarComp extends JMenuBar {
 		mListener = listener;
 	}
 	
+	public void setEnabledCreateRepository(){
+		setEnabled(false);
+		mCreate.setEnabled(true);
+	}
+	
+	public void setEnabledRepositoryCreated(){
+		setEnabled(true);
+		mCreate.setEnabled(false);
+	}
+	
 	public void setEnabled(boolean enabled) {
-		mNewProject.setEnabled(enabled);
-		mOpenProject.setEnabled(enabled);
+		mCreate.setEnabled(enabled);
+		mClone.setEnabled(enabled);
 		mExit.setEnabled(true); // allways enabled
 		mUpdate.setEnabled(enabled);
 		mPull.setEnabled(enabled);

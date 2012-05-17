@@ -16,7 +16,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestE
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowRepositoryEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowSelectRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowNoRepositoryEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.NoHandlerException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.application.ErrorHandler;
@@ -31,7 +31,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullReques
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PushRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowErrorHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowRepositoryHandler;
-import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowSelectRepositoryHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowNoRepositoryHandler;
 
 /**
  * Mapa odwzorowująca zdarzenie ({@link ApplicationEvent}) na odpowiedni handler ({@link ApplicationHandler})
@@ -68,7 +68,7 @@ public class HandlerMap
         
         // Widok
         eventHandlerMap.put(ShowRepositoryEvent.class, new ShowRepositoryHandler(controller));
-        eventHandlerMap.put(ShowSelectRepositoryEvent.class, new ShowSelectRepositoryHandler(controller));
+        eventHandlerMap.put(ShowNoRepositoryEvent.class, new ShowNoRepositoryHandler(controller));
         eventHandlerMap.put(ShowErrorEvent.class, new ShowErrorHandler(controller));
         
         // Główne

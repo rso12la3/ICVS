@@ -1,5 +1,6 @@
 package pl.edu.pw.rso2012.a1.dvcs.view;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -23,6 +24,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestE
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
+import pl.edu.pw.rso2012.a1.dvcs.view.WaitbarDialog.WaitbarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListenerAdapter;
@@ -42,9 +44,13 @@ public class View extends JFrame {
 	Controller mController;
 	//
 	MenuBarComp mMenuBar;
+	WaitbarListener mWaitbarListener;
 	
-	public View() {
+	public View(Controller controller) {
 		super(Constants.APP_NAME);
+		
+		if (controller == null) throw new NullPointerException();
+		mController = controller;
 		
 		WindowUtils.setNativeLookAndFeel();
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -62,29 +68,39 @@ public class View extends JFrame {
 		
 		mMenuBar = new MenuBarComp();
 		mMenuBar.setListener(mMenuBarListener);
-		mMenuBar.setEnabled(true);
+		mMenuBar.setEnabled(false);
 		setJMenuBar(mMenuBar);
 		
 		pack();
 		setVisible(true);
 	}
 	
-	public void setController(Controller controller) {
-		if (controller == null) throw new NullPointerException();
-		
-		mController = controller;
-	}
-	
-	public void showSelectRepositoryView(List<String> repositories) {
+	public void showNoRepositoryView() {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
-		mMenuBar.setEnabled(true);
+		mMenuBar.setEnabledCreateRepository();
 	}
 	
-	public void showRepositoryFolderView(List<File> files, String repositoryName) {
+	public void showRepositoryFolderView(List<File> files) {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
-		mMenuBar.setEnabled(true);
+		mMenuBar.setEnabledRepositoryCreated();
+	}
+	
+	public void onUpdateComplete() {
+		Log.o(TAG, Log.getCurrentMethodName());
+		
+		Runnable command = new Runnable() {
+			@Override
+			public void run() {
+				if (mWaitbarListener != null) {
+					mWaitbarListener.hide();
+					mWaitbarListener = null;
+				}
+			}
+		};
+		
+		SwingUtilities.invokeLater(command);
 	}
 	
 	/*************** MENU LISTENER ***************/
@@ -188,6 +204,10 @@ public class View extends JFrame {
 					if (!TextUtils.isEmpty(revision)) {
 						ApplicationEvent event = new UpdateEvent(revision);
 						mController.onEvent(event);
+						
+						mWaitbarListener = WaitbarDialog.showDialog(View.this, "Update",
+								String.format("Updatint to revision: %s", revision));
+						mWaitbarListener.show();
 					}
 				}
 			};

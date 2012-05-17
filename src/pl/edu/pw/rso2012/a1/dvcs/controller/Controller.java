@@ -3,6 +3,8 @@ package pl.edu.pw.rso2012.a1.dvcs.controller;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowNoRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowRepositoryEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.NoHandlerException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
@@ -14,6 +16,8 @@ import pl.edu.pw.rso2012.a1.dvcs.view.View;
 public class Controller {
     
 	private static final String TAG = Controller.class.getSimpleName();
+	
+	private static final boolean MODEL_ACTIVE = false; // TODO: temporarly for view debugging
 	
     private final Model model;
     private final View view;
@@ -27,14 +31,23 @@ public class Controller {
         handlerMap = new HandlerMap(this);
         eventQueue = new LinkedBlockingQueue<ApplicationEvent>();
         model = new Model(eventQueue);
-        view = new View();
-        view.setController(this);
+        view = new View(this);
         Configuration.getInstance();
+        
+        // FIXME: event should be sent based on configuration - this is just for testing
+        boolean IS_REPOSITORY_CREATED = true;
+       
+        if(IS_REPOSITORY_CREATED){
+        	onEvent(new ShowRepositoryEvent(null));
+        }else{
+        	onEvent(new ShowNoRepositoryEvent());
+        }
     }
 
     public void run()
     {
-        //model.start();
+    	if(MODEL_ACTIVE) model.start();
+    	
         while(!isApplicationEnd())
         {
             try
@@ -59,7 +72,8 @@ public class Controller {
            
         }
         view.dispose();
-        //model.stop();
+        
+        if(MODEL_ACTIVE) model.stop();
     }
     
     public View getView()

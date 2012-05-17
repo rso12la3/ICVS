@@ -21,7 +21,7 @@ public class UpdateCompleteHandler extends ApplicationHandler
 	@Override
 	public void handle(final ApplicationEvent event) throws HandlerNotImplementedException 
 	{
-	    throw new HandlerNotImplementedException(this);
+	    controller.getView().onUpdateComplete();
 	}
 	
 }

@@ -11,21 +11,15 @@ import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
  * 
  */
 public class ShowRepositoryEvent extends ApplicationEvent {
-
-    private final List<File> mFiles;
-    private final String mRepositoryName;
-
-    public ShowRepositoryEvent(final List<File> files, final String repositoryName) {
-        super();
-        this.mFiles = files;
-        this.mRepositoryName = repositoryName;
-    }
-
-    public List<File> getFiles() {
-        return mFiles;
-    }
-
-    public String getRepositoryName() {
-        return mRepositoryName;
-    }
+	
+	private final List<File> mFiles;
+	
+	public ShowRepositoryEvent(final List<File> files) {
+		super();
+		this.mFiles = files;
+	}
+	
+	public List<File> getFiles() {
+		return mFiles;
+	}
 }

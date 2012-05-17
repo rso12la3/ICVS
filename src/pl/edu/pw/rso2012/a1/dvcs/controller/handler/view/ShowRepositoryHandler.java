@@ -26,7 +26,7 @@ public class ShowRepositoryHandler extends ApplicationHandler {
 		
 		ShowRepositoryEvent repositoryEvent = (ShowRepositoryEvent) event;
 		
-		controller.getView().showRepositoryFolderView(repositoryEvent.getFiles(), repositoryEvent.getRepositoryName());
+		controller.getView().showRepositoryFolderView(repositoryEvent.getFiles());
 	}
 	
 }
