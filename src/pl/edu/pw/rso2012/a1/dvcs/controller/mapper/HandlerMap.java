@@ -15,8 +15,10 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequest
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowInformationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowNoRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowWarningEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.NoHandlerException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.application.ErrorHandler;
@@ -30,8 +32,10 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.CloneReque
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PushRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowErrorHandler;
-import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowRepositoryHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowInformationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowNoRepositoryHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowRepositoryHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowWarningHandler;
 
 /**
  * Mapa odwzorowująca zdarzenie ({@link ApplicationEvent}) na odpowiedni handler ({@link ApplicationHandler})
@@ -70,6 +74,8 @@ public class HandlerMap
         eventHandlerMap.put(ShowRepositoryEvent.class, new ShowRepositoryHandler(controller));
         eventHandlerMap.put(ShowNoRepositoryEvent.class, new ShowNoRepositoryHandler(controller));
         eventHandlerMap.put(ShowErrorEvent.class, new ShowErrorHandler(controller));
+        eventHandlerMap.put(ShowWarningEvent.class, new ShowWarningHandler(controller));
+        eventHandlerMap.put(ShowInformationEvent.class, new ShowInformationHandler(controller));
         
         // Główne
         eventHandlerMap.put(ExitEvent.class, new ExitHandler(controller));

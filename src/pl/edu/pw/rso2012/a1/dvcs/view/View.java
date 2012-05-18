@@ -1,10 +1,10 @@
 package pl.edu.pw.rso2012.a1.dvcs.view;
 
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +22,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
-import pl.edu.pw.rso2012.a1.dvcs.model.file.File;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 import pl.edu.pw.rso2012.a1.dvcs.view.WaitbarDialog.WaitbarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
@@ -81,7 +80,7 @@ public class View extends JFrame {
 		mMenuBar.setEnabledCreateRepository();
 	}
 	
-	public void showRepositoryFolderView(List<File> files) {
+	public void showRepositoryFolderView(File rootDirectory, List<String> versionedFilePaths) {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
 		mMenuBar.setEnabledRepositoryCreated();
@@ -117,7 +116,7 @@ public class View extends JFrame {
 				@Override
 				public void run() {
 					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
-					int ret = repositoryPane.showDialog(View.this, "Create");
+					int ret = repositoryPane.showDialog(View.this);
 					switch (ret) {
 					case CreateRepositoryPane.APPROVE_OPTION:
 						ApplicationEvent event = new CreateEvent(repositoryPane.getEmailAddress(),
@@ -249,11 +248,23 @@ public class View extends JFrame {
 		
 	};
 	
-	public void showError(final String errorMessage) {
+	public void showMessageDialogInformation(final String message) {
+		showMessageDialog(message, "Information", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	public void showMessageDialogWarning(final String message) {
+		showMessageDialog(message, "Warning", JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public void showMessageDialogError(final String message) {
+		showMessageDialog(message, "Error", JOptionPane.ERROR_MESSAGE);
+	}
+	
+	public void showMessageDialog(final String message, final String title, final int messageType) {
 		Runnable command = new Runnable() {
 			@Override
 			public void run() {
-				JOptionPane.showMessageDialog(View.this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(View.this, message, title, messageType);
 			}
 		};
 		

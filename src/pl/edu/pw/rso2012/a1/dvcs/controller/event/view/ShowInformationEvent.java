@@ -5,10 +5,9 @@ package pl.edu.pw.rso2012.a1.dvcs.controller.event.view;
  * @author Andrzej Makarewicz
  * 
  */
-public class ShowErrorEvent extends ShowMessageEvent {
+public class ShowInformationEvent extends ShowMessageEvent {
 	
-	public ShowErrorEvent(String message) {
+	public ShowInformationEvent(String message) {
 		super(message);
 	}
-	
 }

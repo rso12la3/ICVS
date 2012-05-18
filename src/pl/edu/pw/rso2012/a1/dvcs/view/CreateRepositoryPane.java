@@ -145,17 +145,17 @@ public class CreateRepositoryPane extends JPanel {
 
     }
 	
-	protected JDialog createDialog(Component parent, String approveButtonText) throws HeadlessException {
+	protected JDialog createDialog(Component parent) throws HeadlessException {
 		Frame frame = (Frame) SwingUtilities.getRoot(parent);
 		JDialog dialog = new JDialog(frame);
 		dialog.getContentPane().add(this);
-		if(approveButtonText != null) mOkButton.setText(approveButtonText);
 		dialog.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				mReturn = CANCEL_OPTION;
 			}
 		});
 		dialog.setModal(true);
+		dialog.setTitle("Create repository");
 		dialog.invalidate();
 		dialog.repaint();
 		return dialog;
@@ -163,9 +163,9 @@ public class CreateRepositoryPane extends JPanel {
 	
 	JDialog dialog;
 	
-	public int showDialog(Component parent, String approveButtonText)
+	public int showDialog(Component parent)
 			throws HeadlessException {
-		dialog = createDialog(parent, approveButtonText);
+		dialog = createDialog(parent);
 		mReturn = ERROR_OPTION;
 		dialog.pack();
 		WindowUtils.setWindowSizeAndLocationToParent(dialog, parent.getSize(), parent.getLocation(), dialog.getSize());
