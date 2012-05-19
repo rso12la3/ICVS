@@ -1,5 +1,7 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
@@ -36,10 +38,15 @@ public class Controller {
 		
 		// FIXME: event should be sent based on configuration - this is just for
 		// testing
-		boolean IS_REPOSITORY_CREATED = true;
+		boolean test_IsRepositoryCreated = true;
+		java.io.File test_RootDir = new java.io.File(".");
+		List<String> test_Versioned = new ArrayList<String>();
+		test_Versioned.add("Config.xml");
+		test_Versioned.add("src\\pl\\edu\\pw\\rso2012\\a1\\dvcs\\Dvcs.java");
 		
-		if (IS_REPOSITORY_CREATED) {
-			onEvent(new ShowRepositoryEvent(null, null));
+		
+		if (test_IsRepositoryCreated) {
+			onEvent(new ShowRepositoryEvent(test_RootDir, test_Versioned));
 		} else {
 			onEvent(new ShowNoRepositoryEvent());
 		}

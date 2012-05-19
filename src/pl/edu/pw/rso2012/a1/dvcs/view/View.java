@@ -1,5 +1,6 @@
 package pl.edu.pw.rso2012.a1.dvcs.view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -27,6 +28,7 @@ import pl.edu.pw.rso2012.a1.dvcs.view.WaitbarDialog.WaitbarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListenerAdapter;
+import pl.edu.pw.rso2012.a1.dvcs.view.tree.FoldersTreeComp;
 import pl.edu.pw.rso2012.a1.dvcs.view.utils.TextUtils;
 import pl.edu.pw.rso2012.a1.dvcs.view.utils.WindowUtils;
 
@@ -43,6 +45,7 @@ public class View extends JFrame {
 	Controller mController;
 	//
 	MenuBarComp mMenuBar;
+	FoldersTreeComp mFoldersTree;
 	WaitbarListener mWaitbarListener;
 	
 	public View(Controller controller) {
@@ -70,6 +73,9 @@ public class View extends JFrame {
 		mMenuBar.setEnabled(false);
 		setJMenuBar(mMenuBar);
 		
+		mFoldersTree = new FoldersTreeComp();
+		getContentPane().add(mFoldersTree.getScrollPane(), BorderLayout.CENTER);
+		
 		pack();
 		setVisible(true);
 	}
@@ -84,6 +90,7 @@ public class View extends JFrame {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
 		mMenuBar.setEnabledRepositoryCreated();
+		mFoldersTree.setFiles(rootDirectory, versionedFilePaths);
 	}
 	
 	public void onUpdateComplete() {
