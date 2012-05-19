@@ -3,22 +3,22 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.operation;
 
-import java.util.List;
+import java.util.Set;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 
 public class AddFilesEvent extends ApplicationEvent
 {
-    private final List<String> filesToAddList;
+    private final Set<String> filesToAdd;
 
-    public AddFilesEvent(final List<String> filesToAddList)
+    public AddFilesEvent(final Set<String> filesToAdd)
     {
-        this.filesToAddList = filesToAddList;
+        this.filesToAdd = filesToAdd;
     }
 
-    public List<String> getFilesToAddList()
+    public Set<String> getFilesToAdd()
     {
-        return filesToAddList;
+        return filesToAdd;
     }
 
 }

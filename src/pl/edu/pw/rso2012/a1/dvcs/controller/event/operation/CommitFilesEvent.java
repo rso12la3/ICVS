@@ -3,22 +3,22 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.operation;
 
-import java.util.List;
+import java.util.Set;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 
 public class CommitFilesEvent extends ApplicationEvent
 {
-    private final List<String> filesToCommitList;
+    private final Set<String> filesToCommit;
 
-    public CommitFilesEvent(final List<String> filesToCommitList)
+    public CommitFilesEvent(final Set<String> filesToCommit)
     {
-        this.filesToCommitList = filesToCommitList;
+        this.filesToCommit = filesToCommit;
     }
 
-    public List<String> getFilesToCommitList()
+    public Set<String> getFilesToCommit()
     {
-        return filesToCommitList;
+        return filesToCommit;
     }
 
 }

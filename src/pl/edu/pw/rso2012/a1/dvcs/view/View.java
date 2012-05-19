@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -29,6 +30,7 @@ import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarComp;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.menu.MenuBarListenerAdapter;
 import pl.edu.pw.rso2012.a1.dvcs.view.tree.FoldersTreeComp;
+import pl.edu.pw.rso2012.a1.dvcs.view.tree.FoldersTreeComp.FoldersTreeActionListener;
 import pl.edu.pw.rso2012.a1.dvcs.view.utils.TextUtils;
 import pl.edu.pw.rso2012.a1.dvcs.view.utils.WindowUtils;
 
@@ -74,6 +76,7 @@ public class View extends JFrame {
 		setJMenuBar(mMenuBar);
 		
 		mFoldersTree = new FoldersTreeComp();
+		mFoldersTree.setListener(mTreeListener);
 		getContentPane().add(mFoldersTree.getScrollPane(), BorderLayout.CENTER);
 		
 		pack();
@@ -108,6 +111,26 @@ public class View extends JFrame {
 		
 		SwingUtilities.invokeLater(command);
 	}
+	
+	/*************** TREE LISTENER ***************/
+	
+	FoldersTreeComp.FoldersTreeActionListener mTreeListener = new FoldersTreeActionListener() {
+		
+		@Override
+		public void onDelete(Set<String> files) {
+			mController.onEvent(new DeleteFilesEvent(files));
+		}
+		
+		@Override
+		public void onCommit(Set<String> files) {
+			mController.onEvent(new CommitFilesEvent(files));
+		}
+		
+		@Override
+		public void onAdd(Set<String> files) {
+			mController.onEvent(new AddFilesEvent(files));
+		}
+	};
 	
 	/*************** MENU LISTENER ***************/
 	
@@ -233,7 +256,7 @@ public class View extends JFrame {
 		public void onCommitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new CommitFilesEvent(new ArrayList<String>());
+			ApplicationEvent event = new CommitFilesEvent(null);
 			mController.onEvent(event);
 		}
 		
@@ -241,7 +264,7 @@ public class View extends JFrame {
 		public void onAddClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new AddFilesEvent(new ArrayList<String>());
+			ApplicationEvent event = new AddFilesEvent(null);
 			mController.onEvent(event);
 		}
 		
@@ -249,7 +272,7 @@ public class View extends JFrame {
 		public void onDeleteClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new DeleteFilesEvent(new ArrayList<String>());
+			ApplicationEvent event = new DeleteFilesEvent(null);
 			mController.onEvent(event);
 		}
 		

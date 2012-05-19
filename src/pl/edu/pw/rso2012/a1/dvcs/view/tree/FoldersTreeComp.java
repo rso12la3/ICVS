@@ -6,7 +6,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -14,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -32,6 +35,7 @@ public class FoldersTreeComp implements ActionListener {
 	VersionedFileRenderer mRenderer;
 	JScrollPane mScrollPane;
 	JPopupMenu mPopupMenu;
+	FoldersTreeActionListener mListener;
 	
 	public FoldersTreeComp() {
 		mRenderer = new VersionedFileRenderer();
@@ -110,19 +114,55 @@ public class FoldersTreeComp implements ActionListener {
 		}
 	};
 	
+	void addChildrenFilesToList(DefaultMutableTreeNode node, Set<String> files) {
+		FileInfo info = (FileInfo) node.getUserObject();
+		File file = info.getFile();
+		if (file.isDirectory() && !node.isLeaf()) {
+			for (int i = 0, childCount = node.getChildCount(); i < childCount; i++) {
+				DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
+				addChildrenFilesToList(child, files);
+			}
+		} else if (!file.isDirectory()) {
+			files.add(file.getPath());
+		}
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
-		mTree.getSelectionPaths();
+		if (mListener == null) return;
+		
+		TreePath[] paths = mTree.getSelectionPaths();
+		Set<String> fileSet = new HashSet<String>();
+		for (TreePath path : paths) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+			addChildrenFilesToList(node, fileSet);
+		}
 		
 		switch (event.getActionCommand()) {
 		case COMMIT_COMMAND:
+			mListener.onCommit(fileSet);
 			break;
 		case ADD_COMMAND:
+			mListener.onAdd(fileSet);
 			break;
 		case DELETE_COMMAND:
+			mListener.onDelete(fileSet);
 			break;
 		}
+	}
+	
+	public void setListener(FoldersTreeActionListener listener){
+		mListener = listener;
+	}
+	
+	public interface FoldersTreeActionListener {
+		
+		public void onCommit(Set<String> files);
+		
+		public void onAdd(Set<String> files);
+		
+		public void onDelete(Set<String> files);
 	}
 }

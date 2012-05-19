@@ -3,22 +3,22 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.operation;
 
-import java.util.List;
+import java.util.Set;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 
 public class DeleteFilesEvent extends ApplicationEvent
 {
-    private final List<String> filesToDeleteList;
+    private final Set<String> filesToDelete;
 
-    public DeleteFilesEvent(final List<String> filesToDeleteList)
+    public DeleteFilesEvent(final Set<String> filesToDelete)
     {
-        this.filesToDeleteList = filesToDeleteList;
+        this.filesToDelete = filesToDelete;
     }
 
-    public List<String> getFilesToDeleteList()
+    public Set<String> getFilesToDeleteList()
     {
-        return filesToDeleteList;
+        return filesToDelete;
     }
 
 }
