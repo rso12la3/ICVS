@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.EventFactory;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.LocalConnection;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.AbstractOperation;
 
@@ -18,11 +21,15 @@ public class ReceiveMailTask extends TimerTask
 {
     private final LocalConnection localConnection;
     private final XStream xstream;
+    private final EventFactory eventFactory;
+    private LinkedBlockingQueue<ApplicationEvent> eventQueue;
     
-    public ReceiveMailTask(final LocalConnection localConnection)
+    public ReceiveMailTask(final LocalConnection localConnection, LinkedBlockingQueue<ApplicationEvent> eventQueue)
     {
         this.localConnection = localConnection;
+        this.eventQueue = eventQueue;
         xstream = new XStream();
+        eventFactory = new EventFactory();
     }
 
     @Override
@@ -38,7 +45,8 @@ public class ReceiveMailTask extends TimerTask
                 try
                 {
                     final AbstractOperation operation = deserializeOperation(xml); 
-                    System.out.println(operation.toString());
+                    ApplicationEvent event = eventFactory.getEvent(operation);
+                    eventQueue.put(event);
                 }
                 catch (final StreamException e)
                 {
@@ -55,9 +63,13 @@ public class ReceiveMailTask extends TimerTask
         {
             e.printStackTrace();
         }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         
     }
-    
+
     private AbstractOperation deserializeOperation(final String xml)
     {
         return (AbstractOperation)xstream.fromXML(xml);
