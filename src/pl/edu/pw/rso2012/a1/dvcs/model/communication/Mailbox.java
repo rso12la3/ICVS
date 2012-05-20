@@ -85,6 +85,11 @@ public class Mailbox
     {
         return null;
     }
+
+    public List<Commit> getCommits()
+    {
+        return null;
+    }
     
     public void startThreads()
     {
