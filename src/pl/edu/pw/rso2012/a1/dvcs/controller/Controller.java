@@ -39,10 +39,13 @@ public class Controller {
 		// FIXME: event should be sent based on configuration - this is just for
 		// testing
 		boolean test_IsRepositoryCreated = true;
-		java.io.File test_RootDir = new java.io.File(".");
+		//java.io.File test_RootDir = new java.io.File(".");
+		java.io.File test_RootDir = new java.io.File("C:\\android-sdk\\tools");
 		List<String> test_Versioned = new ArrayList<String>();
 		test_Versioned.add("Config.xml");
 		test_Versioned.add("src\\pl\\edu\\pw\\rso2012\\a1\\dvcs\\Dvcs.java");
+		test_Versioned.add("android.bat");
+		test_Versioned.add("adb_has_moved.txt");
 		
 		
 		if (test_IsRepositoryCreated) {

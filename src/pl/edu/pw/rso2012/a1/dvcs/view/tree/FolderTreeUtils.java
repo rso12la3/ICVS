@@ -18,19 +18,20 @@ import javax.swing.tree.TreeNode;
  */
 public class FolderTreeUtils {
 	
+	private static final String TAG = FolderTreeUtils.class.getSimpleName();
+	
 	private FolderTreeUtils() {}
 	
 	public static TreeNode createTree(File rootDirectory, List<String> versionedFilePaths) {
 		Set<String> versionedFiles = new HashSet<String>(versionedFilePaths);
-		return addNode(null, rootDirectory, versionedFiles);
+		return addNode(null, rootDirectory, versionedFiles, rootDirectory.getAbsolutePath().length());
 	}
 	
 	private static DefaultMutableTreeNode addNode(DefaultMutableTreeNode currentParent, File directory,
-			Set<String> versionedFiles) {
+			Set<String> versionedFiles, int rootAbsolutePathLength) {
 		
-		boolean isRoot = currentParent == null;
-		DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(new FileInfo(directory));
-		if (!isRoot) currentParent.add(dirNode);
+		DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(new FileInfo(directory, rootAbsolutePathLength));
+		if (currentParent != null) currentParent.add(dirNode);
 		
 		String[] childrenArray = directory.list();
 		List<String> childrenList = new ArrayList<String>(childrenArray.length);
@@ -45,13 +46,17 @@ public class FolderTreeUtils {
 		
 		String path = directory.getPath();
 		for (String node : childrenList) {
-			String newPath = isRoot ? node : path + File.separator + node;
+			String newPath = path + File.separator + node;
 			
 			File file = new File(newPath);
 			if (file.isDirectory()) {
-				addNode(dirNode, file, versionedFiles);
+				addNode(dirNode, file, versionedFiles, rootAbsolutePathLength);
 			} else {
-				fileInfoList.add(new FileInfo(file, versionedFiles.contains(file.getPath())));
+				FileInfo fileInfo = new FileInfo(file, rootAbsolutePathLength);
+				fileInfo.setVersioned(versionedFiles);
+				fileInfoList.add(fileInfo);
+				
+				//Log.o(TAG, file.getAbsolutePath() + " " + fileInfo.getFilePathFromRoot());
 			}
 		}
 		
