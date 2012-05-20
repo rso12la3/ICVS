@@ -54,7 +54,7 @@ public class FoldersTreeComp implements ActionListener {
 	public JTree getTree() {
 		return mTree;
 	}
-	
+
 	public JTree createJTree(TreeNode rootNode) {
 		JTree tree = new JTree(rootNode);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -123,7 +123,7 @@ public class FoldersTreeComp implements ActionListener {
 				addChildrenFilesToList(child, files);
 			}
 		} else if (!file.isDirectory()) {
-			files.add(file.getPath());
+			files.add(info.getFilePathFromRoot());
 		}
 	}
 	
@@ -139,6 +139,8 @@ public class FoldersTreeComp implements ActionListener {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 			addChildrenFilesToList(node, fileSet);
 		}
+		
+		Log.o(TAG, event.getActionCommand() + " " + fileSet.toString());
 		
 		switch (event.getActionCommand()) {
 		case COMMIT_COMMAND:
