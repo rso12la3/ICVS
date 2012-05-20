@@ -17,6 +17,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestE
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowInformationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowNoRepositoryEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowQuestionEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowRepositoryEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowWarningEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.NoHandlerException;
@@ -34,6 +35,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PushReques
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowErrorHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowInformationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowNoRepositoryHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowQuestionHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowRepositoryHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowWarningHandler;
 
@@ -76,6 +78,7 @@ public class HandlerMap
         eventHandlerMap.put(ShowErrorEvent.class, new ShowErrorHandler(controller));
         eventHandlerMap.put(ShowWarningEvent.class, new ShowWarningHandler(controller));
         eventHandlerMap.put(ShowInformationEvent.class, new ShowInformationHandler(controller));
+        eventHandlerMap.put(ShowQuestionEvent.class, new ShowQuestionHandler(controller));
         
         // Główne
         eventHandlerMap.put(ExitEvent.class, new ExitHandler(controller));

@@ -20,6 +20,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.QuestionResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
@@ -259,21 +260,21 @@ public class View extends JFrame {
 			mController.onEvent(event);
 		}
 		
-		@Override
-		public void onAddClicked() {
-			Log.o(TAG, Log.getCurrentMethodName());
-			
-			ApplicationEvent event = new AddFilesEvent(null);
-			mController.onEvent(event);
-		}
-		
-		@Override
-		public void onDeleteClicked() {
-			Log.o(TAG, Log.getCurrentMethodName());
-			
-			ApplicationEvent event = new DeleteFilesEvent(null);
-			mController.onEvent(event);
-		}
+		// @Override
+		// public void onAddClicked() {
+		// Log.o(TAG, Log.getCurrentMethodName());
+		//
+		// ApplicationEvent event = new AddFilesEvent(null);
+		// mController.onEvent(event);
+		// }
+		//
+		// @Override
+		// public void onDeleteClicked() {
+		// Log.o(TAG, Log.getCurrentMethodName());
+		//
+		// ApplicationEvent event = new DeleteFilesEvent(null);
+		// mController.onEvent(event);
+		// }
 		
 	};
 	
@@ -298,5 +299,24 @@ public class View extends JFrame {
 		};
 		
 		SwingUtilities.invokeLater(command);
+	}
+	
+	private void showQuestionDialogBlocking(final String message, final String title, final int id) {
+		int option = JOptionPane.showConfirmDialog(View.this, message, title, JOptionPane.YES_NO_OPTION);
+		mController.onEvent(new QuestionResponseEvent(id, option == JOptionPane.YES_OPTION));
+	}
+	
+	public void showQuestionDialog(final String message, final String title, final int id, final boolean isBlocking) {
+		if (isBlocking || SwingUtilities.isEventDispatchThread()) {
+			showQuestionDialogBlocking(message, title, id);
+		} else {
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					showQuestionDialogBlocking(message, title, id);
+				}
+			};
+			SwingUtilities.invokeLater(command);
+		}
 	}
 }

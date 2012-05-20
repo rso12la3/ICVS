@@ -81,7 +81,7 @@ public class MenuBarComp extends JMenuBar {
 		mPush.addActionListener(mActionListener);
 		synchronization.add(mPush);
 		
-		synchronization.add(new JPopupMenu.Separator());
+		//synchronization.add(new JPopupMenu.Separator());
 		
 		mCommit = new JMenuItem("Commit");
 		mCommit.setActionCommand(ACTION_COMMIT);
@@ -91,12 +91,12 @@ public class MenuBarComp extends JMenuBar {
 		mAdd = new JMenuItem("Add");
 		mAdd.setActionCommand(ACTION_ADD);
 		mAdd.addActionListener(mActionListener);
-		synchronization.add(mAdd);
+		//synchronization.add(mAdd);
 		
 		mDelete = new JMenuItem("Delete");
 		mDelete.setActionCommand(ACTION_DELETE);
 		mDelete.addActionListener(mActionListener);
-		synchronization.add(mDelete);
+		//synchronization.add(mDelete);
 		
 		this.add(synchronization);
 	}
