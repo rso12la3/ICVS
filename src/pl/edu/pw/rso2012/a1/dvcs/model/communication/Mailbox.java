@@ -3,6 +3,7 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.model.communication;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -11,7 +12,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.activity.ReceiveMailTask;
@@ -21,6 +24,8 @@ import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.LocalConnection;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.RemoteConnection;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.CommitOperation;
+import sun.tools.jar.CommandLine;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -46,13 +51,11 @@ public class Mailbox
     private final Thread sendLocalMailThread;
     private final XStream xstream;
     private final Thread sendRemoteMailThread;
-    private final LinkedBlockingQueue<ApplicationEvent> eventQueue;
     private final SendLocalMailRunnable sendLocalMailRunnable;
     private final SendRemoteMailRunnable sendRemoteMailRunnable;
     private final ReceiveMailTask receiveMailTask;
     public Mailbox(final LinkedBlockingQueue<ApplicationEvent> eventQueue)
     {
-        this.eventQueue = eventQueue;
         this.scheduledExecutor = Executors.newScheduledThreadPool(1);
         this.xstream = new XStream();
         this.repositoryConfiguration = Configuration.getInstance().getRepositoryConfiguration();
@@ -66,7 +69,7 @@ public class Mailbox
         sendRemoteMailRunnable = new SendRemoteMailRunnable(remoteSendQueue, remoteConnection);
         sendLocalMailThread = new Thread(sendLocalMailRunnable);
         sendRemoteMailThread = new Thread(sendRemoteMailRunnable);
-        receiveMailTask = new ReceiveMailTask(localConnection);
+        receiveMailTask = new ReceiveMailTask(localConnection, eventQueue);
     }
     
     public void putMessage(final MailMessage message) throws InterruptedException
@@ -81,8 +84,58 @@ public class Mailbox
         }
     }
 
-    public List<Commit> getCommitsBefore(String version)
+    public List<Commit> getCommitsBefore(final String revision) throws MessagingException
     {
+        Message[] commitMessages = localConnection.getCommitsUpToRevision(revision);
+        return getCommitListFromMessages(commitMessages);
+    }
+
+
+    public List<Commit> getCommits() throws MessagingException
+    {
+        Message[] commitMessages = localConnection.getCommitMessages();
+        return getCommitListFromMessages(commitMessages);
+    }
+    
+
+    private List<Commit> getCommitListFromMessages(Message[] commitMessages)
+            throws MessagingException
+    {
+        List<Commit> commitList = new LinkedList<Commit>();
+        for (Message message : commitMessages)
+        {
+            Commit commit = getCommitFromMessage(message);
+            commitList.add(commit);
+        }
+        return commitList;
+    }
+    
+    private Commit getCommitFromMessage(Message message) throws MessagingException
+    {
+        CommitOperation commitOperation = getCommitOperationFromMessage(message);
+        String version = message.getSubject().split(" ")[1];
+        return new Commit(commitOperation, version);
+    }
+
+    private CommitOperation getCommitOperationFromMessage(Message message)
+    {
+        MimeMessage mimeMessage = (MimeMessage)message;
+        try
+        {
+            String messageContent = mimeMessage.getContent().toString();
+            CommitOperation result = (CommitOperation)xstream.fromXML(messageContent);
+            return result;
+        }
+        catch(IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(MessagingException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
     
