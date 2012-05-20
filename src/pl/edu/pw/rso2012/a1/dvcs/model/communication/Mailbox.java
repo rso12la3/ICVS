@@ -6,7 +6,6 @@ package pl.edu.pw.rso2012.a1.dvcs.model.communication;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,7 +24,6 @@ import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.RemoteConnection
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.CommitOperation;
-import sun.tools.jar.CommandLine;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -43,8 +41,8 @@ public class Mailbox
      * * 
      */
     private final RepositoryConfiguration repositoryConfiguration;
-    private final BlockingQueue<MailMessage> localSendQueue;
-    private final BlockingQueue<MailMessage> remoteSendQueue;
+    private final PersistentBlockingQueue localSendQueue;
+    private final PersistentBlockingQueue remoteSendQueue;
     private final LocalConnection localConnection;
     private final RemoteConnection remoteConnection;
     private final ScheduledExecutorService scheduledExecutor;
@@ -60,8 +58,8 @@ public class Mailbox
         this.xstream = new XStream();
         this.repositoryConfiguration = Configuration.getInstance().getRepositoryConfiguration();
 
-        localSendQueue  = new LinkedBlockingQueue<MailMessage>();
-        remoteSendQueue = new LinkedBlockingQueue<MailMessage>();
+        localSendQueue  = new PersistentBlockingQueue("localSendQueue");
+        remoteSendQueue = new PersistentBlockingQueue("remoteSendQueue");
         localConnection = new LocalConnection(repositoryConfiguration);
         remoteConnection = new RemoteConnection();
         

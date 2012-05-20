@@ -1,11 +1,11 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.activity;
 
 import java.util.LinkedList;
-import java.util.concurrent.BlockingQueue;
 
 import javax.mail.MessagingException;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.PersistentBlockingQueue;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.LocalConnection;
 
 public class SendLocalMailRunnable implements Runnable
@@ -13,10 +13,10 @@ public class SendLocalMailRunnable implements Runnable
 
     private boolean threadStarted = true;
 
-    private final BlockingQueue<MailMessage> localSendQueue;
+    private final PersistentBlockingQueue localSendQueue;
     private final LocalConnection localConnection;
     
-    public SendLocalMailRunnable(final BlockingQueue<MailMessage> localSendQueue,
+    public SendLocalMailRunnable(final PersistentBlockingQueue localSendQueue,
        final LocalConnection localConnection)
     {
         this.localSendQueue = localSendQueue;
@@ -30,10 +30,7 @@ public class SendLocalMailRunnable implements Runnable
         {
             try
             {
-                final MailMessage message = localSendQueue.take();
-                final LinkedList<MailMessage> messagesToSend = new LinkedList<MailMessage>();
-                messagesToSend.add(message);
-                localSendQueue.drainTo(messagesToSend);
+                final LinkedList<MailMessage> messagesToSend = localSendQueue.getAllMessages();
                 localConnection.sendMessages(messagesToSend);
             }
             catch(final InterruptedException e)

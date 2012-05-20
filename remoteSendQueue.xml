@@ -1,0 +1,42 @@
+<java.util.concurrent.LinkedBlockingQueue serialization="custom">
+  <unserializable-parents/>
+  <java.util.concurrent.LinkedBlockingQueue>
+    <default>
+      <capacity>2147483647</capacity>
+      <count>
+        <value>0</value>
+      </count>
+      <notEmpty class="java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject">
+        <outer-class class="java.util.concurrent.locks.ReentrantLock$NonfairSync" serialization="custom">
+          <java.util.concurrent.locks.AbstractQueuedSynchronizer>
+            <default>
+              <state>1</state>
+            </default>
+          </java.util.concurrent.locks.AbstractQueuedSynchronizer>
+          <java.util.concurrent.locks.ReentrantLock_-Sync>
+            <default/>
+          </java.util.concurrent.locks.ReentrantLock_-Sync>
+        </outer-class>
+      </notEmpty>
+      <notFull class="java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject">
+        <outer-class class="java.util.concurrent.locks.ReentrantLock$NonfairSync" serialization="custom">
+          <java.util.concurrent.locks.AbstractQueuedSynchronizer>
+            <default>
+              <state>1</state>
+            </default>
+          </java.util.concurrent.locks.AbstractQueuedSynchronizer>
+          <java.util.concurrent.locks.ReentrantLock_-Sync>
+            <default/>
+          </java.util.concurrent.locks.ReentrantLock_-Sync>
+        </outer-class>
+      </notFull>
+      <putLock>
+        <sync class="java.util.concurrent.locks.ReentrantLock$NonfairSync" reference="../../notFull/outer-class"/>
+      </putLock>
+      <takeLock>
+        <sync class="java.util.concurrent.locks.ReentrantLock$NonfairSync" reference="../../notEmpty/outer-class"/>
+      </takeLock>
+    </default>
+    <null/>
+  </java.util.concurrent.LinkedBlockingQueue>
+</java.util.concurrent.LinkedBlockingQueue>

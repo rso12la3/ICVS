@@ -1,10 +1,11 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.activity;
 
 import java.util.LinkedList;
-import java.util.concurrent.BlockingQueue;
+
 import javax.mail.MessagingException;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.PersistentBlockingQueue;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.RemoteConnection;
 
 
@@ -12,10 +13,10 @@ public class SendRemoteMailRunnable implements Runnable
 {
     private boolean threadStarted = true;
 
-    private final BlockingQueue<MailMessage> remoteSendQueue;
+    private final PersistentBlockingQueue remoteSendQueue;
     private final RemoteConnection remoteConnection;
     
-    public SendRemoteMailRunnable(final BlockingQueue<MailMessage> remoteSendQueue,
+    public SendRemoteMailRunnable(final PersistentBlockingQueue remoteSendQueue,
         final RemoteConnection remoteConnection)
     {
         this.remoteSendQueue = remoteSendQueue;
@@ -29,10 +30,7 @@ public class SendRemoteMailRunnable implements Runnable
         {
             try
             {
-                final MailMessage message = remoteSendQueue.take();
-                final LinkedList<MailMessage> messagesToSend = new LinkedList<MailMessage>();
-                messagesToSend.add(message);
-                remoteSendQueue.drainTo(messagesToSend);
+                final LinkedList<MailMessage> messagesToSend = remoteSendQueue.getAllMessages();
                 remoteConnection.sendMail(messagesToSend);
             }
             catch(final InterruptedException e)
