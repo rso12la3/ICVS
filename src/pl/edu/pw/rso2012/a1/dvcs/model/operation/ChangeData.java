@@ -7,6 +7,11 @@ import difflib.Patch;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
 
+/**
+ * @author Oskar Leszczynski
+ * 
+ */
+
 public class ChangeData
 {
 	private String fileName;
