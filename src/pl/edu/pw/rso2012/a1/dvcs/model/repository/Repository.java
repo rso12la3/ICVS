@@ -53,13 +53,13 @@ public class Repository
 		return null;
 	}
 	
-	public PushOperation push()
+	public PushResponseOperation push()
 	{
 		
 		return null;
 	}
 	
-	public PullOperation pull()
+	public PullResponseOperation pull()
 	{
 		return null;
 	}
