@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.mail.Message;
@@ -22,9 +23,9 @@ public class ReceiveMailTask extends TimerTask
     private final LocalConnection localConnection;
     private final XStream xstream;
     private final EventFactory eventFactory;
-    private LinkedBlockingQueue<ApplicationEvent> eventQueue;
+    private LinkedBlockingDeque<ApplicationEvent> eventQueue;
     
-    public ReceiveMailTask(final LocalConnection localConnection, LinkedBlockingQueue<ApplicationEvent> eventQueue)
+    public ReceiveMailTask(final LocalConnection localConnection, LinkedBlockingDeque<ApplicationEvent> eventQueue)
     {
         this.localConnection = localConnection;
         this.eventQueue = eventQueue;

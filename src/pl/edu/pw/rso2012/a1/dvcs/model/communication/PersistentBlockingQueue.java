@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.thoughtworks.xstream.XStream;
@@ -78,7 +79,7 @@ public class PersistentBlockingQueue
         }
         catch(final FileNotFoundException e)
         {
-            queue = new LinkedBlockingQueue<MailMessage>();
+            queue = new LinkedBlockingDeque<MailMessage>();
             saveQueue();
         }
     }

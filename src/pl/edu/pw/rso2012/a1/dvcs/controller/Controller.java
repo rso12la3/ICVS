@@ -3,6 +3,7 @@ package pl.edu.pw.rso2012.a1.dvcs.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
@@ -26,14 +27,14 @@ public class Controller {
 	
 	private final Model model;
 	private final View view;
-	private final LinkedBlockingQueue<ApplicationEvent> eventQueue;
+	private final LinkedBlockingDeque<ApplicationEvent> eventQueue;
 	private boolean applicationEnd = false;
 	
 	private final HandlerMap handlerMap;
 	
 	public Controller() {
 		handlerMap = new HandlerMap(this);
-		eventQueue = new LinkedBlockingQueue<ApplicationEvent>();
+		eventQueue = new LinkedBlockingDeque<ApplicationEvent>();
 		model = new Model(eventQueue);
 		view = new View(this);
 		
@@ -110,7 +111,7 @@ public class Controller {
 		this.applicationEnd = true;
 	}
 	
-	public LinkedBlockingQueue<ApplicationEvent> getEventQueue() {
+	public LinkedBlockingDeque<ApplicationEvent> getEventQueue() {
 		return eventQueue;
 	}
 	
