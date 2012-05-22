@@ -1,7 +1,7 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.view;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 
@@ -12,16 +12,16 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
  */
 public class ShowRepositoryEvent extends ApplicationEvent {
 	
-	private final List<String> versionedFilePaths;
+	private final Set<String> versionedFilePaths;
 	private final File rootDirectory;
 	
-	public ShowRepositoryEvent(final File rootDirectory, final List<String> versionedFilePaths) {
+	public ShowRepositoryEvent(final File rootDirectory, final Set<String> versionedFilePaths) {
 		super();
 		this.rootDirectory = rootDirectory;
 		this.versionedFilePaths = versionedFilePaths;
 	}
 
-	public List<String> getVersionedFilePaths() {
+	public Set<String> getVersionedFilePaths() {
 		return versionedFilePaths;
 	}
 

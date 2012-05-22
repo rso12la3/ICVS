@@ -65,7 +65,7 @@ public class FoldersTreeComp implements ActionListener {
 		return tree;
 	}
 	
-	public void setFiles(File rootDirectory, List<String> versionedFilePaths) {
+	public void setFiles(File rootDirectory, Set<String> versionedFilePaths) {
 		TreeNode rootNode = FolderTreeUtils.createTree(rootDirectory, versionedFilePaths);
 		mTree = createJTree(rootNode);
 		mScrollPane.setViewportView(mTree);

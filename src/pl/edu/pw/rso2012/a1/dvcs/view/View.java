@@ -89,7 +89,7 @@ public class View extends JFrame {
 		mMenuBar.setEnabledCreateRepository();
 	}
 	
-	public void showRepositoryFolderView(File rootDirectory, List<String> versionedFilePaths) {
+	public void showRepositoryFolderView(File rootDirectory, Set<String> versionedFilePaths) {
 		Log.o(TAG, Log.getCurrentMethodName());
 		
 		mMenuBar.setEnabledRepositoryCreated();

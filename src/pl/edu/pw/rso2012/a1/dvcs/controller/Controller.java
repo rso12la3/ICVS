@@ -1,5 +1,6 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,6 +14,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.mapper.HandlerMap;
 import pl.edu.pw.rso2012.a1.dvcs.model.Model;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.view.View;
 
 public class Controller {
@@ -34,25 +36,36 @@ public class Controller {
 		eventQueue = new LinkedBlockingQueue<ApplicationEvent>();
 		model = new Model(eventQueue);
 		view = new View(this);
-		Configuration.getInstance();
 		
-		// FIXME: event should be sent based on configuration - this is just for
-		// testing
-		boolean test_IsRepositoryCreated = true;
-		//java.io.File test_RootDir = new java.io.File(".");
-		java.io.File test_RootDir = new java.io.File("C:\\android-sdk\\tools");
-		List<String> test_Versioned = new ArrayList<String>();
-		test_Versioned.add("Config.xml");
-		test_Versioned.add("src\\pl\\edu\\pw\\rso2012\\a1\\dvcs\\Dvcs.java");
-		test_Versioned.add("android.bat");
-		test_Versioned.add("adb_has_moved.txt");
-		
-		
-		if (test_IsRepositoryCreated) {
-			onEvent(new ShowRepositoryEvent(test_RootDir, test_Versioned));
-		} else {
+		Configuration configuration = Configuration.getInstance();
+		RepositoryConfiguration repoConfig = configuration.getRepositoryConfiguration();
+		String rootDirAbsolutePath = repoConfig.getRepositoryAbsolutePath();
+		File rootDir = null;
+		if(rootDirAbsolutePath != null)
+			rootDir = new File(rootDirAbsolutePath);
+		if(rootDir != null){
+			onEvent(new ShowRepositoryEvent(rootDir, null));
+		}else{
 			onEvent(new ShowNoRepositoryEvent());
 		}
+		
+//		// FIXME: event should be sent based on configuration - this is just for
+//		// testing
+//		boolean test_IsRepositoryCreated = true;
+//		//java.io.File test_RootDir = new java.io.File(".");
+//		java.io.File test_RootDir = new java.io.File("C:\\android-sdk\\tools");
+//		List<String> test_Versioned = new ArrayList<String>();
+//		test_Versioned.add("Config.xml");
+//		test_Versioned.add("src\\pl\\edu\\pw\\rso2012\\a1\\dvcs\\Dvcs.java");
+//		test_Versioned.add("android.bat");
+//		test_Versioned.add("adb_has_moved.txt");
+//		
+//		
+//		if (test_IsRepositoryCreated) {
+//			onEvent(new ShowRepositoryEvent(test_RootDir, test_Versioned));
+//		} else {
+//			onEvent(new ShowNoRepositoryEvent());
+//		}
 	}
 	
 	public void run() {
