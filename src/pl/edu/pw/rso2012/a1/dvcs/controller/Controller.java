@@ -114,8 +114,11 @@ public class Controller {
 	public LinkedBlockingDeque<ApplicationEvent> getEventQueue() {
 		return eventQueue;
 	}
-	
-	public void onEvent(ApplicationEvent event) {
-		eventQueue.offer(event);
-	}
+
+    public void onEvent(ApplicationEvent event) {
+        eventQueue.offer(event);
+    }
+    public void onImportantEvent(ApplicationEvent event) {
+        eventQueue.offerLast(event);
+    }
 }
