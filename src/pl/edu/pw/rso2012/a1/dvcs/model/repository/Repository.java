@@ -6,11 +6,14 @@ package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import difflib.Patch;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.ChangeData;
@@ -94,7 +97,8 @@ public class Repository
 	{
 		List<ChangeData> changeList = prepareChangeList(commitList);
 		
-		workingCopy.recoverFiles(changeList);
+		if (!changeList.isEmpty())
+			workingCopy.recoverFiles(changeList);
 	}
 	
 	
@@ -122,40 +126,47 @@ public class Repository
 	    	CommitOperation operation;
 	    	Collections.sort(commitList);
 	    	Map<String, ChangeData> map;
-	    	Map<String, ChangeData> finalMap;
-	    	ChangeData data;
+	    	Map<String, ChangeData> finalMap, lastMap;
+	    	
+	    	ChangeData data, finalData;
 	    	
 	    	Commit lastCommit = commitList.get(commitList.size() - 1);
-//	    	finalMap = lastCommit.getCommitOperation().getMap();
-	    	Set<String> fileSet = finalMap.keySet();
+	    	finalMap = new HashMap<String, ChangeData>();
+	    	lastMap = lastCommit.getCommitOperation().getFilesDiffs();
+	    	Set<String> fileSet = lastMap.keySet();
 	    	
+	    	
+	    	//niebezpieczne kopiowanie, brak deep copy, wykonuje kopie referencji
+	    	//inicjalizacja nowej mapy wynikowej
+	    	//z pusta lista diffow
 	    	for (String filename : fileSet)
 			{
-//				finalMap.get(filename)
-	    		
+	    		finalData = new ChangeData();
+	    		finalData.setFileName(filename);
+	    		finalData.setVector(lastMap.get(filename).getVector());
+	    		finalData.setDiffList(new ArrayList<Patch>());
+	    		finalMap.put(filename, finalData);
 			}
-	    	
 	    	
 	    	
 	    	for (int i = 0; i < commitList.size(); ++i)
 			{
-				operation = commitList.get(i).getCommitOperation();
-	//			map = operation.getMap();
+				map = commitList.get(i).getCommitOperation().getFilesDiffs();
 				
 				for (String filename : fileSet)
 				{
 					data = map.get(filename);
+					finalData = map.get(filename);
 					if (data != null)
-					{
-						
-					}
+						finalData.addDiffToList(data.getDiffList());
 					else
-					{
-						
-					}
+						finalData.clearDiffList();
 				}
-				
 			}
+	    	
+	    	changeList.addAll(finalMap.values());
+	    	
+	    	return changeList;
     	}
     	else
     	{
