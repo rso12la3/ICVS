@@ -42,6 +42,12 @@ public class LogicalClock
 		return versionVector;
 	}
     
+    public void increment(final String email){
+    	int i= versionVector.get(email);
+    	i++;
+    	versionVector.put(email, i);
+    }
+    
     public CompareResult compare(final LogicalClock clock) throws ModelMethodNotImplementedException
     {
         throw new ModelMethodNotImplementedException();
