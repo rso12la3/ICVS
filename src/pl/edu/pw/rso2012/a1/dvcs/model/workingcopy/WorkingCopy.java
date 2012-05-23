@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -145,7 +146,7 @@ public class WorkingCopy extends FileSystem {
 	 * Method for commit operation
 	 */
 	
-	public Map<String,ChangeData> diffFiles(final List<String> files){
+	public Map<String,ChangeData> diffFiles(final Set<String> files){
 		
 		List<String> working = new LinkedList<String>();
 		List<String> snap = new LinkedList<String>();

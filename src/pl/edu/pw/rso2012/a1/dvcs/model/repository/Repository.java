@@ -4,7 +4,10 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
+import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
@@ -39,10 +42,12 @@ public class Repository
     
     
     
-	public CommitOperation commit(ArrayList<String> fileList)
+	public CommitOperation commit(Set<String> filesToCommit)
 	{
+		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
+		CommitOperation operation= new CommitOperation(diffResult);
 		
-		return null;
+		return operation;
 	}
 	
 	public CloneRequestOperation cloneRequest()
@@ -84,14 +89,14 @@ public class Repository
 	}
 	
 	
-	public void add(final ArrayList<String> fileList)
+	public void add(final Set<String> fileList)
 	{
-		//odwolanie do workingcopy
+		workingCopy.addFiles(fileList);
 	}
 	
-	public void delete(final ArrayList<String> fileList)
+	public void delete(final Set<String> fileList)
 	{
-		
+		workingCopy.deleteFiles(fileList);
 	}
 
     public WorkingCopy getWorkingCopy()

@@ -228,7 +228,7 @@ public abstract class FileSystem {
 	 * Method for adding files to include in versioning system
 	 */
 	
-	public void addFiles (final List<String> files){
+	public void addFiles (final Set<String> files){
 		
 		for (String str : files)
 			this.addFile(str);
@@ -244,7 +244,7 @@ public abstract class FileSystem {
 	 * Method for deleting files from versioning system
 	 */
 	
-	public void deleteFiles (final List<String> files){
+	public void deleteFiles (final Set<String> files){
 		
 		for (String str : files)
 			this.addFile(str);
