@@ -10,7 +10,7 @@ import pl.edu.pw.rso2012.a1.dvcs.model.operation.CommitOperation;
  * Napisac klasę :)
  * 
  */
-public class Commit
+public class Commit implements Comparable<Commit>
 {
     private final CommitOperation commitOperation;
     private final String revision;
@@ -30,5 +30,11 @@ public class Commit
     {
         return revision;
     }
+
+	@Override
+	public int compareTo(Commit o)
+	{
+		return this.revision.compareTo(o.getRevision());
+	}
 
 }
