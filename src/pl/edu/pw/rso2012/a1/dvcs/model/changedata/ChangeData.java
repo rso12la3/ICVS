@@ -4,10 +4,11 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.changedata;
 
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
 
 import difflib.Patch;
 
@@ -19,12 +20,12 @@ public class ChangeData {
 
 		private String filename;				 
 		private List<Patch> difflist;			
-		private Map<String,Integer> lclock;
+		private LogicalClock lclock;
 		
 		public ChangeData (final String filename){
 			this.filename=filename;
 			this.difflist=new LinkedList<Patch>();
-			this.lclock = new HashMap<String,Integer>();
+			this.lclock = new LogicalClock();
 		}
 		
 		/**
@@ -58,15 +59,7 @@ public class ChangeData {
 		 * @return the lclock
 		 */
 		public Map<String, Integer> getLclock() {
-			return lclock;
+			return lclock.getVersionVector();
 		}
-
-		/**
-		 * @param lclock the lclock to set
-		 */
-		public void setLclock(Map<String, Integer> lclock) {
-			this.lclock = lclock;
-		}
-
 		
 }
