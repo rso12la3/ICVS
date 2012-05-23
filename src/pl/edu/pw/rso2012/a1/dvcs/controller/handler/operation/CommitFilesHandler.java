@@ -16,12 +16,14 @@ public class CommitFilesHandler extends ApplicationHandler
 	{
 		super(controller);
 		// TODO Auto-generated constructor stub
+		
 	}
 	
 	@Override
 	public void handle(final ApplicationEvent event) throws HandlerNotImplementedException 
 	{
 	    throw new HandlerNotImplementedException(this);
+	    
 	}
 	
 }

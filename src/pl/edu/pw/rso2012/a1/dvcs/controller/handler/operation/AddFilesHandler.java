@@ -1,5 +1,8 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation;
 
+import java.util.List;
+import java.util.Set;
+
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
@@ -12,9 +15,12 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
  */
 public class AddFilesHandler extends ApplicationHandler 
 {
-	public AddFilesHandler(final Controller controller) 
+	private Set<String> filesSet;
+	
+	public AddFilesHandler(final Controller controller, Set<String> filesSet) 
 	{
 		super(controller);
+		this.filesSet = filesSet;
 		// TODO Auto-generated constructor stub
 	}
 	
