@@ -11,10 +11,12 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 /**
  * @author
  *
@@ -168,6 +170,18 @@ public abstract class FileSystem {
 	    }
 	    return result;
 	  } 
+	
+	/**
+	 * 
+	 * @param rootDir folder w ktorym znajduje sie repo
+	 * @return set ze sciezkami wzgledem roota do plikow wersjonowanych
+	 */
+	public Set<String> getVersionedFiles(File rootDir){
+		if(rootDir == null)
+			throw new NullPointerException();
+		
+		return Collections.emptySet();
+	}
 	
 	/*
 	 *	Method for listing files(root relative paths), tags versioned files    

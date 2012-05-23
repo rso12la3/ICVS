@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +53,7 @@ public class Mailbox
     private final SendLocalMailRunnable sendLocalMailRunnable;
     private final SendRemoteMailRunnable sendRemoteMailRunnable;
     private final ReceiveMailTask receiveMailTask;
-    public Mailbox(final LinkedBlockingQueue<ApplicationEvent> eventQueue)
+    public Mailbox(final LinkedBlockingDeque<ApplicationEvent> eventQueue)
     {
         this.scheduledExecutor = Executors.newScheduledThreadPool(1);
         this.xstream = new XStream();

@@ -22,9 +22,9 @@ public class FolderTreeUtils {
 	
 	private FolderTreeUtils() {}
 	
-	public static TreeNode createTree(File rootDirectory, List<String> versionedFilePaths) {
-		Set<String> versionedFiles = new HashSet<String>(versionedFilePaths);
-		return addNode(null, rootDirectory, versionedFiles, rootDirectory.getAbsolutePath().length());
+	public static TreeNode createTree(File rootDirectory, Set<String> versionedFilePaths) {
+		//Set<String> versionedFiles = new HashSet<String>(versionedFilePaths);
+		return addNode(null, rootDirectory, versionedFilePaths, rootDirectory.getAbsolutePath().length());
 	}
 	
 	private static DefaultMutableTreeNode addNode(DefaultMutableTreeNode currentParent, File directory,

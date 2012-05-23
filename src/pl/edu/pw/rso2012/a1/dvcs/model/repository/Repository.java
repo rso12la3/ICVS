@@ -5,7 +5,10 @@ package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 
 import java.util.ArrayList;
 
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
+import pl.edu.pw.rso2012.a1.dvcs.model.workingcopy.WorkingCopy;
 
 
 /**
@@ -15,12 +18,13 @@ import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
 public class Repository
 {
     private String absolutePath;
-//	private Snapshot snapshot;
-
+    private final WorkingCopy workingCopy;
     
     public Repository(final String absolutePath)
     {
+        RepositoryConfiguration repositoryConfiguration = Configuration.getInstance().getRepositoryConfiguration();
         this.absolutePath = absolutePath;
+        workingCopy = new WorkingCopy(repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryAbsolutePath());
     }
 
     public String getAbsolutePath()
@@ -89,6 +93,11 @@ public class Repository
 	{
 		
 	}
+
+    public WorkingCopy getWorkingCopy()
+    {
+        return workingCopy;
+    }
     
 
 }
