@@ -146,7 +146,7 @@ public class WorkingCopy extends FileSystem {
 	 * Method for commit operation
 	 */
 	
-	public Map<String,ChangeData> diffFiles(final Set<String> files){
+	public Map<String,ChangeData> diffFiles(final List<String> files){
 		
 		List<String> working = new LinkedList<String>();
 		List<String> snap = new LinkedList<String>();

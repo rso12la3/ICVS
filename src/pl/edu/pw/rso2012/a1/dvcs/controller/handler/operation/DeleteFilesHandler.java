@@ -1,5 +1,6 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
@@ -16,7 +17,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
  */
 public class DeleteFilesHandler extends ApplicationHandler 
 {
-	private Set<String> filesSet;
+	private ArrayList<String> filesSet;
 	
 	public DeleteFilesHandler(final Controller controller) 
 	{
@@ -28,7 +29,7 @@ public class DeleteFilesHandler extends ApplicationHandler
 	{
 	    if (event instanceof DeleteFilesEvent) {
 			DeleteFilesEvent ev = (DeleteFilesEvent) event;
-			filesSet= ev.getFilesToDeleteList();
+			filesSet= new ArrayList<String>(ev.getFilesToDeleteList());
 			controller.getModel().getRepository().delete(filesSet);
 		}
 	    else{

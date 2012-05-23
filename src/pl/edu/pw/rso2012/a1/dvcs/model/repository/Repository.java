@@ -4,6 +4,7 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,7 +43,7 @@ public class Repository
     
     
     
-	public CommitOperation commit(Set<String> filesToCommit)
+	public CommitOperation commit(ArrayList<String> filesToCommit)
 	{
 		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
 		CommitOperation operation= new CommitOperation(diffResult);
@@ -89,12 +90,12 @@ public class Repository
 	}
 	
 	
-	public void add(final Set<String> fileList)
+	public void add(final ArrayList<String> fileList)
 	{
 		workingCopy.addFiles(fileList);
 	}
 	
-	public void delete(final Set<String> fileList)
+	public void delete(final ArrayList<String> fileList)
 	{
 		workingCopy.deleteFiles(fileList);
 	}

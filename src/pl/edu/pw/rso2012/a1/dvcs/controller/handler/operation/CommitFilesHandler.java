@@ -1,5 +1,6 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
@@ -21,7 +22,7 @@ import pl.edu.pw.rso2012.a1.dvcs.model.operation.CommitOperation;
  */
 public class CommitFilesHandler extends ApplicationHandler 
 {
-	private Set<String> filesToCommit;
+	private ArrayList<String> filesToCommit;
 	
 	public CommitFilesHandler(final Controller controller) 
 	{
@@ -34,7 +35,7 @@ public class CommitFilesHandler extends ApplicationHandler
 	{
 	    if (event instanceof CommitFilesEvent) {
 			CommitFilesEvent ev = (CommitFilesEvent) event;
-			filesToCommit = ev.getFilesToCommit();
+			filesToCommit = new ArrayList<String>(ev.getFilesToCommit());
 			CommitOperation resutl= controller.getModel().getRepository().commit(filesToCommit);
 			
 			XStream xStream= new XStream();
@@ -42,6 +43,7 @@ public class CommitFilesHandler extends ApplicationHandler
 			MailMessage message= new MailMessage();
 			message.setBody(content);
 			message.setSubject("commit");		//NJ: jaki powinien byc temat wiadomosci??
+			
 			
 			try {
 				controller.getModel().getMailbox().putMessage(message);
