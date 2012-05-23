@@ -5,8 +5,9 @@ package pl.edu.pw.rso2012.a1.dvcs.model.newdata;
 
 
 
-import java.util.HashMap;
 import java.util.Map;
+
+import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
 
 
 /**
@@ -16,7 +17,8 @@ import java.util.Map;
 public class NewData {
 	private String filename;				 
 	private String filecontent;			
-	private Map<String,Integer> lclock;
+	private LogicalClock lclock;
+	
 	/**
 	 * @return the filename
 	 */
@@ -24,7 +26,7 @@ public class NewData {
 	public NewData (final String filename){
 		this.filename=filename;
 		this.filecontent="";
-		this.lclock = new HashMap<String,Integer>();
+		this.lclock = new LogicalClock();
 	}
 	
 	public String getFilename() {
@@ -52,13 +54,7 @@ public class NewData {
 	 * @return the lclock
 	 */
 	public Map<String,Integer> getLclock() {
-		return lclock;
-	}
-	/**
-	 * @param lclock the lclock to set
-	 */
-	public void setLclock(Map<String,Integer> lclock) {
-		this.lclock = lclock;
+		return lclock.getVersionVector();
 	}
 
 }

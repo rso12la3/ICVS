@@ -11,12 +11,14 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
 /**
  * @author
  *
@@ -171,52 +173,46 @@ public abstract class FileSystem {
 	    return result;
 	  } 
 	
+	/*
+	 *	Method for listing versioned files with relative path    
+	 */
+	
 	/**
 	 * 
 	 * @param rootDir folder w ktorym znajduje sie repo
 	 * @return set ze sciezkami wzgledem roota do plikow wersjonowanych
 	 */
 	public Set<String> getVersionedFiles(File rootDir){
-		if(rootDir == null)
+		if(!rootDir.exists())
 			throw new NullPointerException();
 		
-		return Collections.emptySet();
+		return new HashSet<String>(this.getFileNames());
 	}
 	
 	/*
-	 *	Method for listing files(root relative paths), tags versioned files    
+	 * Method for retrieving logical clock values 
 	 */
 	
-	public Map<String,Boolean> dirIsVersioned(final String pathname) {
-	    Map<String,Boolean> map = new HashMap<String,Boolean>();
-  		List<String> result = new LinkedList<String>();
-	    java.io.File[] filesAndDirs = new java.io.File(pathname).listFiles(this.filter);
-
-	    for(java.io.File file : Arrays.asList(filesAndDirs)) {
-	      if(file.isFile()){
-	    	result.add(file.getName());
-	      }
-	      
-	      if (file.isDirectory() ) {
-	       
-	        List<String> nextResult = dirRecursiveRel(file.getAbsolutePath());
-	        for(String str : nextResult)
-	        	result.add(file.getName() + java.io.File.separatorChar + str);
-	      }
-	    }
-	    
-	    for(String str : result){
-	    	if(this.getFileNames().contains(str))
-	    		map.put(str,true);
-	    	else
-	    		map.put(str, false);
-	    }
-	    return map;
-	    
-	  }  	
+	public LogicalClock getLogicalClock(String filename){
+		LogicalClock cl = new LogicalClock();
+		
+		cl.getVersionVector().putAll(this.filelist.get(filename));
+		return cl;
+	}
 	
+	/*
+	 * Method for comparing provided file with working copy equivalent
+	 */
+	boolean isFileDifferent(String content, String filename){
+		List<String> l = this.readFile(this.getRoot()+File.separatorChar+filename);
+		String s="";
+		
+		for (String str2 : l)
+			s=s+str2+"\n";
+		
+		return s.equals(content);
+	}
 
-	
 	public void addFile (final String file){
 		
 		if(!this.filelist.containsKey(file))

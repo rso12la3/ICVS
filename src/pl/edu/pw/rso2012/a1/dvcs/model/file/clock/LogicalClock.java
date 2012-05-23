@@ -38,6 +38,10 @@ public class LogicalClock
         versionVector.put(email, versionNumber);
     }
     
+    public Map<String, Integer> getVersionVector() {
+		return versionVector;
+	}
+    
     public CompareResult compare(final LogicalClock clock) throws ModelMethodNotImplementedException
     {
         throw new ModelMethodNotImplementedException();

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,10 +49,12 @@ public class Repository
     
     
     
-	public CommitOperation commit(ArrayList<String> fileList)
+	public CommitOperation commit(ArrayList<String> filesToCommit)
 	{
+		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
+		CommitOperation operation= new CommitOperation(diffResult);
 		
-		return null;
+		return operation;
 	}
 	
 	public CloneRequestOperation cloneRequest(final Controller controller)
@@ -97,12 +100,12 @@ public class Repository
 	
 	public void add(final ArrayList<String> fileList)
 	{
-		//odwolanie do workingcopy
+		workingCopy.addFiles(fileList);
 	}
 	
 	public void delete(final ArrayList<String> fileList)
 	{
-		
+		workingCopy.deleteFiles(fileList);
 	}
 
     public WorkingCopy getWorkingCopy()

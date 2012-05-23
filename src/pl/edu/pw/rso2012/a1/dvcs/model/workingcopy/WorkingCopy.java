@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -51,7 +52,7 @@ public class WorkingCopy extends FileSystem {
 
 		File f = new File(root+ File.separatorChar + this.metadata_filename);
 		if(f.exists())
-			this.readMetadata(this.getRoot());
+			this.setFilelist(this.readMetadata(this.getRoot()));
 	}
 	
 	public SnapShot getSnapshot(){
@@ -108,7 +109,7 @@ public class WorkingCopy extends FileSystem {
 	
 	/**
 	 * Method for checkout/clone operations
-	 * Note: Works on full set of files, overwrites existing snapshot and versioning metadata, not included files remain
+	 * Note: Works on full set of files, overwrites existing snapshot and versioning metadata
 	 */
 	
 	public void recoverFiles(final List<ChangeData> cd){
@@ -145,13 +146,17 @@ public class WorkingCopy extends FileSystem {
 	 * Method for commit operation
 	 */
 	
-	public Map<String,ChangeData> diffFiles(final List<String> files){
+	public Map<String,ChangeData> diffFiles(final List<String> fl){
 		
 		List<String> working = new LinkedList<String>();
 		List<String> snap = new LinkedList<String>();
 		Map<String,ChangeData> cm = new HashMap<String,ChangeData>();
+		List<String> files= fl;
 		
-		for (String str : files){
+		if(fl == null || fl.isEmpty())
+			files=this.getFileNames();
+		
+		for (String str : files){//isempty
 			File f = new File(this.getSnapshot().getRoot() + File.separatorChar +str);
 			if(!f.exists())
 				this.pCreateFile(this.getSnapshot().getRoot() + File.separatorChar +str);
@@ -163,7 +168,8 @@ public class WorkingCopy extends FileSystem {
 		
 		cm.get(str).getDifflist().add(this.getSnapshot().getDiff(snap, working));
 		
-		if(!cm.get(str).getDifflist().isEmpty())
+		
+		if(!cm.get(str).getDifflist().get(0).getDeltas().isEmpty())
 			this.getFilelist().get(str).put(this.getAddress(), this.getFilelist().get(str).get(this.getAddress()) + 1);
 		
 		cm.get(str).getLclock().putAll(this.getFilelist().get(str));
@@ -231,7 +237,7 @@ public class WorkingCopy extends FileSystem {
 		String s ="";
 		
 		for ( String str : mp.keySet()){
-			this.getFilelist().remove(str);
+//			this.getFilelist().remove(str);
 			this.getFilelist().put(str, mp.get(str).getLclock());
 			
 			BufferedReader reader = new BufferedReader(new StringReader(mp.get(str).getFileContent()));
