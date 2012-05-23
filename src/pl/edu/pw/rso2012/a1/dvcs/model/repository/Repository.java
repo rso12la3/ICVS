@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
-import pl.edu.pw.rso2012.a1.dvcs.model.operation.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
@@ -30,10 +29,10 @@ public class Repository
     private String absolutePath;
     private final WorkingCopy workingCopy;
     
-    public Repository(final String absolutePath)
+    public Repository()
     {
         RepositoryConfiguration repositoryConfiguration = Configuration.getInstance().getRepositoryConfiguration();
-        this.absolutePath = absolutePath;
+        this.absolutePath = repositoryConfiguration.getRepositoryAbsolutePath();
         workingCopy = new WorkingCopy(repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryAbsolutePath());
     }
 
@@ -51,10 +50,13 @@ public class Repository
     
 	public CommitOperation commit(ArrayList<String> filesToCommit)
 	{
-		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
-		CommitOperation operation= new CommitOperation(diffResult);
+//		FIXME !!
+		return null;
 		
-		return operation;
+//		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
+//		CommitOperation operation= new CommitOperation(diffResult);
+//		
+//		return operation;
 	}
 	
 	public CloneRequestOperation cloneRequest(final Controller controller)
@@ -93,8 +95,8 @@ public class Repository
 	public void update(List<Commit> commitList)
 	{
 		List<ChangeData> changeList = prepareChangeList(commitList);
-		
-		workingCopy.recoverFiles(changeList);
+//		FIXME !!
+//		workingCopy.recoverFiles(changeList);
 	}
 	
 	
@@ -113,56 +115,61 @@ public class Repository
         return workingCopy;
     }
     
-    
+//	FIXME !! 
     private List<ChangeData> prepareChangeList(final List<Commit> commitList)
     {
-    	List<ChangeData> changeList = new ArrayList<ChangeData>();
-    	if (commitList != null && !commitList.isEmpty())
-    	{
-	    	CommitOperation operation;
-	    	Collections.sort(commitList);
-	    	Map<String, ChangeData> map;
-	    	Map<String, ChangeData> finalMap;
-	    	ChangeData data;
-	    	
-	    	Commit lastCommit = commitList.get(commitList.size() - 1);
-//	    	finalMap = lastCommit.getCommitOperation().getMap();
-	    	Set<String> fileSet = finalMap.keySet();
-	    	
-	    	for (String filename : fileSet)
-			{
-//				finalMap.get(filename)
-	    		
-			}
-	    	
-	    	
-	    	
-	    	for (int i = 0; i < commitList.size(); ++i)
-			{
-				operation = commitList.get(i).getCommitOperation();
-	//			map = operation.getMap();
-				
-				for (String filename : fileSet)
-				{
-					data = map.get(filename);
-					if (data != null)
-					{
-						
-					}
-					else
-					{
-						
-					}
-				}
-				
-			}
-    	}
-    	else
-    	{
-    		//TODO zastanowic sie czy dla null nie powinno rzucac wyjatkiem
-    		return changeList;
-    	}
+    	return null;
     }
+//    private List<ChangeData> prepareChangeList(final List<Commit> commitList)
+//    {
+//    	List<ChangeData> changeList = new ArrayList<ChangeData>();
+//    	if (commitList != null && !commitList.isEmpty())
+//    	{
+//	    	CommitOperation operation;
+//	    	
+//	    	Collections.sort(commitList);
+//	    	Map<String, ChangeData> map;
+//	    	Map<String, ChangeData> finalMap;
+//	    	ChangeData data;
+//	    	
+//	    	Commit lastCommit = commitList.get(commitList.size() - 1);
+////	    	finalMap = lastCommit.getCommitOperation().getMap();
+//	    	Set<String> fileSet = finalMap.keySet();
+//	    	
+//	    	for (String filename : fileSet)
+//			{
+////				finalMap.get(filename)
+//	    		
+//			}
+//	    	
+//	    	
+//	    	
+//	    	for (int i = 0; i < commitList.size(); ++i)
+//			{
+//				operation = commitList.get(i).getCommitOperation();
+//	//			map = operation.getMap();
+//				
+//				for (String filename : fileSet)
+//				{
+//					data = map.get(filename);
+//					if (data != null)
+//					{
+//						
+//					}
+//					else
+//					{
+//						
+//					}
+//				}
+//				
+//			}
+//    	}
+//    	else
+//    	{
+//    		//TODO zastanowic sie czy dla null nie powinno rzucac wyjatkiem
+//    		return changeList;
+//    	}
+//    }
     
    
     

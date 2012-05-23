@@ -77,5 +77,9 @@ public final class Configuration {
     {
         return repositoryConfiguration;
     }
+
+	public boolean isInitialized() {
+		return repositoryConfiguration.isInitialized();
+	}
  
 }
