@@ -4,11 +4,17 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
+import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.ChangeData;
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
@@ -51,42 +57,44 @@ public class Repository
 		return operation;
 	}
 	
-	public CloneRequestOperation cloneRequest()
+	public CloneRequestOperation cloneRequest(final Controller controller)
 	{
 		return new CloneRequestOperation();
 	}
 	
-	public CloneOperation clone()
+	public CloneOperation clone(final Controller controller)
 	{
 		// bierze liste z ostatniego commita
 		// diff przechowywany w mapie
 		return null;
 	}
 	
-	public PushResponseOperation push()
+	public PushResponseOperation push(final Controller controller)
 	{
 		
 		return null;
 	}
 	
-	public PullResponseOperation pull()
+	public PullResponseOperation pull(final Controller controller)
 	{
 		return null;
 	}
 	
-	public PushRequestOperation pushRequest(ArrayList<String> fileList)
+	public PushRequestOperation pushRequest(Set<String> fileList, final Controller controller)
 	{
 		return null;
 	}
 	
-	public PullRequestOperation pullReqeust(ArrayList<String> fileList)
+	public PullRequestOperation pullReqeust(Set<String> fileList, final Controller controller)
 	{
 		return null;
 	}
 	
-	public void update(String version)
+	public void update(List<Commit> commitList)
 	{
+		List<ChangeData> changeList = prepareChangeList(commitList);
 		
+		workingCopy.recoverFiles(changeList);
 	}
 	
 	
@@ -105,5 +113,57 @@ public class Repository
         return workingCopy;
     }
     
-
+    
+    private List<ChangeData> prepareChangeList(final List<Commit> commitList)
+    {
+    	List<ChangeData> changeList = new ArrayList<ChangeData>();
+    	if (commitList != null && !commitList.isEmpty())
+    	{
+	    	CommitOperation operation;
+	    	Collections.sort(commitList);
+	    	Map<String, ChangeData> map;
+	    	Map<String, ChangeData> finalMap;
+	    	ChangeData data;
+	    	
+	    	Commit lastCommit = commitList.get(commitList.size() - 1);
+//	    	finalMap = lastCommit.getCommitOperation().getMap();
+	    	Set<String> fileSet = finalMap.keySet();
+	    	
+	    	for (String filename : fileSet)
+			{
+//				finalMap.get(filename)
+	    		
+			}
+	    	
+	    	
+	    	
+	    	for (int i = 0; i < commitList.size(); ++i)
+			{
+				operation = commitList.get(i).getCommitOperation();
+	//			map = operation.getMap();
+				
+				for (String filename : fileSet)
+				{
+					data = map.get(filename);
+					if (data != null)
+					{
+						
+					}
+					else
+					{
+						
+					}
+				}
+				
+			}
+    	}
+    	else
+    	{
+    		//TODO zastanowic sie czy dla null nie powinno rzucac wyjatkiem
+    		return changeList;
+    	}
+    }
+    
+   
+    
 }
