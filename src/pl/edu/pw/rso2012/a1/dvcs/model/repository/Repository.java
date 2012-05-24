@@ -13,11 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.thoughtworks.xstream.XStream;
+
 import difflib.Patch;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
@@ -32,12 +35,14 @@ public class Repository
 {
     private String absolutePath;
     private final WorkingCopy workingCopy;
+    private final XStream xStream;
     
     public Repository()
     {
         RepositoryConfiguration repositoryConfiguration = Configuration.getInstance().getRepositoryConfiguration();
         this.absolutePath = repositoryConfiguration.getRepositoryAbsolutePath();
         workingCopy = new WorkingCopy(repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryAbsolutePath());
+        this.xStream = new XStream();
     }
 
     public String getAbsolutePath()
@@ -60,19 +65,41 @@ public class Repository
 		return operation;
 	}
 	
-	public CloneRequestOperation cloneRequest(final Controller controller)
+	public CloneRequestOperation cloneRequest()
 	{
-		return new CloneRequestOperation();
+		return new CloneRequestOperation(this.getWorkingCopy().getAddress());
 	}
 	
 	
 	
-	public CloneOperation clone(final Controller controller)
+	public CloneOperation prepareClone(final List<Commit> commitList)
 	{
 		// bierze liste z ostatniego commita
 		// diff przechowywany w mapie
-		return null;
+		return new CloneOperation(commitList, workingCopy.getAddress());
 	}
+	
+	public void clone(final Controller controller, CloneOperation operation) throws InterruptedException
+	{
+		//Odtwarzanie repozytorium
+		List<Commit> commitList = operation.getCommitList();
+		List<ChangeData> changeList = prepareChangeList(commitList);
+		String body;
+		MailMessage message;
+		
+		//TODO Trzeba dodac do MailBox metode setCommits(List<Commit>)
+		//FIXME: rozwiazanie tymczasowe do poprawki jak bedzie metoda
+		for (Commit commit : commitList)
+		{
+			body = OperationToXML(commit.getCommitOperation());
+			message = new MailMessage(workingCopy.getAddress(), "commit " + commit.getRevision(), body);
+			controller.getModel().getMailbox().putMessage(message);
+		}
+		
+		if (!changeList.isEmpty())
+			workingCopy.recoverFiles(changeList);
+	}
+	
 	
 	public PushResponseOperation push(final Controller controller)
 	{
@@ -175,6 +202,14 @@ public class Repository
     	}
     }
     
-   
     
+    public String OperationToXML(AbstractOperation operation)
+    {
+    	return xStream.toXML(operation);
+    }
+   
+    public AbstractOperation OperationFromXML(String xml)
+    {
+    	return (AbstractOperation)xStream.fromXML(xml);
+    }
 }

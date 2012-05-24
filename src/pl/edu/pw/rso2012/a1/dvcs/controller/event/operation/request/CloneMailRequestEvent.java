@@ -4,6 +4,7 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.CloneRequestOperation;
 
 /**
  * 
@@ -21,16 +22,16 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 
 public class CloneMailRequestEvent  extends ApplicationEvent{
 	
-    private final String email;
+    private final CloneRequestOperation operation;
     
-	public CloneMailRequestEvent(final String email)
+	public CloneMailRequestEvent(final CloneRequestOperation operation)
     {
-        this.email = email;
+        this.operation = operation;
     }
-	
-    public String getEmail()
-    {
-        return email;
-    }
+
+	public CloneRequestOperation getOperation()
+	{
+		return operation;
+	}
 	
 }
