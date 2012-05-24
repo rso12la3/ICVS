@@ -94,6 +94,7 @@ public class Repository
 			body = OperationToXML(commit.getCommitOperation());
 			message = new MailMessage(workingCopy.getAddress(), "commit " + commit.getRevision(), body);
 			controller.getModel().getMailbox().putMessage(message);
+//			Map<String, NewData> map = workingCopy.getSnapshotFiles(fileList);
 		}
 		
 		if (!changeList.isEmpty())
