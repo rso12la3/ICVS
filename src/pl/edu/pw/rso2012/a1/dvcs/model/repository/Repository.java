@@ -54,18 +54,18 @@ public class Repository
     
 	public CommitOperation commit(ArrayList<String> filesToCommit)
 	{
-//		FIXME: nie kompiluje sie!
-		return null;
-//		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
-//		CommitOperation operation= new CommitOperation(diffResult);
-//		
-//		return operation;
+		Map<String,ChangeData> diffResult= workingCopy.diffFiles(filesToCommit);
+		CommitOperation operation= new CommitOperation(diffResult);
+		
+		return operation;
 	}
 	
 	public CloneRequestOperation cloneRequest(final Controller controller)
 	{
 		return new CloneRequestOperation();
 	}
+	
+	
 	
 	public CloneOperation clone(final Controller controller)
 	{
@@ -99,9 +99,8 @@ public class Repository
 	{
 		List<ChangeData> changeList = prepareChangeList(commitList);
 
-//		FIXME: nie kompiluje sie!
-//		if (!changeList.isEmpty())
-//			workingCopy.recoverFiles(changeList);
+		if (!changeList.isEmpty())
+			workingCopy.recoverFiles(changeList);
 	}
 	
 	

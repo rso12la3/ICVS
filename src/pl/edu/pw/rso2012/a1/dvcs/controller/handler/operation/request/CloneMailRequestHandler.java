@@ -15,13 +15,14 @@ public class CloneMailRequestHandler extends ApplicationHandler
 	public CloneMailRequestHandler(final Controller controller) 
 	{
 		super(controller);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void handle(final ApplicationEvent event) throws HandlerNotImplementedException 
 	{
 	    throw new HandlerNotImplementedException(this);
+	    
+	    
 	}
 	
 }
