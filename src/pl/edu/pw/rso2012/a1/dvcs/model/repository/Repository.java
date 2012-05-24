@@ -16,7 +16,7 @@ import java.util.Set;
 import difflib.Patch;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
-import pl.edu.pw.rso2012.a1.dvcs.model.operation.ChangeData;
+import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
@@ -144,10 +144,8 @@ public class Repository
 	    	//z pusta lista diffow
 	    	for (String filename : fileSet)
 			{
-	    		finalData = new ChangeData();
-	    		finalData.setFileName(filename);
+	    		finalData = new ChangeData(filename);
 	    		finalData.setVector(lastMap.get(filename).getVector());
-	    		finalData.setDiffList(new ArrayList<Patch>());
 	    		finalMap.put(filename, finalData);
 			}
 	    	
@@ -161,7 +159,7 @@ public class Repository
 					data = map.get(filename);
 					finalData = map.get(filename);
 					if (data != null)
-						finalData.addDiffToList(data.getDiffList());
+						finalData.addDiffToList(data.getDifflist());
 					else
 						finalData.clearDiffList();
 				}

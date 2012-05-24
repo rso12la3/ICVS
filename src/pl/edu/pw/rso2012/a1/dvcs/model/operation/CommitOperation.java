@@ -2,7 +2,7 @@ package pl.edu.pw.rso2012.a1.dvcs.model.operation;
 
 import java.util.Map;
 
-import pl.edu.pw.rso2012.a1.dvcs.model.operation.ChangeData;
+import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 
 /*
  * Opakowuje informacje niezbedne do wykonania commita

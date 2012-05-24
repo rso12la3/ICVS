@@ -33,6 +33,7 @@ public class UpdateHandler extends ApplicationHandler {
 			List<Commit> commitList = controller.getModel().getMailbox().getCommitsBefore(version);
 			controller.getModel().getRepository().update(commitList);
 			controller.onEvent(new UpdateCompleteEvent());
+			
 		}
 		catch (ClassCastException e)
 		{
