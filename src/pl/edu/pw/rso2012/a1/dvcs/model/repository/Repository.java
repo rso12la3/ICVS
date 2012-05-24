@@ -6,14 +6,17 @@ package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import difflib.Patch;
+
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
-import pl.edu.pw.rso2012.a1.dvcs.model.operation.ChangeData;
+import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
@@ -30,10 +33,10 @@ public class Repository
     private String absolutePath;
     private final WorkingCopy workingCopy;
     
-    public Repository(final String absolutePath)
+    public Repository()
     {
         RepositoryConfiguration repositoryConfiguration = Configuration.getInstance().getRepositoryConfiguration();
-        this.absolutePath = absolutePath;
+        this.absolutePath = repositoryConfiguration.getRepositoryAbsolutePath();
         workingCopy = new WorkingCopy(repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryAbsolutePath());
     }
 
@@ -61,6 +64,8 @@ public class Repository
 	{
 		return new CloneRequestOperation();
 	}
+	
+	
 	
 	public CloneOperation clone(final Controller controller)
 	{
@@ -93,8 +98,9 @@ public class Repository
 	public void update(List<Commit> commitList)
 	{
 		List<ChangeData> changeList = prepareChangeList(commitList);
-		
-		workingCopy.recoverFiles(changeList);
+
+		if (!changeList.isEmpty())
+			workingCopy.recoverFiles(changeList);
 	}
 	
 	
@@ -122,40 +128,45 @@ public class Repository
 	    	CommitOperation operation;
 	    	Collections.sort(commitList);
 	    	Map<String, ChangeData> map;
-	    	Map<String, ChangeData> finalMap;
-	    	ChangeData data;
+	    	Map<String, ChangeData> finalMap, lastMap;
+	    	
+	    	ChangeData data, finalData;
 	    	
 	    	Commit lastCommit = commitList.get(commitList.size() - 1);
-//	    	finalMap = lastCommit.getCommitOperation().getMap();
-	    	Set<String> fileSet = finalMap.keySet();
+	    	finalMap = new HashMap<String, ChangeData>();
+	    	lastMap = lastCommit.getCommitOperation().getFilesDiffs();
+	    	Set<String> fileSet = lastMap.keySet();
 	    	
+	    	
+	    	//niebezpieczne kopiowanie, brak deep copy, wykonuje kopie referencji
+	    	//inicjalizacja nowej mapy wynikowej
+	    	//z pusta lista diffow
 	    	for (String filename : fileSet)
 			{
-//				finalMap.get(filename)
-	    		
+	    		finalData = new ChangeData(filename);
+	    		finalData.setVector(lastMap.get(filename).getVector());
+	    		finalMap.put(filename, finalData);
 			}
-	    	
 	    	
 	    	
 	    	for (int i = 0; i < commitList.size(); ++i)
 			{
-				operation = commitList.get(i).getCommitOperation();
-	//			map = operation.getMap();
+				map = commitList.get(i).getCommitOperation().getFilesDiffs();
 				
 				for (String filename : fileSet)
 				{
 					data = map.get(filename);
+					finalData = map.get(filename);
 					if (data != null)
-					{
-						
-					}
+						finalData.addDiffToList(data.getDifflist());
 					else
-					{
-						
-					}
+						finalData.clearDiffList();
 				}
-				
 			}
+	    	
+	    	changeList.addAll(finalMap.values());
+	    	
+	    	return changeList;
     	}
     	else
     	{

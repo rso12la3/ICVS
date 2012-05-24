@@ -3,6 +3,8 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.model.configuration;
 
+import pl.edu.pw.rso2012.a1.dvcs.view.utils.TextUtils;
+
 /**
  * @author Grzegorz Sancewicz
  * 
@@ -41,5 +43,9 @@ public class RepositoryConfiguration
     public void setRepositoryAbsolutePath(String repositoryAbsolutePath)
     {
         this.repositoryAbsolutePath = repositoryAbsolutePath;
+    }
+    
+    public boolean isInitialized(){
+    	return (!TextUtils.isEmpty(repositoryAddress) && !TextUtils.isEmpty(repositoryPass) && !TextUtils.isEmpty(repositoryAbsolutePath));
     }
 }

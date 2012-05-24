@@ -28,6 +28,7 @@ public class ChangeData {
 			this.lclock = new LogicalClock();
 		}
 		
+		
 		/**
 		 * @return the filename
 		 */
@@ -60,6 +61,31 @@ public class ChangeData {
 		 */
 		public Map<String, Integer> getLclock() {
 			return lclock.getVersionVector();
+		}
+		
+		public void addDiffToList(Patch patch)
+		{
+			difflist.add(patch);
+		}
+		
+		public void addDiffToList(List<Patch> patch)
+		{
+			difflist.addAll(patch);
+		}
+		
+		public void clearDiffList()
+		{
+			difflist.clear();
+		}
+		
+		public LogicalClock getVector()
+		{
+			return lclock;
+		}
+		
+		public void setVector(LogicalClock vector)
+		{
+			this.lclock = vector;
 		}
 		
 }
