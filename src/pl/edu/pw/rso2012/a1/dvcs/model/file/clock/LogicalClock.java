@@ -9,7 +9,7 @@ import java.util.Map;
 import pl.edu.pw.rso2012.a1.dvcs.model.exception.ModelMethodNotImplementedException;
 
 /**
- * @author Grzegorz Sancewicz
+ * @author Grzegorz Sancewicz && Oskar Leszczynski(compare, merge, createMissingValue)
  * 
  */
 public class LogicalClock {
@@ -110,16 +110,20 @@ public class LogicalClock {
 	
 	//scala dwa zegary po scaleniu plikow
 	//wykonywac po kazdym merge na pliku
+	//nie wymaga znormalizowanych zegarow
 	public void merge(LogicalClock otherClock)
 	{
 		Map<String, Integer> otherVector = otherClock.getVersionVector();
-		
-		this.createMissingValue(otherClock);
+		Integer value, otherValue;
 		
 		for (String key : otherVector.keySet())
 		{
-			//TODO wypelnic
-			
+			otherValue = otherVector.get(key);
+			value = versionVector.get(key);
+			if (value == null || otherValue > value)
+			{
+				versionVector.put(key, new Integer(otherValue));
+			}
 		}
 	}
 }
