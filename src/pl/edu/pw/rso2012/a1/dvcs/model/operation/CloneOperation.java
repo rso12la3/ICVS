@@ -1,6 +1,9 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.operation;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 
 /**
  * @author Oskar Leszczynski
@@ -9,5 +12,24 @@ import java.util.ArrayList;
 
 public class CloneOperation extends AbstractOperation
 {
-	private ArrayList<CommitOperation> commitList;
+	private final List<Commit> commitList;
+	private final String email;
+
+	public CloneOperation(List<Commit> commitList, String email)
+	{
+		super();
+		this.commitList = commitList;
+		this.email = email;
+	}
+
+	public List<Commit> getCommitList()
+	{
+		return commitList;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+	
 }
