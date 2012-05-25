@@ -44,10 +44,6 @@ public class PullMailRequestHandler extends ApplicationHandler
 		{
 			controller.onImportantEvent(new ShowErrorEvent("Wystąpił nieoczekiwany błąd, kod: 1"));
 		}
-		catch (MessagingException e)
-		{
-			controller.onImportantEvent(new ShowErrorEvent("Wystąpił nieoczekiwany błąd, kod: 2"));
-		}
 		catch (InterruptedException e)
 		{
 			controller.onImportantEvent(new ShowErrorEvent("Wystąpił nieoczekiwany błąd, kod: 3"));
