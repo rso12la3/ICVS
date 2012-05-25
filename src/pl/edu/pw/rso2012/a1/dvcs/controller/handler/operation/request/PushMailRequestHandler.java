@@ -32,7 +32,7 @@ public class PushMailRequestHandler extends ApplicationHandler
 		{
 			PushRequestOperation requestOperation =((PushMailRequestEvent)event).getOperation();
 			
-
+			//preparePush i przepisanie danych do innej klasy dla zachowania konwensji operacji wystepujacej w clone, pull
 			PushOperation operation = controller.getModel().getRepository().preparePush(requestOperation.getData());
 			PushResponseOperation opResult= controller.getModel().getRepository().push(controller, operation);
 			

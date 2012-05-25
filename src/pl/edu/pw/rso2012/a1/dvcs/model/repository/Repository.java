@@ -59,7 +59,9 @@ public class Repository {
 		Map<String, ChangeData> diffResult = workingCopy
 				.diffFiles(filesToCommit);
 		CommitOperation operation = new CommitOperation(diffResult);
-
+		
+		//TODO sprawdzic czy workingCopy tworzy kopie bo chyba nie tworzy kopii z working copy
+		
 		return operation;
 	}
 
@@ -132,10 +134,9 @@ public class Repository {
 		return operation;
 	}
 
-	public PullRequestOperation pullReqeust() {
-		PullRequestOperation operation = new PullRequestOperation(
-				workingCopy.getAddress());
-		return operation;
+	public PullRequestOperation pullRequest()
+	{
+		return new PullRequestOperation(workingCopy.getAddress());
 	}
 
 	public void update(List<Commit> commitList) {

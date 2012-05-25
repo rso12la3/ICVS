@@ -36,12 +36,12 @@ public class CommitFilesHandler extends ApplicationHandler
 	    if (event instanceof CommitFilesEvent) {
 			CommitFilesEvent ev = (CommitFilesEvent) event;
 			filesToCommit = new ArrayList<String>(ev.getFilesToCommit());
-			CommitOperation resutl= controller.getModel().getRepository().commit(filesToCommit);
+			CommitOperation result= controller.getModel().getRepository().commit(filesToCommit);
 			
-			XStream xStream= new XStream();
-			String content= xStream.toXML(resutl);
+			String content= controller.getModel().getRepository().OperationToXML(result);
 			MailMessage message= new MailMessage();
 			message.setBody(content);
+			//TODO dodac dopisywanie wersji gdy Grzesiek napisze odpowiednia metode
 			message.setSubject("commit");		//NJ: jaki powinien byc temat wiadomosci??
 			
 			
@@ -53,12 +53,7 @@ public class CommitFilesHandler extends ApplicationHandler
 			}
 		}
 	    else{
-	    	try {
-				controller.getEventQueue().put(new ShowErrorEvent("casting to CommitFilesEvent failed!"));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	    		controller.onImportantEvent(new ShowErrorEvent("casting to CommitFilesEvent failed!"));
 	    }
 	    
 	}
