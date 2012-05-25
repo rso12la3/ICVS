@@ -251,6 +251,16 @@ public class Repository {
 					case LESS:
 						//plik z zewnątrz jest starszą wersją naszego, nic nie robimy bo dążymy do posiadania najnowszych wersji
 						break;
+						
+					case UNKNOWN:
+						//nie da się określić który plik jest nowszy, badamy zawartosc
+						if(workingCopy.isDifferent(newFileDescriptorTmp.getFileContent(), fileName)){
+							conflictedFiles.put(fileName, newFileDescriptorTmp);	//pliki rozne i nie wiemy ktory nowszy - konflikt
+						}
+						else{
+							//pliki takie same zawartosciowo ale nie wiemy ktory jest nowszy, ignorujemy
+						}
+						break;
 				}
 				
 			}
