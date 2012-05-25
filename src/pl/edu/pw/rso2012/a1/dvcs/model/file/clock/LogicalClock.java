@@ -109,6 +109,7 @@ public class LogicalClock {
 	}
 	
 	//scala dwa zegary po scaleniu plikow
+	//wykonywac po kazdym merge na pliku
 	public void merge(LogicalClock otherClock)
 	{
 		Map<String, Integer> otherVector = otherClock.getVersionVector();

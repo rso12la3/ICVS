@@ -70,8 +70,6 @@ public class Repository {
 	}
 
 	public CloneOperation prepareClone(final List<Commit> commitList) {
-		// bierze liste z ostatniego commita
-		// diff przechowywany w mapie
 		return new CloneOperation(commitList, workingCopy.getAddress());
 	}
 
@@ -85,12 +83,12 @@ public class Repository {
 
 		// TODO Trzeba dodac do MailBox metode setCommits(List<Commit>)
 		// FIXME: rozwiazanie tymczasowe do poprawki jak bedzie metoda
+		// ustalone z Grzeskiem, ze zostaje jak jest
 		for (Commit commit : commitList) {
 			body = OperationToXML(commit.getCommitOperation());
 			message = new MailMessage(workingCopy.getAddress(), "commit "
 					+ commit.getRevision(), body);
 			controller.getModel().getMailbox().putMessage(message);
-//			Map<String, NewData> map = workingCopy.getSnapshotFiles(fileList);
 		}
 
 		if (!changeList.isEmpty())
@@ -99,8 +97,9 @@ public class Repository {
 
 	public PushResponseOperation push(final Controller controller,
 			PushOperation operation) {
-		// TODO: LOGIKA PUSHA
-
+		Map<String, NewData> map = operation.getMap();
+		mergeData(map);
+		
 		String result = "";
 		PushResponseOperation opResult = new PushResponseOperation(result);
 		return opResult;
@@ -113,8 +112,10 @@ public class Repository {
 
 	public PullResponseOperation pull(final Controller controller,
 			PullOperation operation) {
-		// TODO: LOGIKA PULLA
-
+		
+		Map<String, NewData> map = operation.getData();
+		mergeData(map);
+		
 		String result = "";
 		PullResponseOperation opResult = new PullResponseOperation(result);
 		return opResult;
@@ -158,7 +159,7 @@ public class Repository {
 		return workingCopy;
 	}
 
-	private List<ChangeData> prepareChangeList(final List<Commit> commitList) {
+	protected List<ChangeData> prepareChangeList(final List<Commit> commitList) {
 		List<ChangeData> changeList = new ArrayList<ChangeData>();
 		if (commitList != null && !commitList.isEmpty()) {
 			CommitOperation operation;
@@ -211,5 +212,14 @@ public class Repository {
 
 	public AbstractOperation OperationFromXML(String xml) {
 		return (AbstractOperation) xStream.fromXML(xml);
+	}
+	
+	//zwraca komunikat ktory bedzie wyswietlony na gui
+	//tzn zawierajacy liste plikow z konfliktami
+	protected String mergeData(Map<String, NewData> map)
+	{
+		//TODO tutaj logika scalenia
+		
+		return null;
 	}
 }

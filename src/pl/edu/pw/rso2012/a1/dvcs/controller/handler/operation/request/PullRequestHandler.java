@@ -26,6 +26,7 @@ public class PullRequestHandler extends ApplicationHandler
 	{
 		try 
 		{
+			
 			String email =((PullRequestEvent)event).getEmail();
 		    PullRequestOperation operation = controller.getModel().getRepository().pullRequest();
 		    
