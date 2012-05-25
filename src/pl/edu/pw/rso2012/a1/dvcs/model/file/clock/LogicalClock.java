@@ -43,36 +43,82 @@ public class LogicalClock {
 
 	/*
 	 * Zegary rowne gdy wszystkie elementy sa rowne
-	 * A < B gdy wszystkie elementy z A < B
-	 * A > B gdy wszystkie elementy z A > B
+	 * A < B gdy choc jeden element A jest mniejszy od B a reszta jest rowna
+	 * A < B gdy choc jeden element A jest wiekszy od B a reszta jest rowna
+	 * wynik GREATER mowi, ze obcy zegar jest wiekszy w stosunku do naszego
 	 */
-	public CompareResult compare(final LogicalClock clock) {
+	public CompareResult compare(final LogicalClock clock)
+	{
 		boolean isGreater = true;
 		boolean isLess = true;
-		boolean isEqual = true;
+		
+		Integer compareValue;
 		Map<String, Integer> vectorToCompare = clock.getVersionVector();
 
-		if (vectorToCompare.size() != versionVector.size())
-			return CompareResult.UNKNOWN;
+		this.createMissingValue(clock);
+		
 
-		//można by to sprytniej zrobić...
-		for (String key : versionVector.keySet()) {
-			if (versionVector.get(key) > vectorToCompare.get(key)){
+		for (String key : versionVector.keySet())
+		{
+			compareValue = vectorToCompare.get(key);
+			if (compareValue == null)
+			{
 				isGreater = false;
-				isEqual= false;
 			}
-			else if (versionVector.get(key) < vectorToCompare.get(key)){
-				isLess = false;
-				isEqual= false;
+			else
+			{
+				if (versionVector.get(key) > compareValue)
+				{
+					isGreater = false;
+				}
+				else if (versionVector.get(key) < vectorToCompare.get(key))
+				{
+					isLess = false;
+				}
 			}
-				
 		}
-
-		if (isGreater && !isLess & !isEqual)
+		
+		if (isGreater && isLess)
+			return CompareResult.EQUAL;
+		else if (isGreater && !isLess)
 			return CompareResult.GREATER;
-		else if (!isGreater && isLess & !isEqual)
+		else if (!isGreater && isLess)
 			return CompareResult.LESS;
 		else
-			return CompareResult.EQUAL;
+			return CompareResult.UNKNOWN;
+	}
+	
+	//normalizacja zegara
+	//tworzy brakujace pola
+	//jesli w naszym zegarze nie ma danego pola to jest dodawane
+	//z wartoscia 0
+	public void createMissingValue(LogicalClock otherClock)
+	{
+		Map<String, Integer> otherVector = otherClock.getVersionVector();
+		Integer value;
+		
+		for (String key : otherVector.keySet())
+		{
+			value = versionVector.get(key);
+			if (value == null)
+			{
+				value = new Integer(0);
+				versionVector.put(key, value);
+			}
+		}
+	}
+	
+	//scala dwa zegary po scaleniu plikow
+	public void merge(LogicalClock otherClock)
+	{
+		Map<String, Integer> otherVector = otherClock.getVersionVector();
+		
+		this.createMissingValue(otherClock);
+		
+		for (String key : otherVector.keySet())
+		{
+			//TODO wypelnic
+			
+		}
 	}
 }
