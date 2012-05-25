@@ -16,10 +16,12 @@ import java.util.Set;
 import difflib.Patch;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
+import pl.edu.pw.rso2012.a1.dvcs.model.newdata.NewData;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
 import pl.edu.pw.rso2012.a1.dvcs.model.workingcopy.WorkingCopy;
 
@@ -74,25 +76,46 @@ public class Repository
 		return null;
 	}
 	
-	public PushResponseOperation push(final Controller controller)
+	public PushResponseOperation push(final Controller controller, PushOperation operation)
 	{
+		//TODO: LOGIKA PUSHA
 		
-		return null;
+		String result= "";
+		PushResponseOperation opResult= new PushResponseOperation(result);
+		return opResult;
 	}
 	
-	public PullResponseOperation pull(final Controller controller)
-	{
-		return null;
+	public PushOperation preparePush(final Map<String, NewData> data){
+		PushOperation op= new PushOperation(data);
+		return op;
 	}
 	
-	public PushRequestOperation pushRequest(Set<String> fileList, final Controller controller)
+	public PullResponseOperation pull(final Controller controller, PullOperation operation)
 	{
-		return null;
+		//TODO: LOGIKA PULLA
+		
+		String result= "";
+		PullResponseOperation opResult= new PullResponseOperation(result);
+		return opResult;
 	}
 	
-	public PullRequestOperation pullReqeust(Set<String> fileList, final Controller controller)
+	public PullOperation preparePull(){
+		PullOperation operation= new PullOperation(workingCopy.getSnapshotFiles(workingCopy.getFileNames()));
+		return operation;
+	}
+	
+	public PushRequestOperation pushRequest()
 	{
-		return null;
+		List<String> files= workingCopy.getFileNames();
+		Map<String, NewData> data= workingCopy.getSnapshotFiles(files);
+		PushRequestOperation operation= new PushRequestOperation(data, workingCopy.getAddress());
+		return operation;
+	}
+	
+	public PullRequestOperation pullReqeust()
+	{
+		PullRequestOperation operation= new PullRequestOperation(workingCopy.getAddress());
+		return operation;
 	}
 	
 	public void update(List<Commit> commitList)

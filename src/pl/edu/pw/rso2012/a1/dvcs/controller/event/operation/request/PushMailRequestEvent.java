@@ -4,6 +4,7 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushRequestOperation;
 
 /**
  * 
@@ -13,15 +14,15 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 
 public class PushMailRequestEvent extends ApplicationEvent
 {
-    private final String email;
+    private final PushRequestOperation operation;
     
-    public PushMailRequestEvent(final String email)
+    public PushMailRequestEvent(final PushRequestOperation operation)
     {
-        this.email = email;
+        this.operation= operation;
     }
 
-    public String getEmail()
+    public PushRequestOperation getOperation()
     {
-        return email;
+        return this.operation;
     }
 }
