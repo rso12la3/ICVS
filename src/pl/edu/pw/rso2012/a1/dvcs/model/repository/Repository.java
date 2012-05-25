@@ -24,6 +24,8 @@ import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
+import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
+import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock.CompareResult;
 import pl.edu.pw.rso2012.a1.dvcs.model.newdata.NewData;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
 import pl.edu.pw.rso2012.a1.dvcs.model.workingcopy.WorkingCopy;
@@ -59,9 +61,10 @@ public class Repository {
 		Map<String, ChangeData> diffResult = workingCopy
 				.diffFiles(filesToCommit);
 		CommitOperation operation = new CommitOperation(diffResult);
-		
-		//TODO sprawdzic czy workingCopy tworzy kopie bo chyba nie tworzy kopii z working copy
-		
+
+		// TODO sprawdzic czy workingCopy tworzy kopie bo chyba nie tworzy kopii
+		// z working copy
+
 		return operation;
 	}
 
@@ -98,9 +101,8 @@ public class Repository {
 	public PushResponseOperation push(final Controller controller,
 			PushOperation operation) {
 		Map<String, NewData> map = operation.getMap();
-		mergeData(map);
-		
-		String result = "";
+
+		String result = mergeData(map);
 		PushResponseOperation opResult = new PushResponseOperation(result);
 		return opResult;
 	}
@@ -112,11 +114,10 @@ public class Repository {
 
 	public PullResponseOperation pull(final Controller controller,
 			PullOperation operation) {
-		
+
 		Map<String, NewData> map = operation.getData();
-		mergeData(map);
-		
-		String result = "";
+
+		String result = mergeData(map);
 		PullResponseOperation opResult = new PullResponseOperation(result);
 		return opResult;
 	}
@@ -135,8 +136,7 @@ public class Repository {
 		return operation;
 	}
 
-	public PullRequestOperation pullRequest()
-	{
+	public PullRequestOperation pullRequest() {
 		return new PullRequestOperation(workingCopy.getAddress());
 	}
 
@@ -213,13 +213,60 @@ public class Repository {
 	public AbstractOperation OperationFromXML(String xml) {
 		return (AbstractOperation) xStream.fromXML(xml);
 	}
-	
-	//zwraca komunikat ktory bedzie wyswietlony na gui
-	//tzn zawierajacy liste plikow z konfliktami
+
+	// zwraca komunikat ktory bedzie wyswietlony na gui
+	// tzn zawierajacy liste plikow z konfliktami
 	protected String mergeData(Map<String, NewData> map)
 	{
-		//TODO tutaj logika scalenia
+		NewData newFileDescriptorTmp;
+		NewData ourFileDescriptorTmp;
+		Map<String, NewData> ourData= workingCopy.getSnapshotFiles(workingCopy.getFileNames());
+		Map<String, NewData> filesForReplaceFilesMethod= new HashMap<String, NewData>();	//przechowuje pliki do dodania i calkowitej podmiany
+		Map<String, NewData> conflictedFiles= new HashMap<String, NewData>();
 		
-		return null;
+		for(String fileName : map.keySet()){
+			newFileDescriptorTmp= map.get(fileName);
+			
+			//sprawdzamy czy plik u nas istnieje, jak nie to go dodajemy			
+			if(ourData.containsKey(fileName)){
+				ourFileDescriptorTmp= ourData.get(fileName);
+				CompareResult compareResult= ourFileDescriptorTmp.getLogicalClock().compare(newFileDescriptorTmp.getLogicalClock; 
+				
+				switch(compareResult){
+				
+					case EQUAL:
+						//wersje plikow takie same, sprawdzamy dodatkowo zawartosc
+						if(workingCopy.isDifferent(newFileDescriptorTmp.getFileContent(), fileName))
+							conflictedFiles.put(fileName, newFileDescriptorTmp);		//konflikt
+						else{
+							//pliki maja te sama wersje i ta sama zawartosc, nic nie robimy
+						}
+						break;
+					
+					case GREATER :
+						//plik z zewnatrz jest nowsza wersja naszego, podmieniamy caly plik
+						filesForReplaceFilesMethod.put(fileName, newFileDescriptorTmp);
+						break;
+						
+					case LESS:
+						//plik z zewnątrz jest starszą wersją naszego, nic nie robimy bo dążymy do posiadania najnowszych wersji
+						break;
+				}
+				
+			}
+			else
+				filesForReplaceFilesMethod.put(fileName, newFileDescriptorTmp);		//dodajemy nieistniejacy plik
+
+		}
+		
+		workingCopy.replaceFiles(filesForReplaceFilesMethod);
+		workingCopy.mergeConflictedFiles(conflictedFiles);
+		
+		String resultConflictedFiles="";
+		for(String file : conflictedFiles.keySet()){
+			resultConflictedFiles+= file + "\n";
+		}
+		
+		return resultConflictedFiles;
 	}
 }

@@ -6,7 +6,8 @@ package pl.edu.pw.rso2012.a1.dvcs.model.operation;
  */
 
 public class PullResponseOperation extends AbstractOperation {
-	private final String result;
+	
+	private final String result;	//zawiera string ze skonfliktowanymi plikami
 
 	public PullResponseOperation(String result) {
 		super();
