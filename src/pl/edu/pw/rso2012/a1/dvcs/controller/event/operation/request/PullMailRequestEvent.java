@@ -4,6 +4,7 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PullRequestOperation;
 
 /**
  * 
@@ -11,19 +12,15 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
  * 
  */
 
-public class PullMailRequestEvent extends ApplicationEvent
-{
-    private final String email;
-    
-    public PullMailRequestEvent(final String email)
-    {
-        this.email = email;
-    }
+public class PullMailRequestEvent extends ApplicationEvent {
+	private final PullRequestOperation operation;
 
-    public String getEmail()
-    {
-        return email;
-    }
+	public PullMailRequestEvent(final PullRequestOperation operation) {
+		this.operation = operation;
+	}
 
+	public PullRequestOperation getOperation() {
+		return this.operation;
+	}
 
 }
