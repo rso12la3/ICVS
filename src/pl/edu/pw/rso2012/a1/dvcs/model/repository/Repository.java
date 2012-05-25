@@ -218,7 +218,7 @@ public class Repository {
 	// tzn zawierajacy liste plikow z konfliktami
 	protected String mergeData(Map<String, NewData> map)
 	{
-		NewData newFileDescriptorTmp;
+		/*NewData newFileDescriptorTmp;
 		NewData ourFileDescriptorTmp;
 		Map<String, NewData> ourData= workingCopy.getSnapshotFiles(workingCopy.getFileNames());
 		Map<String, NewData> filesForReplaceFilesMethod= new HashMap<String, NewData>();	//przechowuje pliki do dodania i calkowitej podmiany
@@ -277,6 +277,7 @@ public class Repository {
 			resultConflictedFiles+= file + "\n";
 		}
 		
-		return resultConflictedFiles;
+		return resultConflictedFiles;*/
+		return null;
 	}
 }
