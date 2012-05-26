@@ -10,11 +10,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 
-/**
- * 
- * @author Andrzej Makarewicz
- * 
- */
 public class DeleteFilesHandler extends ApplicationHandler 
 {
 	private ArrayList<String> filesSet;

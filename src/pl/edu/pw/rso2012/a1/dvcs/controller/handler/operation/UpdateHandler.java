@@ -13,11 +13,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedExcep
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 
-/**
- * 
- * @author Andrzej Makarewicz
- * 
- */
 public class UpdateHandler extends ApplicationHandler {
 	public UpdateHandler(final Controller controller) {
 		super(controller);

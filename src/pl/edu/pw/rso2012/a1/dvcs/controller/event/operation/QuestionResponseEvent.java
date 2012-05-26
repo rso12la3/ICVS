@@ -22,7 +22,10 @@ public class QuestionResponseEvent extends ApplicationEvent {
 		return id;
 	}
 
-	public boolean isResponse() {
+	/**
+	 * @return <code>true</code> for positive response, <code>false</code> otherwise
+	 */
+	public boolean getResponse() {
 		return response;
 	}
 }

@@ -114,13 +114,13 @@ public class FoldersTreeComp implements ActionListener {
 		}
 	};
 	
-	void addChildrenFilesToList(DefaultMutableTreeNode node, Set<String> files) {
+	void addChildrenFilesToSet(DefaultMutableTreeNode node, Set<String> files) {
 		FileInfo info = (FileInfo) node.getUserObject();
 		File file = info.getFile();
 		if (file.isDirectory() && !node.isLeaf()) {
 			for (int i = 0, childCount = node.getChildCount(); i < childCount; i++) {
 				DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
-				addChildrenFilesToList(child, files);
+				addChildrenFilesToSet(child, files);
 			}
 		} else if (!file.isDirectory()) {
 			files.add(info.getFilePathFromRoot());
@@ -137,7 +137,7 @@ public class FoldersTreeComp implements ActionListener {
 		Set<String> fileSet = new HashSet<String>();
 		for (TreePath path : paths) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-			addChildrenFilesToList(node, fileSet);
+			addChildrenFilesToSet(node, fileSet);
 		}
 		
 		Log.o(TAG, event.getActionCommand() + " " + fileSet.toString());

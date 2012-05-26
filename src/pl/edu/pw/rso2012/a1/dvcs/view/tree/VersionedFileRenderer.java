@@ -33,18 +33,18 @@ public class VersionedFileRenderer extends DefaultTreeCellRenderer {
 			boolean leaf, int row, boolean hasFocus) {
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 		
-		if (leaf && isVersioned(value)) {
+		FileInfo fileInfo = (FileInfo) ((DefaultMutableTreeNode) value).getUserObject();
+		boolean isNotDirectory = leaf && !fileInfo.getFile().isDirectory();
+		
+		if (isNotDirectory && fileInfo.isVersioned()) {
 			setIcon(versionedIcon);
-		} else if (leaf) {
+		} else if (isNotDirectory) {
 			setIcon(fileIcon);
+		}else if (leaf){
+			setIcon(this.closedIcon);
 		}
 		
 		return this;
-	}
-	
-	private boolean isVersioned(Object value) {
-		FileInfo fileInfo = (FileInfo) ((DefaultMutableTreeNode) value).getUserObject();
-		return fileInfo.isVersioned();
 	}
 	
 }

@@ -10,11 +10,6 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushRequestOperation;
 
-/**
- * 
- * @author Andrzej Makarewicz
- * 
- */
 public class PushRequestHandler extends ApplicationHandler 
 {
 	public PushRequestHandler(final Controller controller) 
