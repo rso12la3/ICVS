@@ -7,7 +7,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -30,6 +29,8 @@ import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 public class FoldersTreeComp implements ActionListener {
 	
 	private static final String TAG = FoldersTreeComp.class.getSimpleName();
+	
+	public static final String SNAPSHOT_DIR = ".snapshot", METADATA_FILENAME = ".metadata.xml";
 	
 	JTree mTree;
 	VersionedFileRenderer mRenderer;
@@ -114,7 +115,17 @@ public class FoldersTreeComp implements ActionListener {
 		}
 	};
 	
-	void addChildrenFilesToSet(DefaultMutableTreeNode node, Set<String> files) {
+	public Set<String> getAllFilesInTree(){
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) mTree.getModel().getRoot();
+		Set<String> fileSet = new HashSet<String>();
+		addChildrenFilesToSet(node, fileSet);
+		
+		Log.o(TAG, Log.getCurrentMethodName() + " " + fileSet.size() + " "+ fileSet.toString());
+		
+		return fileSet;
+	}
+	
+	private void addChildrenFilesToSet(DefaultMutableTreeNode node, Set<String> files) {
 		FileInfo info = (FileInfo) node.getUserObject();
 		File file = info.getFile();
 		if (file.isDirectory() && !node.isLeaf()) {

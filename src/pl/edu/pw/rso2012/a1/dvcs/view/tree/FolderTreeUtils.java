@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ public class FolderTreeUtils {
 	private FolderTreeUtils() {}
 	
 	public static TreeNode createTree(File rootDirectory, Set<String> versionedFilePaths) {
-		//Set<String> versionedFiles = new HashSet<String>(versionedFilePaths);
+		// Set<String> versionedFiles = new HashSet<String>(versionedFilePaths);
 		return addNode(null, rootDirectory, versionedFilePaths, rootDirectory.getAbsolutePath().length());
 	}
 	
@@ -35,8 +34,17 @@ public class FolderTreeUtils {
 		
 		String[] childrenArray = directory.list();
 		List<String> childrenList = new ArrayList<String>(childrenArray.length);
-		for (String child : childrenArray) {
-			childrenList.add(child);
+		if (currentParent == null) {
+			for (String child : childrenArray) {
+				if(child.equals(FoldersTreeComp.METADATA_FILENAME) || child.equals(FoldersTreeComp.SNAPSHOT_DIR))
+					continue;
+				
+				childrenList.add(child);
+			}
+		} else {
+			for (String child : childrenArray) {
+				childrenList.add(child);
+			}
 		}
 		Collator collator = Collator.getInstance();
 		collator.setStrength(Collator.PRIMARY);
@@ -56,7 +64,8 @@ public class FolderTreeUtils {
 				fileInfo.setVersioned(versionedFiles);
 				fileInfoList.add(fileInfo);
 				
-				//Log.o(TAG, file.getAbsolutePath() + " " + fileInfo.getFilePathFromRoot());
+				// Log.o(TAG, file.getAbsolutePath() + " " +
+				// fileInfo.getFilePathFromRoot());
 			}
 		}
 		

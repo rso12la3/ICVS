@@ -235,7 +235,7 @@ public class View extends JFrame {
 						mController.onEvent(event);
 						
 						mWaitbarListener = WaitbarDialog.showDialog(View.this, "Update",
-								String.format("Updatint to revision: %s", revision));
+								String.format("Updating to revision: %s", revision));
 						mWaitbarListener.show();
 					}
 				}
@@ -256,7 +256,8 @@ public class View extends JFrame {
 		public void onCommitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new CommitFilesEvent(null);
+			
+			ApplicationEvent event = new CommitFilesEvent(mFoldersTree.getAllFilesInTree());
 			mController.onEvent(event);
 		}
 		
