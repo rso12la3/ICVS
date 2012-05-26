@@ -23,4 +23,6 @@ public interface MenuBarListener {
 	void onAddClicked();
 	
 	void onDeleteClicked();
+	
+	void onRefreshClicked();
 }

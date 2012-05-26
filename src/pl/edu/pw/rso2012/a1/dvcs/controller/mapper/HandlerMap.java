@@ -9,6 +9,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.application.ExitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateCompleteEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
@@ -27,6 +28,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.application.ExitHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.AddFilesHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.CreateHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.DeleteFilesHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.RefreshHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.UpdateCompleteHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.UpdateHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.CloneRequestHandler;
@@ -79,6 +81,7 @@ public class HandlerMap
         eventHandlerMap.put(ShowWarningEvent.class, new ShowWarningHandler(controller));
         eventHandlerMap.put(ShowInformationEvent.class, new ShowInformationHandler(controller));
         eventHandlerMap.put(ShowQuestionEvent.class, new ShowQuestionHandler(controller));
+        eventHandlerMap.put(RefreshEvent.class, new RefreshHandler(controller));
         
         // Główne
         eventHandlerMap.put(ExitEvent.class, new ExitHandler(controller));

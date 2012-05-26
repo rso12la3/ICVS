@@ -21,6 +21,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.QuestionResponseEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
@@ -260,6 +261,14 @@ public class View extends JFrame {
 			ApplicationEvent event = new CommitFilesEvent(mFoldersTree.getAllFilesInTree());
 			mController.onEvent(event);
 		}
+
+		@Override
+		public void onRefreshClicked() {
+			Log.o(TAG, Log.getCurrentMethodName());
+			
+			ApplicationEvent event = new RefreshEvent();
+			mController.onEvent(event);
+		}
 		
 		// @Override
 		// public void onAddClicked() {
@@ -276,6 +285,7 @@ public class View extends JFrame {
 		// ApplicationEvent event = new DeleteFilesEvent(null);
 		// mController.onEvent(event);
 		// }
+		
 		
 	};
 	

@@ -29,11 +29,12 @@ public class MenuBarComp extends JMenuBar {
 			ACTION_PUSH = "PUSH",
 			ACTION_COMMIT = "COMMIT", 
 			ACTION_ADD = "ADD",
-			ACTION_DELETE = "DELETE";
+			ACTION_DELETE = "DELETE",
+			ACTION_REFRESH = "REFRESH";
 	
 	protected MenuBarListener mListener;
 	protected JMenuItem mCreate, mClone, mCloseProject, mExit, mUpdate, mPull,
-			mPush, mCommit, mAdd, mDelete;
+			mPush, mCommit, mAdd, mDelete, mRefresh;
 	
 	public MenuBarComp() {
 		super();
@@ -99,6 +100,14 @@ public class MenuBarComp extends JMenuBar {
 		//synchronization.add(mDelete);
 		
 		this.add(synchronization);
+		
+		JMenu viewMenu = new JMenu("View");
+		mRefresh = new JMenuItem("Refresh");
+		mRefresh.setActionCommand(ACTION_REFRESH);
+		mRefresh.addActionListener(mActionListener);
+		viewMenu.add(mRefresh);
+		
+		this.add(viewMenu);
 	}
 	
 	protected ActionListener mActionListener = new ActionListener() {
@@ -133,6 +142,9 @@ public class MenuBarComp extends JMenuBar {
 				break;
 			case ACTION_DELETE:
 				mListener.onDeleteClicked();
+				break;
+			case ACTION_REFRESH:
+				mListener.onRefreshClicked();
 				break;
 			}
 		}

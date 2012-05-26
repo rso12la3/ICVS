@@ -16,6 +16,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -68,8 +70,9 @@ public class FoldersTreeComp implements ActionListener {
 	
 	public void setFiles(File rootDirectory, Set<String> versionedFilePaths) {
 		TreeNode rootNode = FolderTreeUtils.createTree(rootDirectory, versionedFilePaths);
-		mTree = createJTree(rootNode);
-		mScrollPane.setViewportView(mTree);
+		DefaultTreeModel model = (DefaultTreeModel) mTree.getModel();
+		model.setRoot(rootNode);
+		model.reload();
 	}
 	
 	private static final String COMMIT_COMMAND = "COMMIT", ADD_COMMAND = "ADD", DELETE_COMMAND = "DELETE";

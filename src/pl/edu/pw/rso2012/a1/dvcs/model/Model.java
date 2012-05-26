@@ -52,6 +52,10 @@ public class Model {
 		initialize();
 	}
 	
+	public void refreshView(){
+		onRepositoryLoaded();
+	}
+	
 	private void onRepositoryLoaded(){
     	RepositoryConfiguration config = Configuration.getInstance().getRepositoryConfiguration();
     	if(!config.isInitialized()) return;

@@ -33,4 +33,7 @@ public class MenuBarListenerAdapter implements MenuBarListener {
 	
 	@Override
 	public void onDeleteClicked() {}
+
+	@Override
+	public void onRefreshClicked() {}
 }
