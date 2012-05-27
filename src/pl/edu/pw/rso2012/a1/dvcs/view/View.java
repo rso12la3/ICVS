@@ -231,13 +231,30 @@ public class View extends JFrame {
 					String revision = (String) JOptionPane.showInputDialog(View.this, "Update to revision number:",
 							"Update", JOptionPane.PLAIN_MESSAGE, null, null, null);
 					
-					if (!TextUtils.isEmpty(revision)) {
+					if (isValid(revision)) {
 						ApplicationEvent event = new UpdateEvent(revision);
 						mController.onEvent(event);
 						
 						mWaitbarListener = WaitbarDialog.showDialog(View.this, "Update",
 								String.format("Updating to revision: %s", revision));
 						mWaitbarListener.show();
+					}else{
+						showMessageDialogError("Incorrect revision's number format.");
+					}
+				}
+				
+				private boolean isValid(String str){
+					if(TextUtils.isEmpty(str))
+						return false;
+					
+					try{
+						int revision = Integer.parseInt(str);
+						if(revision < 0)
+							return false;
+						
+						return true;
+					}catch (Exception e) {
+						return false;
 					}
 				}
 			};

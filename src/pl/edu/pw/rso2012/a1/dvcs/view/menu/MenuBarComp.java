@@ -176,6 +176,7 @@ public class MenuBarComp extends JMenuBar {
 		mCommit.setEnabled(enabled);
 		mAdd.setEnabled(enabled);
 		mDelete.setEnabled(enabled);
+		mRefresh.setEnabled(enabled);
 	}
 	
 }

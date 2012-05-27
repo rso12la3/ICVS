@@ -7,6 +7,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.application.ErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.application.ExitEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
@@ -26,6 +27,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.application.ErrorHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.application.ExitHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.AddFilesHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.CommitFilesHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.CreateHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.DeleteFilesHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.RefreshHandler;
@@ -64,6 +66,7 @@ public class HandlerMap
     {
         // Operacje
         eventHandlerMap.put(AddFilesEvent.class,  new AddFilesHandler(controller));
+        eventHandlerMap.put(CommitFilesEvent.class, new CommitFilesHandler(controller));
         eventHandlerMap.put(CreateEvent.class,  new CreateHandler(controller));
         eventHandlerMap.put(DeleteFilesEvent.class,  new DeleteFilesHandler(controller));
         eventHandlerMap.put(UpdateCompleteEvent.class,  new UpdateCompleteHandler(controller));
