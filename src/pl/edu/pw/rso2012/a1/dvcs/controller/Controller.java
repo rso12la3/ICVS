@@ -37,15 +37,15 @@ public class Controller {
 				final ApplicationHandler applicationHandler = handlerMap.get(event);
 				applicationHandler.handle(event);
 			}
-			catch (final InterruptedException e) {
-				e.printStackTrace();
-				endApplication();
-			}
 			catch (final NoHandlerException e) {
 				e.printStackTrace();
 			}
 			catch (final HandlerNotImplementedException e) {
 				e.printStackTrace();
+			}
+			catch (final Exception e){
+				e.printStackTrace();
+				endApplication(); // for sure?
 			}
 			
 		}
