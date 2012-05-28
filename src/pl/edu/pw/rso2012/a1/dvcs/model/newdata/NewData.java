@@ -56,5 +56,15 @@ public class NewData {
 	public Map<String,Integer> getLclock() {
 		return lclock.getVersionVector();
 	}
+	
+	public LogicalClock getLogicalClock()
+	{
+		return this.lclock;
+	}
+	
+	public void setLogicalClock(final LogicalClock clock)
+	{
+		this.lclock = clock;
+	}
 
 }

@@ -31,7 +31,7 @@ import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
 import pl.edu.pw.rso2012.a1.dvcs.model.workingcopy.WorkingCopy;
 
 /**
- * @author Grzegorz Sancewicz & Oskar Leszczynski
+ * @author Grzegorz Sancewicz & Oskar Leszczynski & Darek
  * 
  */
 public class Repository {
@@ -218,7 +218,7 @@ public class Repository {
 	// tzn zawierajacy liste plikow z konfliktami
 	protected String mergeData(Map<String, NewData> map)
 	{
-		/*NewData newFileDescriptorTmp;
+		NewData newFileDescriptorTmp;
 		NewData ourFileDescriptorTmp;
 		Map<String, NewData> ourData= workingCopy.getSnapshotFiles(workingCopy.getFileNames());
 		Map<String, NewData> filesForReplaceFilesMethod= new HashMap<String, NewData>();	//przechowuje pliki do dodania i calkowitej podmiany
@@ -230,13 +230,13 @@ public class Repository {
 			//sprawdzamy czy plik u nas istnieje, jak nie to go dodajemy			
 			if(ourData.containsKey(fileName)){
 				ourFileDescriptorTmp= ourData.get(fileName);
-				CompareResult compareResult= ourFileDescriptorTmp.getLogicalClock().compare(newFileDescriptorTmp.getLogicalClock; 
+				CompareResult compareResult= ourFileDescriptorTmp.getLogicalClock().compare(newFileDescriptorTmp.getLogicalClock()); 
 				
 				switch(compareResult){
 				
 					case EQUAL:
 						//wersje plikow takie same, sprawdzamy dodatkowo zawartosc
-						if(workingCopy.isDifferent(newFileDescriptorTmp.getFileContent(), fileName))
+						if(workingCopy.isFileDifferent(newFileDescriptorTmp.getFileContent(), fileName))
 							conflictedFiles.put(fileName, newFileDescriptorTmp);		//konflikt
 						else{
 							//pliki maja te sama wersje i ta sama zawartosc, nic nie robimy
@@ -254,7 +254,7 @@ public class Repository {
 						
 					case UNKNOWN:
 						//nie da się określić który plik jest nowszy, badamy zawartosc
-						if(workingCopy.isDifferent(newFileDescriptorTmp.getFileContent(), fileName)){
+						if(workingCopy.isFileDifferent(newFileDescriptorTmp.getFileContent(), fileName)){
 							conflictedFiles.put(fileName, newFileDescriptorTmp);	//pliki rozne i nie wiemy ktory nowszy - konflikt
 						}
 						else{
@@ -269,7 +269,8 @@ public class Repository {
 
 		}
 		
-		workingCopy.replaceFiles(filesForReplaceFilesMethod);
+		workingCopy.setWorkingFiles(filesForReplaceFilesMethod);
+//		workingCopy.replaceFiles(filesForReplaceFilesMethod);
 		workingCopy.mergeConflictedFiles(conflictedFiles);
 		
 		String resultConflictedFiles="";
@@ -277,7 +278,7 @@ public class Repository {
 			resultConflictedFiles+= file + "\n";
 		}
 		
-		return resultConflictedFiles;*/
-		return null;
+		return resultConflictedFiles;
+//		return null;
 	}
 }

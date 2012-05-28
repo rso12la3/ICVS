@@ -203,7 +203,7 @@ public abstract class FileSystem {
 	/*
 	 * Method for comparing provided file with working copy equivalent
 	 */
-	boolean isFileDifferent(String content, String filename){
+	public boolean isFileDifferent(String content, String filename){
 		List<String> l = this.readFile(this.getRoot()+File.separatorChar+filename);
 		String s="";
 		

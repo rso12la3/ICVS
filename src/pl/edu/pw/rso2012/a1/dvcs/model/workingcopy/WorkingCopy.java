@@ -254,15 +254,15 @@ public class WorkingCopy extends FileSystem {
 	
 	}
 	
-	//TODO Dodane przez OL
-	//pobiera content pliku, oraz nazwe pliku w repozytorium
-	//i sprawdza czy są to rozne pliki
-	public boolean isDifferent(String content, String filename)
-	{
-		//FIXME wypełnić logika
-		
-		return false;
-	}
+//	//TODO Dodane przez OL
+//	//pobiera content pliku, oraz nazwe pliku w repozytorium
+//	//i sprawdza czy są to rozne pliki
+//	public boolean isDifferent(String content, String filename)
+//	{
+//		//FIXME wypełnić logika
+//		
+//		return false;
+//	}
 	
 	//TODO Dodane przez OL
 	//metoda powinna scalic skonfliktowane pliki zaznaczajac
@@ -272,11 +272,11 @@ public class WorkingCopy extends FileSystem {
 		//FIXME wypełnić logika
 	}
 	
-	//TODO Dodane przez OL
-	//metoda zamieniajaca pliki, lub tworzaca pliki gdy nie istnieja
-	public void replaceFiles(Map<String, NewData> files)
-	{
-		//FIXME wypełnić logika
-	}
+//	//TODO Dodane przez OL
+//	//metoda zamieniajaca pliki, lub tworzaca pliki gdy nie istnieja
+//	public void replaceFiles(Map<String, NewData> files)
+//	{
+//		//FIXME wypełnić logika
+//	}
 	
 }

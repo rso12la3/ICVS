@@ -16,7 +16,6 @@ import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 public class UpdateHandler extends ApplicationHandler {
 	public UpdateHandler(final Controller controller) {
 		super(controller);
-		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
@@ -27,15 +26,18 @@ public class UpdateHandler extends ApplicationHandler {
 			String version = ((UpdateEvent)event).getVersion();
 			List<Commit> commitList = controller.getModel().getMailbox().getCommitsBefore(version);
 			controller.getModel().getRepository().update(commitList);
-			controller.onEvent(new UpdateCompleteEvent());
+			controller.onImportantEvent(new UpdateCompleteEvent());
+			
 			
 		}
 		catch (ClassCastException e)
 		{
+			controller.onImportantEvent(new UpdateCompleteEvent());
 			controller.onImportantEvent(new ShowErrorEvent("Wystąpił nieoczekiwany błąd, kod: 1"));
 		}
 		catch (MessagingException e)
 		{
+			controller.onImportantEvent(new UpdateCompleteEvent());
 			controller.onImportantEvent(new ShowErrorEvent("Wystąpił nieoczekiwany błąd, kod: 2"));
 		}
 	}
