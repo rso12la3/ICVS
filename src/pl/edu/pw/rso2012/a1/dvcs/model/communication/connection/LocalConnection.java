@@ -7,7 +7,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Properties;
+import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
@@ -27,6 +29,8 @@ import javax.mail.search.SearchTerm;
 import javax.mail.search.SentDateTerm;
 import javax.mail.search.SubjectTerm;
 
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.exception.NoSuchCommitException;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
@@ -41,10 +45,12 @@ public class LocalConnection
     private final RepositoryConfiguration repositoryConfiguration;
     private Store store;
     private Session session;
+    private final LinkedBlockingDeque<ApplicationEvent> eventQueue;
 
-    public LocalConnection(final RepositoryConfiguration repositoryConfiguration)
+    public LocalConnection(final RepositoryConfiguration repositoryConfiguration, LinkedBlockingDeque<ApplicationEvent> eventQueue)
     {
         this.repositoryConfiguration = repositoryConfiguration;
+        this.eventQueue = eventQueue;
         prepareStore();
     }
 
@@ -128,7 +134,7 @@ public class LocalConnection
             mailMessage.setSubject(message.getSubject());
             mailMessage.addRecipient(RecipientType.TO, new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
             mailMessage.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
-            Message messages[] = {mailMessage};
+            final Message messages[] = {mailMessage};
             inbox.appendMessages(messages);
         }
     }
@@ -150,7 +156,20 @@ public class LocalConnection
     {
         if (!store.isConnected())
         {
-            store.connect("imap.gmail.com", repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryPass());
+            try
+            {
+                store.connect("imap.gmail.com", repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryPass());
+            }
+            catch(final AuthenticationFailedException e)
+            {
+                try
+                {
+                    eventQueue.put(new ShowErrorEvent("Błędne dane logowania do repozytorium"));
+                }
+                catch(InterruptedException e1)
+                {
+                }
+            }
         }
     }
 

@@ -60,7 +60,7 @@ public class Mailbox
 
         localSendQueue  = new PersistentBlockingQueue("localSendQueue");
         remoteSendQueue = new PersistentBlockingQueue("remoteSendQueue");
-        localConnection = new LocalConnection(repositoryConfiguration);
+        localConnection = new LocalConnection(repositoryConfiguration, eventQueue);
         remoteConnection = new RemoteConnection();
         
         sendLocalMailRunnable = new SendLocalMailRunnable(localSendQueue, localConnection);
