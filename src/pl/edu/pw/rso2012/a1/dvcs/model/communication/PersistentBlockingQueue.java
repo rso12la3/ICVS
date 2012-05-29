@@ -4,15 +4,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import com.thoughtworks.xstream.XStream;
 
 public class PersistentBlockingQueue
 {
-    private BlockingQueue<MailMessage> queue;
+    private BlockingDeque<MailMessage> queue;
     private final XStream xstream;
     private final String name;
     public PersistentBlockingQueue(final String name)
@@ -22,37 +21,30 @@ public class PersistentBlockingQueue
         loadQueue();
     }
     
-    public LinkedList<MailMessage> getAllMessages() throws InterruptedException
+    public MailMessage getMessage() throws InterruptedException
     {
-        final LinkedList<MailMessage> messagesToSend = new LinkedList<MailMessage>();
-        synchronized(queue)
-        {
-            final MailMessage message = queue.take();
-            messagesToSend.add(message);
-            queue.drainTo(messagesToSend);
-            saveQueue();
-        }
-        return messagesToSend;
+        MailMessage message = null;
+        message = queue.take();
+        saveQueue();
+        return message;
     }
     
     public void put(final MailMessage mailMessage) throws InterruptedException
     {
-        synchronized(queue)
-        {
-           queue.put(mailMessage);
-        }
+        queue.put(mailMessage);
+    }
+    public void putFirst(final MailMessage mailMessage) throws InterruptedException
+    {
+        queue.putFirst(mailMessage);
     }
     
     public void put(final LinkedList<MailMessage> mailMessages) throws InterruptedException
     {
-        synchronized(queue)
+        for (final MailMessage mailMessage : mailMessages)
         {
-            for (final MailMessage mailMessage : mailMessages)
-            {
-                queue.put(mailMessage);
-            }
-            saveQueue();
+            queue.put(mailMessage);
         }
+        saveQueue();
     }
     
     private void saveQueue()
@@ -75,7 +67,7 @@ public class PersistentBlockingQueue
         try
         {
             fis = new FileInputStream(name+".xml");
-            queue = (BlockingQueue<MailMessage>)xstream.fromXML(fis);
+            queue = (BlockingDeque<MailMessage>)xstream.fromXML(fis);
         }
         catch(final FileNotFoundException e)
         {

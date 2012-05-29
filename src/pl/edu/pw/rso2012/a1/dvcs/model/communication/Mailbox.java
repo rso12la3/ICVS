@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -85,52 +84,60 @@ public class Mailbox
 
     public List<Commit> getCommitsBefore(final String revision) throws MessagingException
     {
-        Message[] commitMessages = localConnection.getCommitsUpToRevision(revision);
+        final Message[] commitMessages = localConnection.getCommitsUpToRevision(revision);
         return getCommitListFromMessages(commitMessages);
     }
 
 
     public List<Commit> getCommits() throws MessagingException
     {
-        Message[] commitMessages = localConnection.getCommitMessages();
+        final Message[] commitMessages = localConnection.getCommitMessages();
         return getCommitListFromMessages(commitMessages);
     }
     
+    public String getRevision() throws MessagingException
+    {
+        final Message newestCommitMessage = localConnection.getNewestCommitMessage();
+        if (newestCommitMessage == null)
+            return null;
+        final String[] split = newestCommitMessage.getSubject().split(" ");
+        return split[1];
+    }
 
-    private List<Commit> getCommitListFromMessages(Message[] commitMessages)
+    private List<Commit> getCommitListFromMessages(final Message[] commitMessages)
             throws MessagingException
     {
-        List<Commit> commitList = new LinkedList<Commit>();
-        for (Message message : commitMessages)
+        final List<Commit> commitList = new LinkedList<Commit>();
+        for (final Message message : commitMessages)
         {
-            Commit commit = getCommitFromMessage(message);
+            final Commit commit = getCommitFromMessage(message);
             commitList.add(commit);
         }
         return commitList;
     }
     
-    private Commit getCommitFromMessage(Message message) throws MessagingException
+    private Commit getCommitFromMessage(final Message message) throws MessagingException
     {
-        CommitOperation commitOperation = getCommitOperationFromMessage(message);
-        String version = message.getSubject().split(" ")[1];
+        final CommitOperation commitOperation = getCommitOperationFromMessage(message);
+        final String version = message.getSubject().split(" ")[1];
         return new Commit(commitOperation, version);
     }
 
-    private CommitOperation getCommitOperationFromMessage(Message message)
+    private CommitOperation getCommitOperationFromMessage(final Message message)
     {
-        MimeMessage mimeMessage = (MimeMessage)message;
+        final MimeMessage mimeMessage = (MimeMessage)message;
         try
         {
-            String messageContent = mimeMessage.getContent().toString();
-            CommitOperation result = (CommitOperation)xstream.fromXML(messageContent);
+            final String messageContent = mimeMessage.getContent().toString();
+            final CommitOperation result = (CommitOperation)xstream.fromXML(messageContent);
             return result;
         }
-        catch(IOException e)
+        catch(final IOException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        catch(MessagingException e)
+        catch(final MessagingException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -153,7 +160,9 @@ public class Mailbox
 
         try
         {
+            sendLocalMailThread.interrupt();
             sendLocalMailThread.join();
+            sendRemoteMailThread.interrupt();
             sendRemoteMailThread.join();
             scheduledExecutor.awaitTermination(Constants.SCHEDULED_TASK_WAIT_TIME, TimeUnit.SECONDS);
         }

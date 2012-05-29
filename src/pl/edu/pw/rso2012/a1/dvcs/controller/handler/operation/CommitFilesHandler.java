@@ -3,6 +3,8 @@ package pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation;
 import java.util.ArrayList;
 import java.util.Set;
 
+import javax.mail.MessagingException;
+
 import com.sun.corba.se.impl.protocol.giopmsgheaders.Message;
 import com.thoughtworks.xstream.XStream;
 
@@ -13,6 +15,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.CommitOperation;
 
 /**
@@ -41,9 +44,27 @@ public class CommitFilesHandler extends ApplicationHandler
 			String content= controller.getModel().getRepository().OperationToXML(result);
 			MailMessage message= new MailMessage();
 			message.setBody(content);
-			//TODO dodac dopisywanie wersji gdy Grzesiek napisze odpowiednia metode
-			message.setSubject("commit");		//NJ: jaki powinien byc temat wiadomosci??
-			
+			String currentRevision = null;
+            try
+            {
+                currentRevision = controller.getModel().getMailbox().getRevision();
+            }
+            catch(MessagingException e1)
+            {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+			String newRevision = null;
+			if (currentRevision == null)
+			{
+			    newRevision = "1";
+			}
+			else
+			{
+			    newRevision = new Integer(new Integer(currentRevision) + 1).toString();
+			}
+			message.setSubject("commit " + newRevision);		//NJ: jaki powinien byc temat wiadomosci??
+			message.setSendTo(Configuration.getInstance().getRepositoryConfiguration().getRepositoryAddress());
 			
 			try {
 				controller.getModel().getMailbox().putMessage(message);

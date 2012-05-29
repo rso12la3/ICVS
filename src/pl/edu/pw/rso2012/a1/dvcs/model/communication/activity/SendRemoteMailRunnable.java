@@ -1,7 +1,5 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.activity;
 
-import java.util.LinkedList;
-
 import javax.mail.MessagingException;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
@@ -26,23 +24,25 @@ public class SendRemoteMailRunnable implements Runnable
     @Override
     public void run()
     {
-        while(isThreadStarted())
+        try
         {
-            try
+            while(isThreadStarted())
             {
-                final LinkedList<MailMessage> messagesToSend = remoteSendQueue.getAllMessages();
-                remoteConnection.sendMail(messagesToSend);
-            }
-            catch(final InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            catch(final MessagingException e)
-            {
-                e.printStackTrace();
+                MailMessage message = null;
+                try
+                {
+                    message = remoteSendQueue.getMessage();
+                    remoteConnection.sendMail(message);
+                }
+                catch(final MessagingException e)
+                {
+                    remoteSendQueue.putFirst(message);
+                }
             }
         }
-        
+        catch(final InterruptedException e)
+        {
+        }
     }
 
     public void stop()

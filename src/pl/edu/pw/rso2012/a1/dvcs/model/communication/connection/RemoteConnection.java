@@ -3,7 +3,6 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.connection;
 
-import java.util.LinkedList;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -24,8 +23,8 @@ import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
  */
 public class RemoteConnection
 {
-    private Properties props;
-    private RepositoryConfiguration repositoryConfiguration;
+    private final Properties props;
+    private final RepositoryConfiguration repositoryConfiguration;
     public RemoteConnection()
     {
         props = new Properties();
@@ -44,9 +43,9 @@ public class RemoteConnection
         props.put("mail.smtp.port", "465");
     }
     
-    public void sendMail(LinkedList<MailMessage> messagesToSend) throws MessagingException
+    public void sendMail(final MailMessage message) throws MessagingException
     {
-        Session session = Session.getInstance(props,
+        final Session session = Session.getInstance(props,
             new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(repositoryConfiguration.getRepositoryAddress(), 
@@ -54,21 +53,11 @@ public class RemoteConnection
                 }
             });
  
-        try 
-        {
-            for (MailMessage message : messagesToSend)
-            {
-                Message mail = new MimeMessage(session);
-                mail.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
-                mail.setRecipients(Message.RecipientType.TO,
-                        InternetAddress.parse(message.getSendTo()));
-                mail.setSubject(message.getSubject());
-                mail.setText(message.getBody());
-                Transport.send(mail);
-            }
-        } 
-        catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+        final Message mail = new MimeMessage(session);
+        mail.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
+        mail.setRecipients(Message.RecipientType.TO, InternetAddress.parse(message.getSendTo()));
+        mail.setSubject(message.getSubject());
+        mail.setText(message.getBody());
+        Transport.send(mail);
     }
 }

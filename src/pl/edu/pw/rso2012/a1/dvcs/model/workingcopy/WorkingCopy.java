@@ -14,18 +14,17 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
+import pl.edu.pw.rso2012.a1.dvcs.model.filesystem.FileSystem;
+import pl.edu.pw.rso2012.a1.dvcs.model.newdata.NewData;
+import pl.edu.pw.rso2012.a1.dvcs.model.snapshot.SnapShot;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import difflib.Patch;
 import difflib.PatchFailedException;
-
-import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
-import pl.edu.pw.rso2012.a1.dvcs.model.filesystem.FileSystem;
-import pl.edu.pw.rso2012.a1.dvcs.model.newdata.NewData;
-import pl.edu.pw.rso2012.a1.dvcs.model.snapshot.SnapShot;
 
 /**
  * @author 

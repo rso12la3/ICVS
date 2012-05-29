@@ -3,6 +3,7 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.connection;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Properties;
@@ -36,7 +37,7 @@ import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
  */
 public class LocalConnection
 {
-    private static final String COMMIT_SUBJECT_PREFIX = "Commit ";
+    private static final String COMMIT_SUBJECT_PREFIX = "commit ";
     private final RepositoryConfiguration repositoryConfiguration;
     private Store store;
     private Session session;
@@ -115,28 +116,20 @@ public class LocalConnection
         return messages;
     }
 
-    public void sendMessages(final LinkedList<MailMessage> messagesToSend) throws AddressException, MessagingException
+    public void sendMessages(final MailMessage message) throws AddressException, MessagingException
     {
         synchronized(store)
         {
             ensureConnection();
             final Folder inbox = store.getFolder("Inbox");
             inbox.open(Folder.READ_WRITE);
-            final Message[] messageArray = new Message[messagesToSend.size()];
-            final int i=0;
-            for (final MailMessage message : messagesToSend)
-            {
-                final Message mailMessage = new MimeMessage(session);
-                mailMessage.setText(message.getBody());
-                mailMessage.setSubject(message.getSubject());
-                mailMessage.addRecipient(RecipientType.TO, new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
-                mailMessage.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
-                messageArray[i] = mailMessage;
-            }
-            if (!(messageArray[0] == null))
-            {
-                inbox.appendMessages(messageArray);
-            }
+            final Message mailMessage = new MimeMessage(session);
+            mailMessage.setText(message.getBody());
+            mailMessage.setSubject(message.getSubject());
+            mailMessage.addRecipient(RecipientType.TO, new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
+            mailMessage.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
+            Message messages[] = {mailMessage};
+            inbox.appendMessages(messages);
         }
     }
 
@@ -159,6 +152,24 @@ public class LocalConnection
         {
             store.connect("imap.gmail.com", repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryPass());
         }
+    }
+
+    public Message getNewestCommitMessage() throws MessagingException
+    {
+        final SubjectTerm subjectTerm = new SubjectTerm(COMMIT_SUBJECT_PREFIX);
+        Message messages[];
+        synchronized(store)
+        {
+            ensureConnection();
+            final Folder inbox = store.getFolder("Inbox");
+            inbox.open(Folder.READ_WRITE);
+            messages = inbox.search(subjectTerm);
+            final Flags flags = new Flags(Flag.SEEN);
+            inbox.setFlags(messages, flags, true);
+        }
+        if (messages.length==0)
+            return null;
+        return messages[messages.length-1];
     }
 
 }
