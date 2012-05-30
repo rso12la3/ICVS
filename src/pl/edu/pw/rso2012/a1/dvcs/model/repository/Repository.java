@@ -58,14 +58,41 @@ public class Repository {
 	}
 
 	public CommitOperation commit(ArrayList<String> filesToCommit) {
-		Map<String, ChangeData> diffResult = workingCopy
-				.diffFiles(filesToCommit);
+		Map<String, ChangeData> diffResult = workingCopy.diffFiles(autoDelete(filesToCommit));
 		CommitOperation operation = new CommitOperation(diffResult);
 
 		// TODO sprawdzic czy workingCopy tworzy kopie bo chyba nie tworzy kopii
 		// z working copy
 
 		return operation;
+	}
+	
+	/**
+	 * Metoda wywoływana przed wykonaniem workingCopy.diffFiles()
+	 * Sprawdza, czy pliki z podawanej w commicie listy maja swoje fizycnze pokrycie na dysku
+	 */
+	public List<String> autoDelete(List<String> filesToCommit){
+		
+		if (filesToCommit == null) {
+			// domyślnie commitujemy wszystko, pobieramy liste plikow wersjonowanych z WC
+			// zakladam ze ta metoda zwraca pliki fizycznie występujące na dysku
+			return workingCopy.getFileNames();
+		}
+		
+		// sprawdzamy czy pliki z filesToCommit maja pokrycie fizyczne jeśli nie to usuwamy je z tej listy
+		ArrayList<String> toDelete = new ArrayList<String>();
+		List<String>ourFiles= workingCopy.getFileNames();
+		
+		for (String fileName : filesToCommit) {
+			if (!ourFiles.contains(fileName)) {
+				toDelete.add(fileName);
+			}
+		}
+
+		for (String fileName : toDelete)
+			filesToCommit.remove(fileName);
+		
+		return filesToCommit;
 	}
 
 	public CloneRequestOperation cloneRequest() {
@@ -216,69 +243,82 @@ public class Repository {
 
 	// zwraca komunikat ktory bedzie wyswietlony na gui
 	// tzn zawierajacy liste plikow z konfliktami
-	protected String mergeData(Map<String, NewData> map)
-	{
+	protected String mergeData(Map<String, NewData> map) {
 		NewData newFileDescriptorTmp;
 		NewData ourFileDescriptorTmp;
-		Map<String, NewData> ourData= workingCopy.getSnapshotFiles(workingCopy.getFileNames());
-		Map<String, NewData> filesForReplaceFilesMethod= new HashMap<String, NewData>();	//przechowuje pliki do dodania i calkowitej podmiany
-		Map<String, NewData> conflictedFiles= new HashMap<String, NewData>();
-		
-		for(String fileName : map.keySet()){
-			newFileDescriptorTmp= map.get(fileName);
-			
-			//sprawdzamy czy plik u nas istnieje, jak nie to go dodajemy			
-			if(ourData.containsKey(fileName)){
-				ourFileDescriptorTmp= ourData.get(fileName);
-				CompareResult compareResult= ourFileDescriptorTmp.getLogicalClock().compare(newFileDescriptorTmp.getLogicalClock()); 
-				
-				switch(compareResult){
-				
-					case EQUAL:
-						//wersje plikow takie same, sprawdzamy dodatkowo zawartosc
-						if(workingCopy.isFileDifferent(newFileDescriptorTmp.getFileContent(), fileName))
-							conflictedFiles.put(fileName, newFileDescriptorTmp);		//konflikt
-						else{
-							//pliki maja te sama wersje i ta sama zawartosc, nic nie robimy
-						}
-						break;
-					
-					case GREATER :
-						//plik z zewnatrz jest nowsza wersja naszego, podmieniamy caly plik
-						filesForReplaceFilesMethod.put(fileName, newFileDescriptorTmp);
-						break;
-						
-					case LESS:
-						//plik z zewnątrz jest starszą wersją naszego, nic nie robimy bo dążymy do posiadania najnowszych wersji
-						break;
-						
-					case UNKNOWN:
-						//nie da się określić który plik jest nowszy, badamy zawartosc
-						if(workingCopy.isFileDifferent(newFileDescriptorTmp.getFileContent(), fileName)){
-							conflictedFiles.put(fileName, newFileDescriptorTmp);	//pliki rozne i nie wiemy ktory nowszy - konflikt
-						}
-						else{
-							//pliki takie same zawartosciowo ale nie wiemy ktory jest nowszy, ignorujemy
-						}
-						break;
-				}
-				
-			}
-			else
-				filesForReplaceFilesMethod.put(fileName, newFileDescriptorTmp);		//dodajemy nieistniejacy plik
+		Map<String, NewData> ourData = workingCopy.getSnapshotFiles(workingCopy
+				.getFileNames());
+		Map<String, NewData> filesForReplaceFilesMethod = new HashMap<String, NewData>(); // przechowuje
+																							// pliki
+																							// do
+																							// dodania
+																							// i
+																							// calkowitej
+																							// podmiany
+		Map<String, NewData> conflictedFiles = new HashMap<String, NewData>();
 
+		for (String fileName : map.keySet()) {
+			newFileDescriptorTmp = map.get(fileName);
+
+			// sprawdzamy czy plik u nas istnieje, jak nie to go dodajemy
+			if (ourData.containsKey(fileName)) {
+				ourFileDescriptorTmp = ourData.get(fileName);
+				CompareResult compareResult = ourFileDescriptorTmp
+						.getLogicalClock().compare(
+								newFileDescriptorTmp.getLogicalClock());
+
+				switch (compareResult) {
+
+				case EQUAL:
+					// wersje plikow takie same, sprawdzamy dodatkowo zawartosc
+					if (workingCopy.isFileDifferent(
+							newFileDescriptorTmp.getFileContent(), fileName))
+						conflictedFiles.put(fileName, newFileDescriptorTmp); // konflikt
+					else {
+						// pliki maja te sama wersje i ta sama zawartosc, nic
+						// nie robimy
+					}
+					break;
+
+				case GREATER:
+					// plik z zewnatrz jest nowsza wersja naszego, podmieniamy
+					// caly plik
+					filesForReplaceFilesMethod.put(fileName,
+							newFileDescriptorTmp);
+					break;
+
+				case LESS:
+					// plik z zewnątrz jest starszą wersją naszego, nic nie
+					// robimy bo dążymy do posiadania najnowszych wersji
+					break;
+
+				case UNKNOWN:
+					// nie da się określić który plik jest nowszy, badamy
+					// zawartosc
+					if (workingCopy.isFileDifferent(
+							newFileDescriptorTmp.getFileContent(), fileName)) {
+						conflictedFiles.put(fileName, newFileDescriptorTmp); // pliki rozne i nie wiemy ktory nowszy = konflikt
+					} else {
+						// pliki takie same zawartosciowo ale nie wiemy ktory
+						// jest nowszy, ignorujemy
+					}
+					break;
+				}
+
+			} else
+				filesForReplaceFilesMethod.put(fileName, newFileDescriptorTmp); // dodajemy nieistniejacy plik
 		}
-		
+
 		workingCopy.setWorkingFiles(filesForReplaceFilesMethod);
-//		workingCopy.replaceFiles(filesForReplaceFilesMethod);
+		// workingCopy.replaceFiles(filesForReplaceFilesMethod);
 		workingCopy.mergeConflictedFiles(conflictedFiles);
-		
-		String resultConflictedFiles="";
-		for(String file : conflictedFiles.keySet()){
-			resultConflictedFiles+= file + "\n";
+
+		String resultConflictedFiles = "";
+		for (String file : conflictedFiles.keySet()) {
+			resultConflictedFiles += file + "\n";
 		}
-		
+
 		return resultConflictedFiles;
-//		return null;
+		// return null;
 	}
 }
