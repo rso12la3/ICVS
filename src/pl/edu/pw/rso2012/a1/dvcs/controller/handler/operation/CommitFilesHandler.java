@@ -63,7 +63,7 @@ public class CommitFilesHandler extends ApplicationHandler
 			{
 			    newRevision = new Integer(new Integer(currentRevision) + 1).toString();
 			}
-			message.setSubject("commit " + newRevision);		//NJ: jaki powinien byc temat wiadomosci??
+			message.setSubject("commit " + newRevision);	
 			message.setSendTo(Configuration.getInstance().getRepositoryConfiguration().getRepositoryAddress());
 			
 			try {

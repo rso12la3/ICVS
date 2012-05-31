@@ -16,7 +16,11 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.CloneResponseEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.PullResponseEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.PushResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowInformationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowNoRepositoryEvent;
@@ -37,7 +41,11 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.UpdateHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.CloneRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullMailRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullRequestHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PushMailRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PushRequestHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.response.CloneResponseHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.response.PullResponseHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.response.PushResponseHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowErrorHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowInformationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.view.ShowNoRepositoryHandler;
@@ -73,12 +81,19 @@ public class HandlerMap
         eventHandlerMap.put(DeleteFilesEvent.class,  new DeleteFilesHandler(controller));
         eventHandlerMap.put(UpdateCompleteEvent.class,  new UpdateCompleteHandler(controller));
         eventHandlerMap.put(UpdateEvent.class,  new UpdateHandler(controller));
-        eventHandlerMap.put(PushRequestEvent.class,  new PushRequestHandler(controller));
-        eventHandlerMap.put(PullRequestEvent.class,  new PullRequestHandler(controller));
         
         // Operacje - request
         eventHandlerMap.put(CloneRequestEvent.class,  new CloneRequestHandler(controller));
+        eventHandlerMap.put(PushRequestEvent.class,  new PushRequestHandler(controller));
+        eventHandlerMap.put(PullRequestEvent.class,  new PullRequestHandler(controller));
         eventHandlerMap.put(PullMailRequestEvent.class,  new PullMailRequestHandler(controller));
+        eventHandlerMap.put(PushMailRequestEvent.class,  new PushMailRequestHandler(controller));
+        
+        // Operacje - response
+        eventHandlerMap.put(PushResponseEvent.class,  new PushResponseHandler(controller));
+        eventHandlerMap.put(PullResponseEvent.class,  new PullResponseHandler(controller));
+        eventHandlerMap.put(CloneResponseEvent.class,  new CloneResponseHandler(controller));
+        
         
         // Widok
         eventHandlerMap.put(ShowRepositoryEvent.class, new ShowRepositoryHandler(controller));
