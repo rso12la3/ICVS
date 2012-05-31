@@ -215,9 +215,10 @@ public abstract class FileSystem {
 
 	public void addFile (final String file){
 		
-		if(!this.filelist.containsKey(file))
+		if(!this.filelist.containsKey(file)){
 			this.filelist.put(file, new HashMap<String,Integer>());
 			this.filelist.get(file).put(this.address, 0);
+		}
 	}
 	
 	/*
@@ -243,7 +244,7 @@ public abstract class FileSystem {
 	public void deleteFiles (final List<String> files){
 		
 		for (String str : files)
-			this.addFile(str);
+			this.deleteFile(str);
 	}
 	
 	public List<String> getFileNames(){

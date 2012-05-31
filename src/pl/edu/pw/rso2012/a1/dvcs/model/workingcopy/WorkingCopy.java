@@ -23,6 +23,7 @@ import pl.edu.pw.rso2012.a1.dvcs.model.snapshot.SnapShot;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
+import difflib.Delta;
 import difflib.Patch;
 import difflib.PatchFailedException;
 
@@ -155,7 +156,10 @@ public class WorkingCopy extends FileSystem {
 		if(fl == null || fl.isEmpty())
 			files=this.getFileNames();
 		
-		for (String str : files){//isempty
+		for (String str : files){
+		File file = new File(this.getRoot()+ File.separatorChar +str);
+		
+		if(this.getFileNames().contains(str) && file.exists()){
 			File f = new File(this.getSnapshot().getRoot() + File.separatorChar +str);
 			if(!f.exists())
 				this.pCreateFile(this.getSnapshot().getRoot() + File.separatorChar +str);
@@ -167,8 +171,7 @@ public class WorkingCopy extends FileSystem {
 		
 		cm.get(str).getDifflist().add(this.getSnapshot().getDiff(snap, working));
 		
-		
-		if(!cm.get(str).getDifflist().get(0).getDeltas().isEmpty())
+		if(!cm.get(str).getDifflist().get(0).getDeltas().isEmpty())//addOfEmptyFile
 			this.getFilelist().get(str).put(this.getAddress(), this.getFilelist().get(str).get(this.getAddress()) + 1);
 		
 		cm.get(str).getLclock().putAll(this.getFilelist().get(str));
@@ -178,6 +181,7 @@ public class WorkingCopy extends FileSystem {
 		
 		working.clear();
 		snap.clear();
+			}
 		}
 		
 		for(String str : this.getFileNames()){
@@ -190,7 +194,7 @@ public class WorkingCopy extends FileSystem {
 		for(String str : this.dirRecursiveRel(this.getSnapshot().getRoot())){
 			
 			if(!this.getFileNames().contains(str)){
-				this.pDeleteFile(this.getRoot()+ File.separatorChar +str);
+//				this.pDeleteFile(this.getRoot()+ File.separatorChar +str);
 				this.pDeleteFile(this.getSnapshot().getRoot()+ File.separatorChar +str);
 			}
 		}
@@ -237,8 +241,9 @@ public class WorkingCopy extends FileSystem {
 		
 		for ( String str : mp.keySet()){
 //			this.getFilelist().remove(str);
-			this.getFilelist().put(str, mp.get(str).getLclock());
-			
+//			this.getFilelist().put(str, mp.get(str).getLclock());
+			this.getFilelist().get(str).putAll(mp.get(str).getLclock());
+
 			BufferedReader reader = new BufferedReader(new StringReader(mp.get(str).getFileContent()));
 				try {
 					while ((s = reader.readLine()) != null)
@@ -253,29 +258,51 @@ public class WorkingCopy extends FileSystem {
 	
 	}
 	
-//	//TODO Dodane przez OL
-//	//pobiera content pliku, oraz nazwe pliku w repozytorium
-//	//i sprawdza czy są to rozne pliki
-//	public boolean isDifferent(String content, String filename)
-//	{
-//		//FIXME wypełnić logika
-//		
-//		return false;
-//	}
-	
 	//TODO Dodane przez OL
 	//metoda powinna scalic skonfliktowane pliki zaznaczajac
 	//w tresci wynikowego pliku miejsca konfliktow
-	public void mergeConflictedFiles(Map<String, NewData> conflictedFiles)
+	public void mergeConflictedFiles(final Map<String, NewData> conflictedFiles)
 	{
-		//FIXME wypełnić logika
+		List<String> working = new LinkedList<String>();
+		List<String> conflicted = new LinkedList<String>();
+		String s="";
+		Patch diff = new Patch();
+		
+		for(String str:conflictedFiles.keySet()){
+		
+			BufferedReader reader = new BufferedReader(new StringReader(conflictedFiles.get(str).getFileContent()));
+			try {
+				while ((s = reader.readLine()) != null)
+					conflicted.add(s);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		File f = new File(this.getRoot() + File.separatorChar +str);
+		if(!f.exists()){
+			this.pCreateFile(this.getRoot() + File.separatorChar +str);	
+			working=conflicted;
+		}
+		else{
+		working = this.readFile(this.getRoot()+ File.separatorChar +str);
+		
+		diff=this.getSnapshot().getDiff(working, conflicted);
+		
+		for(Delta delta:diff.getDeltas()){	
+		
+			for(int i=delta.getRevised().getPosition(), j=0;j<delta.getRevised().getLines().size();++i,++j)
+				working.set(i, working.get(i)+" <<<O==merge==R>>> "+delta.getRevised().getLines().get(j));
+			}
+		}
+		this.getFilelist().get(str).putAll(conflictedFiles.get(str).getLclock());
+		
+		this.writeFile(this.getRoot()+ File.separatorChar +str, working);
+		
+		working.clear();
+		conflicted.clear();
+		}
 	}
 	
-//	//TODO Dodane przez OL
-//	//metoda zamieniajaca pliki, lub tworzaca pliki gdy nie istnieja
-//	public void replaceFiles(Map<String, NewData> files)
-//	{
-//		//FIXME wypełnić logika
-//	}
 	
 }
