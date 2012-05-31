@@ -289,10 +289,17 @@ public class WorkingCopy extends FileSystem {
 		
 		diff=this.getSnapshot().getDiff(working, conflicted);
 		
+		while(working.size()<conflicted.size())
+			working.add("");
+		
 		for(Delta delta:diff.getDeltas()){	
 		
-			for(int i=delta.getRevised().getPosition(), j=0;j<delta.getRevised().getLines().size();++i,++j)
-				working.set(i, working.get(i)+" <<<O==merge==R>>> "+delta.getRevised().getLines().get(j));
+			for(int i=delta.getRevised().getPosition(), j=0;j<delta.getRevised().getLines().size();++i,++j){
+				if(working.get(i)!="")
+					working.set(i, working.get(i)+" <<<O==merge==R>>> "+delta.getRevised().getLines().get(j));
+				else 
+					working.set(i, ""+delta.getRevised().getLines().get(j));
+				}
 			}
 		}
 		this.getFilelist().get(str).putAll(conflictedFiles.get(str).getLclock());
