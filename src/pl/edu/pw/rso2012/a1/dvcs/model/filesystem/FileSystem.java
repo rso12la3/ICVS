@@ -293,5 +293,21 @@ public abstract class FileSystem {
 		this.writeFile(destpath, content);	
 	}
 	
+	//by OL
+	public List<String> checkFileList(final List<String> fileList)
+	{
+		File file;
+		if (fileList == null)
+			return fileList;
+		
+		for (String filename : fileList)
+		{
+			file = new File(filename);
+			if (!file.exists())
+				fileList.remove(filename);
+		}
+		
+		return fileList;
+	}
 	
 }

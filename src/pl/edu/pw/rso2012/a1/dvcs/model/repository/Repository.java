@@ -57,7 +57,7 @@ public class Repository {
 		this.absolutePath = absolutePath;
 	}
 
-	public CommitOperation commit(ArrayList<String> filesToCommit) {
+	public CommitOperation commit(Set<String> filesToCommit) {
 		Map<String, ChangeData> diffResult = workingCopy.diffFiles(autoDelete(filesToCommit));
 		CommitOperation operation = new CommitOperation(diffResult);
 
@@ -71,28 +71,56 @@ public class Repository {
 	 * Metoda wywoływana przed wykonaniem workingCopy.diffFiles()
 	 * Sprawdza, czy pliki z podawanej w commicie listy maja swoje fizycnze pokrycie na dysku
 	 */
-	public List<String> autoDelete(List<String> filesToCommit){
+	public List<String> autoDelete(Set<String> filesToCommit){
 		
-		if (filesToCommit == null) {
+		if (filesToCommit == null)
+		{
 			// domyślnie commitujemy wszystko, pobieramy liste plikow wersjonowanych z WC
 			// zakladam ze ta metoda zwraca pliki fizycznie występujące na dysku
-			return workingCopy.getFileNames();
+			List<String> fileList = workingCopy.getFileNames();
+			fileList = workingCopy.checkFileList(fileList);
+			
+			return fileList;
 		}
 		
 		// sprawdzamy czy pliki z filesToCommit maja pokrycie fizyczne jeśli nie to usuwamy je z tej listy
 		ArrayList<String> toDelete = new ArrayList<String>();
-		List<String>ourFiles= workingCopy.getFileNames();
+		List<String> ourFiles= workingCopy.getFileNames();
+		List<String> checkedOurFiles = workingCopy.checkFileList(ourFiles);
+		List<String> finalList = new ArrayList<String>();
 		
-		for (String fileName : filesToCommit) {
-			if (!ourFiles.contains(fileName)) {
-				toDelete.add(fileName);
+		//n^2
+		for (String filename : ourFiles)
+		{
+			if (!checkedOurFiles.contains(filename))
+			{
+				ourFiles.remove(filename);
+				workingCopy.deleteFile(filename);
 			}
 		}
-
-		for (String fileName : toDelete)
-			filesToCommit.remove(fileName);
 		
-		return filesToCommit;
+		// n^1
+		for (String filename : ourFiles)
+		{
+			if (filesToCommit.contains(filename))
+			{
+				finalList.add(filename);
+			}
+		}
+		
+		//n^2 + n - poza tym algorytm dzialania jest błędny, bo usuwa pliki, które nie są w danym commicie a nie o to chodziło
+//		for (String fileName : filesToCommit)
+//		{
+//			if (!ourFiles.contains(fileName))
+//			{
+//				toDelete.add(fileName);
+//			}
+//		}
+//
+//		for (String fileName : toDelete)
+//			filesToCommit.remove(fileName);
+		
+		return finalList;
 	}
 
 	public CloneRequestOperation cloneRequest() {
