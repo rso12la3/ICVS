@@ -239,12 +239,14 @@ public class Repository {
 				finalMap.put(filename, finalData);
 			}
 
-			for (int i = 0; i < commitList.size(); ++i) {
+			for (int i = 0; i < commitList.size(); ++i)
+			{
 				map = commitList.get(i).getCommitOperation().getFilesDiffs();
 
-				for (String filename : fileSet) {
+				for (String filename : fileSet)
+				{
 					data = map.get(filename);
-					finalData = map.get(filename);
+					finalData = finalMap.get(filename);
 					if (data != null)
 						finalData.addDiffToList(data.getDifflist());
 					else
