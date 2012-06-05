@@ -108,6 +108,8 @@ public class Mailbox
         final List<Commit> commitList = new LinkedList<Commit>();
         for (final MailMessage message : commitMessages)
         {
+            if(message==null)
+                continue;
             final Commit commit = getCommitFromMessage(message);
             commitList.add(commit);
         }
