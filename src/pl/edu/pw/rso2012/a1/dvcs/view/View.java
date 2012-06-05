@@ -262,6 +262,16 @@ public class View extends JFrame {
 			SwingUtilities.invokeLater(command);
 		}
 		
+		
+		
+		@Override
+		public void onUpdateToHeadClicked() {
+			Log.o(TAG, Log.getCurrentMethodName());
+			
+			ApplicationEvent event = new UpdateEvent(null);
+			mController.onEvent(event);
+		}
+
 		@Override
 		public void onExitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
@@ -273,7 +283,6 @@ public class View extends JFrame {
 		@Override
 		public void onCommitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
-			
 			
 			ApplicationEvent event = new CommitFilesEvent(mFoldersTree.getAllFilesInTree());
 			mController.onEvent(event);
