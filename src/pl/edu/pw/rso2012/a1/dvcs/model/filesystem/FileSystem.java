@@ -299,14 +299,18 @@ public abstract class FileSystem {
 		File file;
 		if (fileList == null)
 			return fileList;
+		String filename;
 		
-		for (String filename : fileList)
+		for (int i = 0; i < fileList.size(); ++i)
 		{
+			filename = fileList.get(i);
 			file = new File(filename);
 			if (!file.exists())
+			{
 				fileList.remove(filename);
+				--i;
+			}
 		}
-		
 		return fileList;
 	}
 	
