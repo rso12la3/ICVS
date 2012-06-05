@@ -20,6 +20,9 @@ public class MenuBarListenerAdapter implements MenuBarListener {
 	public void onUpdateClicked() {}
 	
 	@Override
+	public void onUpdateToHeadClicked() {}
+
+	@Override
 	public void onPullClicked() {}
 	
 	@Override
