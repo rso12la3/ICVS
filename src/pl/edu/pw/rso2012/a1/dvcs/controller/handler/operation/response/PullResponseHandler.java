@@ -2,6 +2,7 @@ package pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.response;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.PullResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
@@ -28,6 +29,7 @@ public class PullResponseHandler extends ApplicationHandler
 		{
 			PullOperation operation =((PullResponseEvent)event).getOperation();
 			PullResponseOperation opResult= controller.getModel().getRepository().pull(controller, operation);
+			controller.onEvent(new RefreshEvent());
 			//za pomoca opResult mozna poinformowac guja o wyniku pull requesta...
 		}
 		catch (ClassCastException e)
