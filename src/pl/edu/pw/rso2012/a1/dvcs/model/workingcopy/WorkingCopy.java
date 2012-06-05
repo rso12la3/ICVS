@@ -225,6 +225,7 @@ public class WorkingCopy extends FileSystem {
 			
 			w.get(str).setFileContent(s);
 			w.get(str).getLclock().putAll(this.getFilelist().get(str));
+			l.clear();
 		}
 				
 		return w;
