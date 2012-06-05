@@ -6,8 +6,6 @@ package pl.edu.pw.rso2012.a1.dvcs.model.file.clock;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.edu.pw.rso2012.a1.dvcs.model.exception.ModelMethodNotImplementedException;
-
 /**
  * @author Grzegorz Sancewicz && Oskar Leszczynski(compare, merge, createMissingValue)
  * 

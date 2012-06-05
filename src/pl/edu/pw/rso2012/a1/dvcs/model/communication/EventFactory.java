@@ -8,7 +8,6 @@ import java.util.Map;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullMailRequestEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.CloneResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.PullResponseEvent;

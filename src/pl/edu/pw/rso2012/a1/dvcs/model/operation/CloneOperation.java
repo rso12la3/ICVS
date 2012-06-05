@@ -1,6 +1,5 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.operation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;

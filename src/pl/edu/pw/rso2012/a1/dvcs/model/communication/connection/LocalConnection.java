@@ -3,9 +3,8 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.connection;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
+import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -22,11 +21,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
-import javax.mail.search.AndTerm;
-import javax.mail.search.DateTerm;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
-import javax.mail.search.SentDateTerm;
 import javax.mail.search.SubjectTerm;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
@@ -47,7 +43,7 @@ public class LocalConnection
     private Session session;
     private final LinkedBlockingDeque<ApplicationEvent> eventQueue;
 
-    public LocalConnection(final RepositoryConfiguration repositoryConfiguration, LinkedBlockingDeque<ApplicationEvent> eventQueue)
+    public LocalConnection(final RepositoryConfiguration repositoryConfiguration, final LinkedBlockingDeque<ApplicationEvent> eventQueue)
     {
         this.repositoryConfiguration = repositoryConfiguration;
         this.eventQueue = eventQueue;
@@ -69,35 +65,47 @@ public class LocalConnection
         }
     }
 
-    public Message[] getUnreadMessages() throws MessagingException
+    public MailMessage[] getUnreadMessages() throws MessagingException
     {
         final FlagTerm ft = new FlagTerm(new Flags(Flags.Flag.SEEN), false);
         return getMessages(ft);
     }
     
-    public Message[] getCommitMessages() throws MessagingException
+    public MailMessage[] getCommitMessages() throws MessagingException
     {
         final SubjectTerm subjectTerm = new SubjectTerm(COMMIT_SUBJECT_PREFIX);
         return getMessages(subjectTerm);
     }
     
-    public Message[] getCommitsUpToRevision(final String revision) throws MessagingException
+    public MailMessage[] getCommitsUpToRevision(final String revision) throws MessagingException
     {
-        final Message commitWithRevision = getCommitWithRevision(revision);
-        final Date sentDate = commitWithRevision.getSentDate();
-        final DateTerm sentDateTerm = new SentDateTerm(DateTerm.LE, sentDate);
+        final Integer versionLimit = new Integer(revision);
+        final MailMessage[] result = new MailMessage[versionLimit];
         final SearchTerm subjectTerm = new SubjectTerm(COMMIT_SUBJECT_PREFIX);
-        final SearchTerm lessOrEqualCommitTerm = new AndTerm(subjectTerm, sentDateTerm);
-        return getMessages(lessOrEqualCommitTerm);
+        final MailMessage[] messages = getMessages(subjectTerm);
+        int i=0;
+        for (final MailMessage message : messages)
+        {
+            final String subject = message.getSubject();
+            final String[] split = subject.split(" ");
+            final String version = split[1];
+            final Integer integerVersion = new Integer(version);
+            if (integerVersion<=versionLimit)
+            {
+                result[i] = message;
+                ++i;
+            }
+        }
+        return result;
     }
     
-    public Message getCommitWithRevision(final String revision) throws MessagingException
+    public MailMessage getCommitWithRevision(final String revision) throws MessagingException
     {
         final String subject = COMMIT_SUBJECT_PREFIX + revision;
         //Subject term działa jako substring wiec nalezy sie upewnic czy napewno sie zgadza temat
         final SubjectTerm subjectTerm = new SubjectTerm(subject);
-        final Message[] commitMessages = getMessages(subjectTerm);
-        for (final Message message : commitMessages)
+        final MailMessage[] commitMessages = getMessages(subjectTerm);
+        for (final MailMessage message : commitMessages)
         {
             if (message.getSubject().equals(subject))
             {
@@ -107,19 +115,40 @@ public class LocalConnection
         throw new NoSuchCommitException();
     }
     
-    private Message[] getMessages(final SearchTerm searchTerm) throws MessagingException
+    private MailMessage[] getMessages(final SearchTerm searchTerm) throws MessagingException
     {
         Message messages[];
+        MailMessage result[];
         synchronized(store)
         {
             ensureConnection();
             final Folder inbox = store.getFolder("Inbox");
             inbox.open(Folder.READ_WRITE);
             messages = inbox.search(searchTerm);
+            result = new MailMessage[messages.length];
+            int i=0;
+            for(final Message message : messages)
+            {
+                try
+                {
+
+                    final MimeMessage mimeMessage = (MimeMessage)message;
+                    final MailMessage mailMessage = new MailMessage("", mimeMessage.getSubject(), mimeMessage.getContent().toString());
+                    result[i] = mailMessage;
+                    ++i;
+                    
+                }
+                catch(final IOException e)
+                {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+            
             final Flags flags = new Flags(Flag.SEEN);
             inbox.setFlags(messages, flags, true);
         }
-        return messages;
+        return result;
     }
 
     public void sendMessages(final MailMessage message) throws AddressException, MessagingException
@@ -139,7 +168,7 @@ public class LocalConnection
         }
     }
 
-    public void deleteMessages(final Message[] messagesToDelete) throws MessagingException
+    public void deleteMessages(final List<String> messagesToDelete) throws MessagingException
     {
         synchronized(store)
         {
@@ -147,7 +176,11 @@ public class LocalConnection
             final Folder inbox = store.getFolder("Inbox");
             inbox.open(Folder.READ_WRITE);
             final Flags flags = new Flags(Flag.DELETED);
-            inbox.setFlags(messagesToDelete, flags, true);
+            for(final String subject : messagesToDelete)
+            {
+                final Message[] messages = inbox.search(new SubjectTerm(subject));
+                inbox.setFlags(messages, flags, true);
+            }
         }
     }
 
@@ -166,7 +199,7 @@ public class LocalConnection
                 {
                     eventQueue.put(new ShowErrorEvent("Błędne dane logowania do repozytorium"));
                 }
-                catch(InterruptedException e1)
+                catch(final InterruptedException e1)
                 {
                 }
             }
@@ -189,6 +222,19 @@ public class LocalConnection
         if (messages.length==0)
             return null;
         return messages[messages.length-1];
+    }
+
+    public void clearAll() throws MessagingException
+    {
+        synchronized(store)
+        {
+            ensureConnection();
+            final Folder inbox = store.getFolder("Inbox");
+            inbox.open(Folder.READ_WRITE);
+            final Flags delete = new Flags(Flag.DELETED);
+            final Message[] messages = inbox.getMessages();
+            inbox.setFlags(messages, delete, true);
+        }
     }
 
 }

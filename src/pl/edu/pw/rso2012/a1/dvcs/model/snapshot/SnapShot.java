@@ -7,7 +7,9 @@ import java.io.File;
 import java.util.List;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.filesystem.FileSystem;
-import difflib.*;
+import difflib.DiffUtils;
+import difflib.Patch;
+import difflib.PatchFailedException;
 
 /**
  * @author
