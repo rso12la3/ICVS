@@ -23,6 +23,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.QuestionResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
@@ -172,7 +173,7 @@ public class View extends JFrame {
 							"Clone", JOptionPane.PLAIN_MESSAGE, null, null, null);
 					
 					if (!TextUtils.isEmpty(email)) {
-						ApplicationEvent event = new PullRequestEvent(email);
+						ApplicationEvent event = new CloneRequestEvent(email);
 						mController.onEvent(event);
 					}
 				}
