@@ -1,20 +1,12 @@
 package pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.response;
 
-import java.util.List;
-
-import javax.mail.MessagingException;
-
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.CloneResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
-import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
-import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.CloneOperation;
-import pl.edu.pw.rso2012.a1.dvcs.model.operation.CloneRequestOperation;
 
 /**
  * 

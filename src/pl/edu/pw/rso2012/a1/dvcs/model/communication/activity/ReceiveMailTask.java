@@ -1,17 +1,15 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.communication.activity;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.EventFactory;
+import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.connection.LocalConnection;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.AbstractOperation;
 
@@ -23,9 +21,9 @@ public class ReceiveMailTask extends TimerTask
     private final LocalConnection localConnection;
     private final XStream xstream;
     private final EventFactory eventFactory;
-    private LinkedBlockingDeque<ApplicationEvent> eventQueue;
+    private final LinkedBlockingDeque<ApplicationEvent> eventQueue;
     
-    public ReceiveMailTask(final LocalConnection localConnection, LinkedBlockingDeque<ApplicationEvent> eventQueue)
+    public ReceiveMailTask(final LocalConnection localConnection, final LinkedBlockingDeque<ApplicationEvent> eventQueue)
     {
         this.localConnection = localConnection;
         this.eventQueue = eventQueue;
@@ -38,20 +36,20 @@ public class ReceiveMailTask extends TimerTask
     {
         try
         {
-            final Message[] unreadMessages = localConnection.getUnreadMessages();
-            final List<Message> messagesToDelete = new ArrayList<Message>();
-            for (final Message message : unreadMessages)
+            final MailMessage[] unreadMessages = localConnection.getUnreadMessages();
+            final List<String> messagesToDelete = new ArrayList<String>();
+            for (final MailMessage message : unreadMessages)
             {
-                final String xml = message.getContent().toString();
+                final String xml = message.getBody();
                 try
                 {
                     final AbstractOperation operation = deserializeOperation(xml); 
-                    ApplicationEvent event = eventFactory.getEvent(operation);
+                    final ApplicationEvent event = eventFactory.getEvent(operation);
                     eventQueue.put(event);
                 }
                 catch (final StreamException e)
                 {
-                    messagesToDelete.add(message);
+                    messagesToDelete.add(message.getSubject());
                 }
             }
             deleteMessages(messagesToDelete);
@@ -60,11 +58,7 @@ public class ReceiveMailTask extends TimerTask
         {
             e.printStackTrace();
         }
-        catch(final IOException e)
-        {
-            e.printStackTrace();
-        }
-        catch(InterruptedException e)
+        catch(final InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -76,8 +70,8 @@ public class ReceiveMailTask extends TimerTask
         return (AbstractOperation)xstream.fromXML(xml);
     }
 
-    private void deleteMessages(final List<Message> messagesToDelete) throws MessagingException
+    private void deleteMessages(final List<String> messagesToDelete) throws MessagingException
     {
-        localConnection.deleteMessages( messagesToDelete.toArray(new Message[messagesToDelete.size()]));
+        localConnection.deleteMessages( messagesToDelete);
     }
 };

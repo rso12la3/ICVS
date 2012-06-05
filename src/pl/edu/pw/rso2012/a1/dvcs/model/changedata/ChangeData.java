@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
-
 import difflib.Patch;
 
 /**

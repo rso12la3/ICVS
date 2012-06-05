@@ -4,31 +4,36 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.repository;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.thoughtworks.xstream.XStream;
-
-import difflib.Patch;
+import javax.mail.MessagingException;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
-import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowWarningEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.changedata.ChangeData;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.Commit;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
 import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
-import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
 import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock.CompareResult;
 import pl.edu.pw.rso2012.a1.dvcs.model.newdata.NewData;
-import pl.edu.pw.rso2012.a1.dvcs.model.operation.*;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.AbstractOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.CloneOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.CloneRequestOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.CommitOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PullOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PullRequestOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PullResponseOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushRequestOperation;
+import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushResponseOperation;
 import pl.edu.pw.rso2012.a1.dvcs.model.workingcopy.WorkingCopy;
+
+import com.thoughtworks.xstream.XStream;
 
 /**
  * @author Grzegorz Sancewicz & Oskar Leszczynski & Darek
@@ -134,6 +139,14 @@ public class Repository {
 	public void clone(final Controller controller, CloneOperation operation)
 			throws InterruptedException {
 		// Odtwarzanie repozytorium
+	    try
+        {
+            controller.getModel().getMailbox().clearLocalMailbox();
+        }
+        catch(MessagingException e)
+        {
+           controller.onEvent(new ShowWarningEvent(e.toString()));
+        }
 		List<Commit> commitList = operation.getCommitList();
 		List<ChangeData> changeList = prepareChangeList(commitList);
 		String body;

@@ -1,11 +1,9 @@
 package pl.edu.pw.rso2012.a1.dvcs.model.operation;
 
-import java.util.HashMap;
 import java.util.List;
 
-import difflib.Patch;
-
 import pl.edu.pw.rso2012.a1.dvcs.model.file.clock.LogicalClock;
+import difflib.Patch;
 
 /**
  * @author Oskar Leszczynski
