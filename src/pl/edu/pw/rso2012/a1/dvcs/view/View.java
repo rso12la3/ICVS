@@ -330,6 +330,11 @@ public class View extends JFrame {
 		SwingUtilities.invokeLater(command);
 	}
 	
+	public boolean showBlockingQuestionDialog(final String message, final String title){
+		int option = JOptionPane.showConfirmDialog(View.this, message, title, JOptionPane.YES_NO_OPTION);
+		return option == JOptionPane.YES_OPTION;
+	}
+	
 	private void showQuestionDialogBlocking(final String message, final String title, final int id) {
 		int option = JOptionPane.showConfirmDialog(View.this, message, title, JOptionPane.YES_NO_OPTION);
 		mController.onEvent(new QuestionResponseEvent(id, option == JOptionPane.YES_OPTION));
