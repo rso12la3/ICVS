@@ -3,7 +3,6 @@
  */
 package pl.edu.pw.rso2012.a1.dvcs.model.communication;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -13,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.activity.ReceiveMailTask;
@@ -84,14 +82,14 @@ public class Mailbox
 
     public List<Commit> getCommitsBefore(final String revision) throws MessagingException
     {
-        final Message[] commitMessages = localConnection.getCommitsUpToRevision(revision);
+        final MailMessage[] commitMessages = localConnection.getCommitsUpToRevision(revision);
         return getCommitListFromMessages(commitMessages);
     }
 
 
     public List<Commit> getCommits() throws MessagingException
     {
-        final Message[] commitMessages = localConnection.getCommitMessages();
+        final MailMessage[] commitMessages = localConnection.getCommitMessages();
         return getCommitListFromMessages(commitMessages);
     }
     
@@ -104,45 +102,37 @@ public class Mailbox
         return split[1];
     }
 
-    private List<Commit> getCommitListFromMessages(final Message[] commitMessages)
+    private List<Commit> getCommitListFromMessages(final MailMessage[] commitMessages)
             throws MessagingException
     {
         final List<Commit> commitList = new LinkedList<Commit>();
-        for (final Message message : commitMessages)
+        for (final MailMessage message : commitMessages)
         {
+            if(message==null)
+                continue;
             final Commit commit = getCommitFromMessage(message);
             commitList.add(commit);
         }
         return commitList;
     }
     
-    private Commit getCommitFromMessage(final Message message) throws MessagingException
+    private Commit getCommitFromMessage(final MailMessage message) throws MessagingException
     {
         final CommitOperation commitOperation = getCommitOperationFromMessage(message);
         final String version = message.getSubject().split(" ")[1];
         return new Commit(commitOperation, version);
     }
 
-    private CommitOperation getCommitOperationFromMessage(final Message message)
+    private CommitOperation getCommitOperationFromMessage(final MailMessage message)
     {
-        final MimeMessage mimeMessage = (MimeMessage)message;
-        try
-        {
-            final String messageContent = mimeMessage.getContent().toString();
-            final CommitOperation result = (CommitOperation)xstream.fromXML(messageContent);
-            return result;
-        }
-        catch(final IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        catch(final MessagingException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return null;
+        final String messageContent = message.getBody();
+        final CommitOperation result = (CommitOperation)xstream.fromXML(messageContent);
+        return result;
+    }
+    
+    public void clearLocalMailbox() throws MessagingException
+    {
+        localConnection.clearAll();
     }
     
     public void startThreads()
