@@ -58,7 +58,10 @@ public class Repository {
 	}
 
 	public CommitOperation commit(Set<String> filesToCommit) {
-		Map<String, ChangeData> diffResult = workingCopy.diffFiles(autoDelete(filesToCommit));
+		List<String> fileList = autoDelete(filesToCommit);
+		if (fileList.isEmpty())
+			return null;
+		Map<String, ChangeData> diffResult = workingCopy.diffFiles(fileList);
 		CommitOperation operation = new CommitOperation(diffResult);
 
 		// TODO sprawdzic czy workingCopy tworzy kopie bo chyba nie tworzy kopii

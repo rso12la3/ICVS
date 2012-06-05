@@ -41,6 +41,8 @@ public class CommitFilesHandler extends ApplicationHandler
 			CommitFilesEvent ev = (CommitFilesEvent) event;
 			CommitOperation result= controller.getModel().getRepository().commit(ev.getFilesToCommit());
 			
+			if (result == null)
+				return;
 			String content= controller.getModel().getRepository().OperationToXML(result);
 			MailMessage message= new MailMessage();
 			message.setBody(content);
