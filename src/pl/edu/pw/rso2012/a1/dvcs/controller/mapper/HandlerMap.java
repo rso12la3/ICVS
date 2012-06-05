@@ -13,6 +13,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateCompleteEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.CloneRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PullRequestEvent;
@@ -38,6 +39,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.DeleteFilesHandler
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.RefreshHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.UpdateCompleteHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.UpdateHandler;
+import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.CloneMailRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.CloneRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullMailRequestHandler;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.operation.request.PullRequestHandler;
@@ -88,6 +90,7 @@ public class HandlerMap
         eventHandlerMap.put(PullRequestEvent.class,  new PullRequestHandler(controller));
         eventHandlerMap.put(PullMailRequestEvent.class,  new PullMailRequestHandler(controller));
         eventHandlerMap.put(PushMailRequestEvent.class,  new PushMailRequestHandler(controller));
+        eventHandlerMap.put(CloneMailRequestEvent.class,  new CloneMailRequestHandler(controller));
         
         // Operacje - response
         eventHandlerMap.put(PushResponseEvent.class,  new PushResponseHandler(controller));
