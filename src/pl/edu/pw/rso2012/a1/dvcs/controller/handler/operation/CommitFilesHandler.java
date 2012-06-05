@@ -7,6 +7,7 @@ import javax.mail.MessagingException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
@@ -60,6 +61,8 @@ public class CommitFilesHandler extends ApplicationHandler
 			}
 			message.setSubject("commit " + newRevision);	
 			message.setSendTo(Configuration.getInstance().getRepositoryConfiguration().getRepositoryAddress());
+			
+			controller.onEvent(new RefreshEvent());
 			
 			try {
 				controller.getModel().getMailbox().putMessage(message);

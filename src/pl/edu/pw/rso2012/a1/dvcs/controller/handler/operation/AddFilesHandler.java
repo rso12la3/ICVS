@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
@@ -28,6 +29,7 @@ public class AddFilesHandler extends ApplicationHandler
 			ev = (AddFilesEvent) event;
 			filesSet= new ArrayList<String>(ev.getFilesToAdd());
 			controller.getModel().getRepository().add(filesSet);
+			controller.onEvent(new RefreshEvent());
 		}
 		else{
 			//wyslij komunikat do guja o bledzie (poprzez contorler)

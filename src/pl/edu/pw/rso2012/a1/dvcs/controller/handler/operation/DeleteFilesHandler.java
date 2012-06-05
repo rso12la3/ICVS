@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
@@ -25,6 +26,7 @@ public class DeleteFilesHandler extends ApplicationHandler
 			DeleteFilesEvent ev = (DeleteFilesEvent) event;
 			filesSet= new ArrayList<String>(ev.getFilesToDeleteList());
 			controller.getModel().getRepository().delete(filesSet);
+			controller.onEvent(new RefreshEvent());
 		}
 	    else{
 	    	try {
