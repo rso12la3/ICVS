@@ -37,7 +37,7 @@ public class CloneMailRequestHandler extends ApplicationHandler
 			CloneRequestOperation requestOperation =((CloneMailRequestEvent)event).getOperation();
 			List<Commit> commitList = controller.getModel().getMailbox().getCommits();
 			
-			if (controller.getView().showQuestionDialog("Czy chcesz udostepnic repozytorium dla adresu: " + requestOperation.getEmail(), "Clone", 0, true))
+			if (controller.getView().showBlockingQuestionDialog("Czy chcesz udostepnic repozytorium dla adresu: " + requestOperation.getEmail(), "Clone"))
 			{
 				CloneOperation operation = controller.getModel().getRepository().prepareClone(commitList);
 			    String body = controller.getModel().getRepository().OperationToXML(operation);
