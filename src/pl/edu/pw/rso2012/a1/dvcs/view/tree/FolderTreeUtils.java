@@ -21,9 +21,18 @@ public class FolderTreeUtils {
 	
 	private FolderTreeUtils() {}
 	
+	/**
+	 * Returned length depends on the last character of the string.
+	 * @param rootDirectory
+	 * @return
+	 */
+	public static int getProperRootPathLenght(File rootDirectory){
+		String rootPath = rootDirectory.getAbsolutePath();
+		return rootPath.endsWith(File.separator) ? rootPath.length() : rootPath.length() + 1;
+	}
+	
 	public static TreeNode createTree(File rootDirectory, Set<String> versionedFilePaths) {
-		// Set<String> versionedFiles = new HashSet<String>(versionedFilePaths);
-		return addNode(null, rootDirectory, versionedFilePaths, rootDirectory.getAbsolutePath().length());
+		return addNode(null, rootDirectory, versionedFilePaths, getProperRootPathLenght(rootDirectory));
 	}
 	
 	private static DefaultMutableTreeNode addNode(DefaultMutableTreeNode currentParent, File directory,

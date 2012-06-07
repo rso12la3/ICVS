@@ -38,7 +38,7 @@ public class FileInfo {
 	}
 	
 	public String getFilePathFromRoot(){
-		return file.getAbsolutePath().substring(rootPathLength+1);
+		return file.getAbsolutePath().substring(rootPathLength);
 	}
 	
 	@Override
