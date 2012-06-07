@@ -6,7 +6,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -56,7 +59,7 @@ public class FoldersTreeComp implements ActionListener {
 	public JTree getTree() {
 		return mTree;
 	}
-
+	
 	public JTree createJTree(TreeNode rootNode) {
 		JTree tree = new JTree(rootNode);
 		tree.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -67,11 +70,38 @@ public class FoldersTreeComp implements ActionListener {
 		return tree;
 	}
 	
+	public void getExpadnedPaths(JTree tree, TreePath parent, List<TreePath> list) {
+		if (!tree.isVisible(parent)) {
+			return;
+		}
+		list.add(parent);
+		
+		TreeNode node = (TreeNode) parent.getLastPathComponent();
+		if (node.getChildCount() >= 0) {
+			for (Enumeration e = node.children(); e.hasMoreElements();) {
+				TreeNode n = (TreeNode) e.nextElement();
+				TreePath path = parent.pathByAddingChild(n);
+				getExpadnedPaths(tree, path, list);
+			}
+		}
+	}
+	
 	public void setFiles(File rootDirectory, Set<String> versionedFilePaths) {
-		TreeNode rootNode = FolderTreeUtils.createTree(rootDirectory, versionedFilePaths);
 		DefaultTreeModel model = (DefaultTreeModel) mTree.getModel();
-		model.setRoot(rootNode);
+		
+		List<TreePath> paths = null;
+		Object root = model.getRoot();
+		if (root != null) {
+			paths = new ArrayList<TreePath>();
+			getExpadnedPaths(mTree, new TreePath(root), paths);
+		}
+		
+		TreeNode newRootNode = FolderTreeUtils.createTree(rootDirectory, versionedFilePaths);
+		model.setRoot(newRootNode);
 		model.reload();
+		
+		if (paths != null) for (TreePath path : paths)
+			mTree.expandPath(path);
 	}
 	
 	private static final String COMMIT_COMMAND = "COMMIT", ADD_COMMAND = "ADD", DELETE_COMMAND = "DELETE";
@@ -117,12 +147,12 @@ public class FoldersTreeComp implements ActionListener {
 		}
 	};
 	
-	public Set<String> getAllFilesInTree(){
+	public Set<String> getAllFilesInTree() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) mTree.getModel().getRoot();
 		Set<String> fileSet = new HashSet<String>();
 		addChildrenFilesToSet(node, fileSet);
 		
-		Log.o(TAG, Log.getCurrentMethodName() + " " + fileSet.size() + " "+ fileSet.toString());
+		Log.o(TAG, Log.getCurrentMethodName() + " " + fileSet.size() + " " + fileSet.toString());
 		
 		return fileSet;
 	}
@@ -168,7 +198,7 @@ public class FoldersTreeComp implements ActionListener {
 		}
 	}
 	
-	public void setListener(FoldersTreeActionListener listener){
+	public void setListener(FoldersTreeActionListener listener) {
 		mListener = listener;
 	}
 	

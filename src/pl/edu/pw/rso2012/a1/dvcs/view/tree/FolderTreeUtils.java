@@ -35,10 +35,10 @@ public class FolderTreeUtils {
 		return addNode(null, rootDirectory, versionedFilePaths, getProperRootPathLenght(rootDirectory));
 	}
 	
-	private static DefaultMutableTreeNode addNode(DefaultMutableTreeNode currentParent, File directory,
+	private static FileTreeNode addNode(FileTreeNode currentParent, File directory,
 			Set<String> versionedFiles, int rootAbsolutePathLength) {
 		
-		DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(new FileInfo(directory, rootAbsolutePathLength));
+		FileTreeNode dirNode = new FileTreeNode(new FileInfo(directory, rootAbsolutePathLength));
 		if (currentParent != null) currentParent.add(dirNode);
 		
 		String[] childrenArray = directory.list();
