@@ -26,6 +26,10 @@ public class UpdateHandler extends ApplicationHandler {
 		try 
 		{
 			String version = ((UpdateEvent)event).getVersion();
+			
+			if (version == null || version.length() == 0)
+				version = controller.getModel().getMailbox().getRevision();
+			
 			List<Commit> commitList = controller.getModel().getMailbox().getCommitsBefore(version);
 			controller.getModel().getRepository().update(commitList);
 			controller.onImportantEvent(new UpdateCompleteEvent());

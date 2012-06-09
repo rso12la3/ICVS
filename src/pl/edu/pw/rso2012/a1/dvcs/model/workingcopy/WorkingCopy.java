@@ -225,6 +225,7 @@ public class WorkingCopy extends FileSystem {
 			
 			w.get(str).setFileContent(s);
 			w.get(str).getLclock().putAll(this.getFilelist().get(str));
+			l.clear();
 		}
 				
 		return w;
@@ -238,10 +239,15 @@ public class WorkingCopy extends FileSystem {
 	public void setWorkingFiles (final Map<String, NewData> mp){
 		List<String> nf = new LinkedList<String>();
 		String s ="";
+		String filename;
 		
 		for ( String str : mp.keySet()){
 //			this.getFilelist().remove(str);
 //			this.getFilelist().put(str, mp.get(str).getLclock());
+			
+			
+			if (this.getFilelist().get(str) == null)
+				addFile(str);
 			this.getFilelist().get(str).putAll(mp.get(str).getLclock());
 
 			BufferedReader reader = new BufferedReader(new StringReader(mp.get(str).getFileContent()));
