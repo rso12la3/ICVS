@@ -19,6 +19,7 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.AddFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CommitFilesEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.CreateEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.DeleteFilesEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.EditEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.QuestionResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.UpdateEvent;
@@ -135,6 +136,8 @@ public class View extends JFrame {
 	
 	/*************** MENU LISTENER ***************/
 	
+	private String mLastEmail;
+	
 	private MenuBarListener mMenuBarListener = new MenuBarListenerAdapter() {
 		
 		private final String TAG = MenuBarListener.class.getSimpleName();
@@ -146,12 +149,34 @@ public class View extends JFrame {
 			Runnable command = new Runnable() {
 				@Override
 				public void run() {
-					CreateRepositoryPane repositoryPane = new CreateRepositoryPane();
+					CreateRepositoryPane repositoryPane = new CreateRepositoryPane(false);
 					int ret = repositoryPane.showDialog(View.this);
 					switch (ret) {
 					case CreateRepositoryPane.APPROVE_OPTION:
 						ApplicationEvent event = new CreateEvent(repositoryPane.getEmailAddress(),
 								repositoryPane.getPassword(), repositoryPane.getBaseDirectory());
+						mController.onEvent(event);
+						break;
+					}
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
+		}
+		
+		@Override
+		public void onEditRepositoryClicked() {
+			Log.o(TAG, Log.getCurrentMethodName());
+			
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					CreateRepositoryPane repositoryPane = new CreateRepositoryPane(true);
+					int ret = repositoryPane.showDialog(View.this);
+					switch (ret) {
+					case CreateRepositoryPane.APPROVE_OPTION:
+						ApplicationEvent event = new EditEvent(repositoryPane.getEmailAddress(),
+								repositoryPane.getPassword());
 						mController.onEvent(event);
 						break;
 					}
@@ -169,9 +194,10 @@ public class View extends JFrame {
 				@Override
 				public void run() {
 					String email = (String) JOptionPane.showInputDialog(View.this, "Type email address to clone:",
-							"Clone", JOptionPane.PLAIN_MESSAGE, null, null, null);
+							"Clone", JOptionPane.PLAIN_MESSAGE, null, null, mLastEmail);
 					
 					if (!TextUtils.isEmpty(email)) {
+						mLastEmail = email;
 						ApplicationEvent event = new CloneRequestEvent(email);
 						mController.onEvent(event);
 					}
@@ -189,9 +215,10 @@ public class View extends JFrame {
 				@Override
 				public void run() {
 					String email = (String) JOptionPane.showInputDialog(View.this, "Type email address to pull from:",
-							"Pull", JOptionPane.PLAIN_MESSAGE, null, null, null);
+							"Pull", JOptionPane.PLAIN_MESSAGE, null, null, mLastEmail);
 					
 					if (!TextUtils.isEmpty(email)) {
+						mLastEmail = email;
 						ApplicationEvent event = new PullRequestEvent(email);
 						mController.onEvent(event);
 					}
@@ -209,9 +236,10 @@ public class View extends JFrame {
 				@Override
 				public void run() {
 					String email = (String) JOptionPane.showInputDialog(View.this, "Type email address to push to:",
-							"Push", JOptionPane.PLAIN_MESSAGE, null, null, null);
+							"Push", JOptionPane.PLAIN_MESSAGE, null, null, mLastEmail);
 					
 					if (!TextUtils.isEmpty(email)) {
+						mLastEmail = email;
 						ApplicationEvent event = new PushRequestEvent(email);
 						mController.onEvent(event);
 					}

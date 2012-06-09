@@ -10,6 +10,8 @@ public interface MenuBarListener {
 	
 	void onCloneRepositoryClicked();
 	
+	void onEditRepositoryClicked();
+	
 	void onExitClicked();
 	
 	void onUpdateClicked();
