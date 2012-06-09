@@ -116,7 +116,8 @@ public class WorkingCopy extends FileSystem {
 		List<String> ls = new LinkedList<String>();
 		
 		this.clearFilelist();
-
+		this.dirRecursiveRel(this.getSnapshot().getRoot());
+		
 		for(int i=0;i<cd.size();++i){
 			this.pDeleteFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename());
 			this.pCreateFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename());
@@ -133,9 +134,10 @@ public class WorkingCopy extends FileSystem {
 			
 			this.getFilelist().put(cd.get(i).getFilename(), cd.get(i).getLclock());	
 			if(!this.getFilelist().get(cd.get(i).getFilename()).containsKey(this.getAddress()))
-				this.getFilelist().get(cd.get(i).getFilename()).put(this.getAddress(), 0);
+				this.getFilelist().get(cd.get(i).getFilename()).put(this.getAddress(), 1);
 			
 			this.writeFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename(), ls);
+			this.pCopyFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename(), this.getSnapshot().getRoot() + File.separatorChar + cd.get(i).getFilename());
 			ls.clear();
 		}
 		this.storeMetadata(this.getRoot());
@@ -171,7 +173,9 @@ public class WorkingCopy extends FileSystem {
 		
 		cm.get(str).getDifflist().add(this.getSnapshot().getDiff(snap, working));
 		
-		if(!cm.get(str).getDifflist().get(0).getDeltas().isEmpty())//addOfEmptyFile
+		if(this.getFilelist().get(str).get(this.getAddress()) == 0)
+			this.getFilelist().get(str).put(this.getAddress(),1);
+		else if(!cm.get(str).getDifflist().get(0).getDeltas().isEmpty())
 			this.getFilelist().get(str).put(this.getAddress(), this.getFilelist().get(str).get(this.getAddress()) + 1);
 		
 		cm.get(str).getLclock().putAll(this.getFilelist().get(str));
@@ -198,8 +202,6 @@ public class WorkingCopy extends FileSystem {
 				this.pDeleteFile(this.getSnapshot().getRoot()+ File.separatorChar +str);
 			}
 		}
-		
-		
 	this.storeMetadata(this.getRoot());	
 		
 	return cm;
@@ -239,29 +241,32 @@ public class WorkingCopy extends FileSystem {
 	public void setWorkingFiles (final Map<String, NewData> mp){
 		List<String> nf = new LinkedList<String>();
 		String s ="";
-		String filename;
 		
-		for ( String str : mp.keySet()){
-//			this.getFilelist().remove(str);
-//			this.getFilelist().put(str, mp.get(str).getLclock());
+		if(mp != null && !mp.isEmpty()){
+		
+			for ( String str : mp.keySet()){
+//				this.getFilelist().remove(str);
+//				this.getFilelist().put(str, mp.get(str).getLclock());
 			
 			
-			if (this.getFilelist().get(str) == null)
-				addFile(str);
-			this.getFilelist().get(str).putAll(mp.get(str).getLclock());
+				if (this.getFilelist().get(str) == null)
+					addFile(str);
+				this.getFilelist().get(str).putAll(mp.get(str).getLclock());
 
-			BufferedReader reader = new BufferedReader(new StringReader(mp.get(str).getFileContent()));
-				try {
-					while ((s = reader.readLine()) != null)
-						nf.add(s);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			this.writeFile(this.getRoot()+ File.separatorChar +str, nf);
-			nf.clear();
+				BufferedReader reader = new BufferedReader(new StringReader(mp.get(str).getFileContent()));
+					try {
+						while ((s = reader.readLine()) != null)
+							nf.add(s);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.writeFile(this.getRoot()+ File.separatorChar +str, nf);
+					nf.clear();
+			}
 		}
-	
+		
+		this.storeMetadata(this.getRoot());	
 	}
 	
 	//TODO Dodane przez OL
@@ -315,6 +320,8 @@ public class WorkingCopy extends FileSystem {
 		working.clear();
 		conflicted.clear();
 		}
+
+		this.storeMetadata(this.getRoot());	
 	}
 	
 	
