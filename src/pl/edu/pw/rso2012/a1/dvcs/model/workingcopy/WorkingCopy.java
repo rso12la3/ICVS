@@ -261,7 +261,7 @@ public class WorkingCopy extends FileSystem {
 			this.writeFile(this.getRoot()+ File.separatorChar +str, nf);
 			nf.clear();
 		}
-	
+		this.storeMetadata(getRoot());
 	}
 	
 	//TODO Dodane przez OL
@@ -315,6 +315,7 @@ public class WorkingCopy extends FileSystem {
 		working.clear();
 		conflicted.clear();
 		}
+		this.storeMetadata(getRoot());
 	}
 	
 	
