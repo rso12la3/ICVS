@@ -102,7 +102,8 @@ public abstract class FileSystem {
         
         try {
                 in = new BufferedReader(new FileReader(pathname));
-                while ((line = in.readLine()) != null) 
+                while ((line = in.readLine()) != null)
+                	//System.out.print(in);
                         lines.add(line);
         } catch (IOException e) {
                 e.printStackTrace();
@@ -127,10 +128,12 @@ public abstract class FileSystem {
 			try {
 				out = new BufferedWriter(new FileWriter(pathname));
 			
-			for (String str: content){
-            out.write(str);
-            out.newLine();
+			for (int i=0;i<content.size();++i){
+				out.write(content.get(i));
+				if(i!=(content.size()-1))
+					out.newLine();
 			}
+				
 
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -222,7 +225,7 @@ public abstract class FileSystem {
 		
 		s=s.substring(0,s.length()-1);
 		
-		return s.equals(content);
+		return !s.equals(content);
 	}
 
 	public void addFile (final String file){
