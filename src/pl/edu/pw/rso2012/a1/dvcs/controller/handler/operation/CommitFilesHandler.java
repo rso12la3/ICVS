@@ -38,7 +38,10 @@ public class CommitFilesHandler extends ApplicationHandler
 			CommitOperation result= controller.getModel().getRepository().commit(ev.getFilesToCommit());
 			
 			if (result == null)
+			{
+				controller.onImportantEvent(new ShowErrorEvent("No files to commit"));
 				return;
+			}
 			String content= controller.getModel().getRepository().OperationToXML(result);
 			MailMessage message= new MailMessage();
 			message.setBody(content);
