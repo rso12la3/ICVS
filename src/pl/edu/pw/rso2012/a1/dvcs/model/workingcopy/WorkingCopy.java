@@ -199,7 +199,11 @@ public class WorkingCopy extends FileSystem {
 			this.getFilelist().put(str, new HashMap<String,Integer>());
 			this.getFilelist().get(str).put(this.getAddress(),1);	
 		}
-		else if(this.getFilelist().get(str).get(this.getAddress()) == 0)
+		
+		if(!this.getFilelist().get(str).containsKey(this.getAddress()))
+			this.getFilelist().get(str).put(this.getAddress(),1);	
+		
+		if(this.getFilelist().get(str).get(this.getAddress()) == 0)
 			this.getFilelist().get(str).put(this.getAddress(),1);
 		else if(!cm.get(str).getDifflist().get(0).getDeltas().isEmpty())
 			this.getFilelist().get(str).put(this.getAddress(), this.getFilelist().get(str).get(this.getAddress()) + 1);
