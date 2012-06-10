@@ -32,12 +32,6 @@ import com.thoughtworks.xstream.XStream;
  */
 public class Mailbox
 {
-    /**
-     * TODO: 
-     * * Obudować kolejki aby się serializowały co zmianę
-     * * metoda dla Oskara
-     * * 
-     */
     private final RepositoryConfiguration repositoryConfiguration;
     private final PersistentBlockingQueue localSendQueue;
     private final PersistentBlockingQueue remoteSendQueue;
@@ -85,7 +79,6 @@ public class Mailbox
         final MailMessage[] commitMessages = localConnection.getCommitsUpToRevision(revision);
         return getCommitListFromMessages(commitMessages);
     }
-
 
     public List<Commit> getCommits() throws MessagingException
     {
