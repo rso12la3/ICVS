@@ -360,8 +360,11 @@ public class Repository {
 		workingCopy.mergeConflictedFiles(conflictedFiles);
 
 		String resultConflictedFiles = "";
-		for (String file : conflictedFiles.keySet()) {
+		for (String file : filesForReplaceFilesMethod.keySet()) {
 			resultConflictedFiles += file + "\n";
+		}
+		for (String file : conflictedFiles.keySet()) {
+			resultConflictedFiles += file + " - konflikt\n";
 		}
 
 		return resultConflictedFiles;
