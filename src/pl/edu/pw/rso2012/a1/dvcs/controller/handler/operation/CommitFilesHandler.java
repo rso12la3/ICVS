@@ -42,26 +42,27 @@ public class CommitFilesHandler extends ApplicationHandler
 			String content= controller.getModel().getRepository().OperationToXML(result);
 			MailMessage message= new MailMessage();
 			message.setBody(content);
-			String currentRevision = null;
-            try
-            {
-                currentRevision = controller.getModel().getMailbox().getRevision();
-            }
-            catch(MessagingException e1)
-            {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-			String newRevision = null;
-			if (currentRevision == null)
-			{
-			    newRevision = "1";
-			}
-			else
-			{
-			    newRevision = new Integer(new Integer(currentRevision) + 1).toString();
-			}
-			message.setSubject("commit " + newRevision);	
+//			String currentRevision = null;
+//            try
+//            {
+//                currentRevision = controller.getModel().getMailbox().getRevision();
+//            }
+//            catch(MessagingException e1)
+//            {
+//                // TODO Auto-generated catch block
+//                e1.printStackTrace();
+//            }
+//			String newRevision = null;
+//			if (currentRevision == null)
+//			{
+//			    newRevision = "1";
+//			}
+//			else
+//			{
+//			    newRevision = new Integer(new Integer(currentRevision) + 1).toString();
+//			}
+//			message.setSubject("commit " + newRevision);	
+			message.setSubject("commit ");	
 			message.setSendTo(Configuration.getInstance().getRepositoryConfiguration().getRepositoryAddress());
 			
 			controller.onEvent(new RefreshEvent());
