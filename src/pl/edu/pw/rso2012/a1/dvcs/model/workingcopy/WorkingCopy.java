@@ -154,8 +154,8 @@ public class WorkingCopy extends FileSystem {
 			}
 			
 			this.getFilelist().put(cd.get(i).getFilename(), cd.get(i).getLclock());	
-			if(!this.getFilelist().get(cd.get(i).getFilename()).containsKey(this.getAddress()))
-				this.getFilelist().get(cd.get(i).getFilename()).put(this.getAddress(), 1);
+//			if(!this.getFilelist().get(cd.get(i).getFilename()).containsKey(this.getAddress()))
+//				this.getFilelist().get(cd.get(i).getFilename()).put(this.getAddress(), 1);
 			
 			this.writeFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename(), ls);
 			this.pCopyFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename(), this.getSnapshot().getRoot() + File.separatorChar + cd.get(i).getFilename());
