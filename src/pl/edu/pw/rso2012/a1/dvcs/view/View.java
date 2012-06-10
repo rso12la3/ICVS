@@ -312,7 +312,8 @@ public class View extends JFrame {
 		public void onCommitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new CommitFilesEvent(mFoldersTree.getAllFilesInTree());
+			//ApplicationEvent event = new CommitFilesEvent(mFoldersTree.getAllFilesInTree());
+			ApplicationEvent event = new CommitFilesEvent(null);
 			mController.onEvent(event);
 		}
 
