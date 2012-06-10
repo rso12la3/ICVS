@@ -39,7 +39,7 @@ public class PullResponseHandler extends ApplicationHandler
 			PullResponseOperation opResult= controller.getModel().getRepository().pull(controller, operation);
 			controller.onEvent(new RefreshEvent());
 			//za pomoca opResult mozna poinformowac guja o wyniku pull requesta...
-			controller.onImportantEvent(new ShowInformationEvent(String.format("Wykonano operacje pull dla adresu: %s", operation.getEmail())));
+			controller.onImportantEvent(new ShowInformationEvent(String.format("Wykonano operacje pull dla adresu: %s \n wynik operacji: %s", operation.getEmail(), opResult.getResult())));
 			Log.o("PullResponseHandler stop");
 		}
 		catch (ClassCastException e)
