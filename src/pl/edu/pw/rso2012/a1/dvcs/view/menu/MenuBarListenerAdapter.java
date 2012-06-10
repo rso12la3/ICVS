@@ -11,6 +11,9 @@ public class MenuBarListenerAdapter implements MenuBarListener {
 	public void onCreateRepositoryClicked() {}
 	
 	@Override
+	public void onEditRepositoryClicked() {}
+	
+	@Override
 	public void onCloneRepositoryClicked() {}
 	
 	@Override

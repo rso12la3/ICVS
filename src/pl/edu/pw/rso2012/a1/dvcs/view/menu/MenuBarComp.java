@@ -22,6 +22,7 @@ public class MenuBarComp extends JMenuBar {
 	
 	protected static final String 
 			ACTION_CREATE_REPOSITORY = "CREATEREPOSITORY",
+			ACTION_EDIT_REPOSITORY = "EDITREPOSITORY",
 			ACTION_CLONE_REPOSITORY = "CLONEREPOSITORY", 
 			ACTION_EXIT = "EXIT",
 			ACTION_UPDATE = "UPDATE",
@@ -34,7 +35,7 @@ public class MenuBarComp extends JMenuBar {
 			ACTION_REFRESH = "REFRESH";
 	
 	protected MenuBarListener mListener;
-	protected JMenuItem mCreate, mClone, mCloseProject, mExit, mUpdate, mUpdateToHead, mPull,
+	protected JMenuItem mCreate, mEdit, mClone, mCloseProject, mExit, mUpdate, mUpdateToHead, mPull,
 			mPush, mCommit, mAdd, mDelete, mRefresh;
 	
 	public MenuBarComp() {
@@ -51,6 +52,11 @@ public class MenuBarComp extends JMenuBar {
 		mCreate.setActionCommand(ACTION_CREATE_REPOSITORY);
 		mCreate.addActionListener(mActionListener);
 		repository.add(mCreate);
+		
+		mEdit = new JMenuItem("Edit repository");
+		mEdit.setActionCommand(ACTION_EDIT_REPOSITORY);
+		mEdit.addActionListener(mActionListener);
+		repository.add(mEdit);
 		
 		mClone = new JMenuItem("Clone repository");
 		mClone.setActionCommand(ACTION_CLONE_REPOSITORY);
@@ -125,6 +131,9 @@ public class MenuBarComp extends JMenuBar {
 			case ACTION_CREATE_REPOSITORY:
 				mListener.onCreateRepositoryClicked();
 				break;
+			case ACTION_EDIT_REPOSITORY:
+				mListener.onEditRepositoryClicked();
+				break;
 			case ACTION_CLONE_REPOSITORY:
 				mListener.onCloneRepositoryClicked();
 				break;
@@ -177,6 +186,7 @@ public class MenuBarComp extends JMenuBar {
 	
 	public void setEnabled(boolean enabled) {
 		mCreate.setEnabled(enabled);
+		mEdit.setEnabled(enabled);
 		mClone.setEnabled(enabled);
 		mExit.setEnabled(true); // allways enabled
 		mUpdate.setEnabled(enabled);

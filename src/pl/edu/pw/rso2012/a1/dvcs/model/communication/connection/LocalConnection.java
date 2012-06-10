@@ -83,7 +83,6 @@ public class LocalConnection
         final MailMessage[] result = new MailMessage[versionLimit];
         final SearchTerm subjectTerm = new SubjectTerm(COMMIT_SUBJECT_PREFIX);
         final MailMessage[] messages = getMessages(subjectTerm);
-        int i=0;
         for (final MailMessage message : messages)
         {
             final String subject = message.getSubject();
@@ -92,8 +91,7 @@ public class LocalConnection
             final Integer integerVersion = new Integer(version);
             if (integerVersion<=versionLimit)
             {
-                result[i] = message;
-                ++i;
+                result[integerVersion-1] = message;
             }
         }
         return result;

@@ -98,13 +98,23 @@ public abstract class FileSystem {
 	public List<String> readFile(final String pathname) {
         List<String> lines = new LinkedList<String>();
         String line;
+        BufferedReader in = null;
+        
         try {
-                BufferedReader in = new BufferedReader(new FileReader(pathname));
+                in = new BufferedReader(new FileReader(pathname));
                 while ((line = in.readLine()) != null) 
                         lines.add(line);
         } catch (IOException e) {
                 e.printStackTrace();
         }
+        
+        try {
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         return lines;
 	}
 	
@@ -127,7 +137,7 @@ public abstract class FileSystem {
 				e.printStackTrace();
 			}
 			
-			if(out != null) {
+//			if(out != null) {
                 try {
 					out.flush();
                 out.close();
@@ -135,7 +145,7 @@ public abstract class FileSystem {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			}
+//			}
     }
 	
 	/*

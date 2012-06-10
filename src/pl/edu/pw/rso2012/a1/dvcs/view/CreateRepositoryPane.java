@@ -14,12 +14,16 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingUtilities;
 
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration;
+import pl.edu.pw.rso2012.a1.dvcs.model.configuration.RepositoryConfiguration;
 import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
+import pl.edu.pw.rso2012.a1.dvcs.view.utils.TextUtils;
 import pl.edu.pw.rso2012.a1.dvcs.view.utils.WindowUtils;
 
 /**
@@ -43,30 +47,34 @@ public class CreateRepositoryPane extends JPanel {
 	protected JLabel mEmailLabel, mPasswordLabel, mDirectoryLabel;
 	protected JTextField mPasswordField, mEmailField, mDirectoryField;
 	protected JButton mSelectDirectoryButton, mOkButton, mCancelButton;
+	//
+	private boolean mEditMode;
 	
 	
-	public CreateRepositoryPane() {
+	public CreateRepositoryPane(boolean editMode) {
 		super();
-		initialize();
+		initialize(editMode);
 	}
 	
-	public CreateRepositoryPane(boolean isDoubleBuffered) {
+	public CreateRepositoryPane(boolean isDoubleBuffered, boolean editMode) {
 		super(isDoubleBuffered);
-		initialize();
+		initialize(editMode);
 	}
 	
-	public CreateRepositoryPane(LayoutManager layout, boolean isDoubleBuffered) {
+	public CreateRepositoryPane(LayoutManager layout, boolean isDoubleBuffered, boolean editMode) {
 		super(layout, isDoubleBuffered);
-		initialize();
+		initialize(editMode);
 	}
 	
-	public CreateRepositoryPane(LayoutManager layout) {
+	public CreateRepositoryPane(LayoutManager layout, boolean editMode) {
 		super(layout);
-		initialize();
+		initialize(editMode);
 	}
 	
-	private void initialize() {
+	private void initialize(boolean editMode) {
 
+		mEditMode = editMode;
+		
         mEmailLabel = new JLabel("Email address");
         mEmailField = new JTextField();
         
@@ -80,6 +88,14 @@ public class CreateRepositoryPane extends JPanel {
         mSelectDirectoryButton = new JButton("...");
         mSelectDirectoryButton.setActionCommand(ACTION_SELECT_DIR);
         mSelectDirectoryButton.addActionListener(mActionListener);
+        
+        if(mEditMode){
+        	RepositoryConfiguration config = Configuration.getInstance().getRepositoryConfiguration();
+        	mEmailField.setText(config.getRepositoryAddress());
+        	mPasswordField.setText(config.getRepositoryPass());
+        	mDirectoryField.setText(config.getRepositoryAbsolutePath());
+        	mSelectDirectoryButton.setEnabled(false);
+        }
         
         mOkButton = new JButton("OK");
         mOkButton.setActionCommand(ACTION_OK);
@@ -154,7 +170,7 @@ public class CreateRepositoryPane extends JPanel {
 			}
 		});
 		dialog.setModal(true);
-		dialog.setTitle("Create repository");
+		dialog.setTitle(mEditMode ? "Edit repository" : "Create repository");
 		dialog.invalidate();
 		dialog.repaint();
 		return dialog;
@@ -182,14 +198,20 @@ public class CreateRepositoryPane extends JPanel {
 			case ACTION_SELECT_DIR:
 				File dir = FilePickingHelper.openFolderChooser(SwingUtilities
 						.getRoot(CreateRepositoryPane.this));
-				if (dir != null) {
+				if (dir != null && dir.exists()) {
 					mDirectory = dir;
 					mDirectoryField.setText(dir.getPath());
 				}
 				break;
 			case ACTION_OK:
-				mReturn = APPROVE_OPTION;
-				dialog.setVisible(false);
+				if (areValuesSet()) {
+					mReturn = APPROVE_OPTION;
+					dialog.setVisible(false);
+				} else {
+					String msg = String.format("All fields should be filled in order to %s repository.",
+							mEditMode ? "edit the" : "create a");
+					JOptionPane.showMessageDialog(CreateRepositoryPane.this, msg, "Warning", JOptionPane.WARNING_MESSAGE);
+				}
 				break;
 			case ACTION_CANCEL:
 				mReturn = CANCEL_OPTION;
@@ -198,6 +220,10 @@ public class CreateRepositoryPane extends JPanel {
 			}
 		}
 	};
+	
+	private boolean areValuesSet(){
+		return (mEditMode || getBaseDirectory() != null) && !TextUtils.isEmpty(getPassword()) && !TextUtils.isEmpty(getEmailAddress());
+	}
 	
 	public File getBaseDirectory() {
 		return mDirectory;
