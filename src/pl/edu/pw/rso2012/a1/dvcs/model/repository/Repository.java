@@ -195,7 +195,7 @@ public class Repository {
 
 	public PullOperation preparePull() {
 		PullOperation operation = new PullOperation(
-				workingCopy.getSnapshotFiles(workingCopy.getFileNames()));
+				workingCopy.getSnapshotFiles(workingCopy.getFileNames()), workingCopy.getAddress());
 		return operation;
 	}
 

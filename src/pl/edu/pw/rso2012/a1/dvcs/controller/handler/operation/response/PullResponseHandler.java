@@ -5,10 +5,12 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.RefreshEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.response.PullResponseEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowInformationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.PullOperation;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.PullResponseOperation;
+import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 
 /**
  * 
@@ -27,10 +29,18 @@ public class PullResponseHandler extends ApplicationHandler
 	{
 		try 
 		{
+			Log.o("PullResponseHandler start");
 			PullOperation operation =((PullResponseEvent)event).getOperation();
+			if (operation.isReject())
+			{
+				controller.onImportantEvent(new ShowInformationEvent(String.format("Adres: %s odrzucil prosbe o udostepnienie pulla", operation.getEmail())));
+				return;
+			}	
 			PullResponseOperation opResult= controller.getModel().getRepository().pull(controller, operation);
 			controller.onEvent(new RefreshEvent());
 			//za pomoca opResult mozna poinformowac guja o wyniku pull requesta...
+			controller.onImportantEvent(new ShowInformationEvent(String.format("Wykonano operacje pull dla adresu: %s", operation.getEmail())));
+			Log.o("PullResponseHandler stop");
 		}
 		catch (ClassCastException e)
 		{

@@ -4,12 +4,14 @@ import pl.edu.pw.rso2012.a1.dvcs.controller.Controller;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.operation.request.PushMailRequestEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
+import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowInformationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.exception.HandlerNotImplementedException;
 import pl.edu.pw.rso2012.a1.dvcs.controller.handler.ApplicationHandler;
 import pl.edu.pw.rso2012.a1.dvcs.model.communication.MailMessage;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushOperation;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushRequestOperation;
 import pl.edu.pw.rso2012.a1.dvcs.model.operation.PushResponseOperation;
+import pl.edu.pw.rso2012.a1.dvcs.utils.Log;
 
 /**
  * 
@@ -28,6 +30,7 @@ public class PushMailRequestHandler extends ApplicationHandler
 	{
 		try 
 		{
+			Log.o("PushMailRequestHandler start");
 			PushRequestOperation requestOperation =((PushMailRequestEvent)event).getOperation();
 			if (controller.getView().showBlockingQuestionDialog("Czy chcesz przyjąć push'a z adresu: " + requestOperation.getEmailCallback(), "Push"))
 			{
@@ -38,7 +41,9 @@ public class PushMailRequestHandler extends ApplicationHandler
 			    String body = controller.getModel().getRepository().OperationToXML(opResult);
 			    MailMessage message = new MailMessage(requestOperation.getEmailCallback(), "pushResponse", body);
 			    controller.getModel().getMailbox().putMessage(message);
+			    controller.onImportantEvent(new ShowInformationEvent(String.format("Wykonano operacje push/merge z adresu", requestOperation.getEmailCallback())));
 			}
+			Log.o("PushMailRequestHandler stop");
 		}
 		catch (ClassCastException e)
 		{
