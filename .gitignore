@@ -1,3 +1,6 @@
 
 /bin
 /.classpath
+/remoteSendQueue.xml
+/Config.xml
+/localSendQueue.xml
