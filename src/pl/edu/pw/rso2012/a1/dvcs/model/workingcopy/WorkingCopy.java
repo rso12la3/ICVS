@@ -61,28 +61,44 @@ public class WorkingCopy extends FileSystem {
 	
 	public void storeMetadata(final String pathname){
 		XStream xs = new XStream();
-
+		FileOutputStream fs = null;
+		
 		try {
-			FileOutputStream fs = new FileOutputStream(pathname + File.separatorChar + this.metadata_filename);
+			fs = new FileOutputStream(pathname + File.separatorChar + this.metadata_filename);
 			xs.toXML(this.getFilelist(), fs);
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+		}
+		
+		try {
+			fs.flush();
+			fs.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
 	public Map<String,Map<String,Integer>> readMetadata(final String pathname){
 		 XStream xs = new XStream(new DomDriver());
 		 Map<String,Map<String,Integer>> map = null;
-		 
+		 FileInputStream fs = null;
 		 
 	     try {
-	    	 FileInputStream fs = new FileInputStream(pathname + File.separatorChar + this.metadata_filename);
+	    	 fs = new FileInputStream(pathname + File.separatorChar + this.metadata_filename);
 	         
 	    	 map = (Map<String, Map<String, Integer>>)xs.fromXML(fs); 
 
 	     } catch (FileNotFoundException ex) {
 	         ex.printStackTrace();
          }
+	     
+	     try {
+			fs.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	     
 	return map;     
 	}
@@ -116,7 +132,12 @@ public class WorkingCopy extends FileSystem {
 		List<String> ls = new LinkedList<String>();
 		
 		this.clearFilelist();
-		this.dirRecursiveRel(this.getSnapshot().getRoot());
+		
+		File snp = new File(this.getSnapshot().getRoot());
+		if(snp.exists())
+			this.dirRecursiveRel(this.getSnapshot().getRoot());
+		else
+			snp.mkdirs();
 		
 		for(int i=0;i<cd.size();++i){
 			this.pDeleteFile(this.getRoot() + File.separatorChar + cd.get(i).getFilename());
@@ -218,18 +239,21 @@ public class WorkingCopy extends FileSystem {
 		List<String> l = new LinkedList<String>();
 		String s="";
 		
-		for (String str : files){
-			w.put(str, new NewData(str));
-			l=this.readFile(this.getSnapshot().getRoot() + File.separatorChar +str);
-			
-			for (String str2 : l)
-				s=s+str2+"\n";
-			
-			w.get(str).setFileContent(s);
-			w.get(str).getLclock().putAll(this.getFilelist().get(str));
-			l.clear();
-		}
+		if(files != null && !files.isEmpty()){
+		
+			for (String str : files){
+				w.put(str, new NewData(str));
+				l=this.readFile(this.getSnapshot().getRoot() + File.separatorChar +str);
 				
+				for (String str2 : l)
+					s=s+str2+"\n";
+				
+				w.get(str).setFileContent(s);
+				w.get(str).getLclock().putAll(this.getFilelist().get(str));
+				s="";
+			}		
+		}
+		
 		return w;
 	} 
 	
