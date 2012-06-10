@@ -288,9 +288,9 @@ public class WorkingCopy extends FileSystem {
 					this.writeFile(this.getRoot()+ File.separatorChar +str, nf);
 					nf.clear();
 			}
-		}
-		
+		}		
 		this.storeMetadata(this.getRoot());	
+
 	}
 	
 	//TODO Dodane przez OL
