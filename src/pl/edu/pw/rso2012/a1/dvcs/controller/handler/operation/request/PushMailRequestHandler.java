@@ -29,15 +29,16 @@ public class PushMailRequestHandler extends ApplicationHandler
 		try 
 		{
 			PushRequestOperation requestOperation =((PushMailRequestEvent)event).getOperation();
-			
-			//preparePush i przepisanie danych do innej klasy dla zachowania konwensji operacji wystepujacej w clone, pull
-			PushOperation operation = controller.getModel().getRepository().preparePush(requestOperation.getData());
-			PushResponseOperation opResult= controller.getModel().getRepository().push(controller, operation);
-			
-		    String body = controller.getModel().getRepository().OperationToXML(opResult);
-		    MailMessage message = new MailMessage(requestOperation.getEmailCallback(), "pushResponse", body);
-		    controller.getModel().getMailbox().putMessage(message);
-
+			if (controller.getView().showBlockingQuestionDialog("Czy chcesz przyjąć push'a z adresu: " + requestOperation.getEmailCallback(), "Push"))
+			{
+				//preparePush i przepisanie danych do innej klasy dla zachowania konwensji operacji wystepujacej w clone, pull
+				PushOperation operation = controller.getModel().getRepository().preparePush(requestOperation.getData());
+				PushResponseOperation opResult= controller.getModel().getRepository().push(controller, operation);
+				
+			    String body = controller.getModel().getRepository().OperationToXML(opResult);
+			    MailMessage message = new MailMessage(requestOperation.getEmailCallback(), "pushResponse", body);
+			    controller.getModel().getMailbox().putMessage(message);
+			}
 		}
 		catch (ClassCastException e)
 		{

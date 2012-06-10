@@ -30,12 +30,13 @@ public class PullMailRequestHandler extends ApplicationHandler
 		{
 			PullRequestOperation requestOperation =((PullMailRequestEvent)event).getOperation();
 			
-
-			PullOperation operation = controller.getModel().getRepository().preparePull(); 
-		    String body = controller.getModel().getRepository().OperationToXML(operation);
-		    MailMessage message = new MailMessage(requestOperation.getEmail(), "pullResponse", body);
-		    controller.getModel().getMailbox().putMessage(message);
-
+			if (controller.getView().showBlockingQuestionDialog("Czy chcesz udostepnic pliki dla adresu: " + requestOperation.getEmail(), "Pull"))
+			{
+				PullOperation operation = controller.getModel().getRepository().preparePull(); 
+			    String body = controller.getModel().getRepository().OperationToXML(operation);
+			    MailMessage message = new MailMessage(requestOperation.getEmail(), "pullResponse", body);
+			    controller.getModel().getMailbox().putMessage(message);
+			}
 		}
 		catch (ClassCastException e)
 		{
