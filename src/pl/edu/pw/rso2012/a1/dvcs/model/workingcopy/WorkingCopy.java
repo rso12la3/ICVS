@@ -320,7 +320,7 @@ public class WorkingCopy extends FileSystem {
 			working=conflicted;
 		}
 		else{
-		working = this.readFile(this.getRoot()+ File.separatorChar +str);
+			working = this.readFile(this.getRoot()+ File.separatorChar +str);
 		
 		diff=this.getSnapshot().getDiff(working, conflicted);
 		
@@ -337,6 +337,9 @@ public class WorkingCopy extends FileSystem {
 				}
 			}
 		}
+		
+		if (this.getFilelist().get(str) == null)
+			addFile(str);
 		this.getFilelist().get(str).putAll(conflictedFiles.get(str).getLclock());
 		
 		this.writeFile(this.getRoot()+ File.separatorChar +str, working);
