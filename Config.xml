@@ -1,7 +1,7 @@
-<pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration>
+<Configuration>
   <repositoryConfiguration>
-    <repositoryAddress>rso2012a1@gmail.com</repositoryAddress>
-    <repositoryPass>plokij00</repositoryPass>
-    <repositoryAbsolutePath>D:\Coding\Haskell</repositoryAbsolutePath>
+    <repositoryAddress>rso2012a1repo2@gmail.com</repositoryAddress>
+    <repositoryPass>plokij000</repositoryPass>
+    <repositoryAbsolutePath>C:\Users\Grzesiek\Desktop\Repo2</repositoryAbsolutePath>
   </repositoryConfiguration>
-</pl.edu.pw.rso2012.a1.dvcs.model.configuration.Configuration>
+</Configuration>
