@@ -248,6 +248,8 @@ public class WorkingCopy extends FileSystem {
 				for (String str2 : l)
 					s=s+str2+"\n";
 				
+				s=s.substring(0,s.length()-1);
+				
 				w.get(str).setFileContent(s);
 				w.get(str).getLclock().putAll(this.getFilelist().get(str));
 				s="";
