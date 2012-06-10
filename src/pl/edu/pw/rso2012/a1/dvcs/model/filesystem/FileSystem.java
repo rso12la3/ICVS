@@ -104,6 +104,10 @@ public abstract class FileSystem {
                 in = new BufferedReader(new FileReader(pathname));
                 while ((line = in.readLine()) != null)
                         lines.add(line);
+                
+                if(lines.get(lines.size()-1).isEmpty())
+                	lines.add("");
+                	
         } catch (IOException e) {
                 e.printStackTrace();
         }
