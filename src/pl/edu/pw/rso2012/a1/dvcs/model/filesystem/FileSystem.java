@@ -314,7 +314,7 @@ public abstract class FileSystem {
 		for (int i = 0; i < fileList.size(); ++i)
 		{
 			filename = fileList.get(i);
-			file = new File(filename);
+			file = new File(this.getRoot()+ File.separatorChar + filename);
 			if (!file.exists())
 			{
 				fileList.remove(filename);
