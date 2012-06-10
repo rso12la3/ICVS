@@ -45,6 +45,10 @@ public class ReceiveMailTask extends TimerTask
                 {
                     final AbstractOperation operation = deserializeOperation(xml); 
                     final ApplicationEvent event = eventFactory.getEvent(operation);
+                    if(event==null)
+                    {
+                        continue;
+                    }
                     eventQueue.put(event);
                 }
                 catch (final StreamException e)

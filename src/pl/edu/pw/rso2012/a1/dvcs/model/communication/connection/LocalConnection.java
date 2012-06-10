@@ -161,6 +161,7 @@ public class LocalConnection
             mailMessage.setSubject(message.getSubject());
             mailMessage.addRecipient(RecipientType.TO, new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
             mailMessage.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
+            mailMessage.setFlag(Flag.SEEN, true);
             final Message messages[] = {mailMessage};
             inbox.appendMessages(messages);
         }

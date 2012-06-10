@@ -39,9 +39,11 @@ public class EventFactory
     }
     public ApplicationEvent getEvent(final AbstractOperation abstractOperation)
     {
-        final Class<? extends ApplicationEvent> class1 = operationEventMap.get(abstractOperation.getClass());
         try
         {
+            final Class<? extends ApplicationEvent> class1 = operationEventMap.get(abstractOperation.getClass());
+            if(class1 == null)
+                return null;
             final Constructor<? extends ApplicationEvent> constructor = class1.getConstructor(abstractOperation.getClass());
             return constructor.newInstance(abstractOperation);
         }
@@ -49,7 +51,6 @@ public class EventFactory
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            System.out.println();
         }
         catch(final SecurityException e)
         {
@@ -74,6 +75,10 @@ public class EventFactory
         catch(final InvocationTargetException e)
         {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(final Exception e)
+        {
             e.printStackTrace();
         }
         return null;
