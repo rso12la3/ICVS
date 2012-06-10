@@ -103,7 +103,6 @@ public abstract class FileSystem {
         try {
                 in = new BufferedReader(new FileReader(pathname));
                 while ((line = in.readLine()) != null)
-                	//System.out.print(in);
                         lines.add(line);
         } catch (IOException e) {
                 e.printStackTrace();
