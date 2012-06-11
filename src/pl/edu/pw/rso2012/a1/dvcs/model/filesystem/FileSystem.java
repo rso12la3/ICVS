@@ -226,7 +226,8 @@ public abstract class FileSystem {
 		for (String str2 : l)
 			s=s+str2+"\n";
 		
-		s=s.substring(0,s.length()-1);
+		if(s.length()>0)
+			s=s.substring(0,s.length()-1);
 		
 		return !s.equals(content);
 	}
