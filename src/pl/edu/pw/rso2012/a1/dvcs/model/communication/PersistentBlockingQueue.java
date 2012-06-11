@@ -32,10 +32,12 @@ public class PersistentBlockingQueue
     public void put(final MailMessage mailMessage) throws InterruptedException
     {
         queue.put(mailMessage);
+        saveQueue();
     }
     public void putFirst(final MailMessage mailMessage) throws InterruptedException
     {
         queue.putFirst(mailMessage);
+        saveQueue();
     }
     
     public void put(final LinkedList<MailMessage> mailMessages) throws InterruptedException
