@@ -305,8 +305,17 @@ public class View extends JFrame {
 		public void onUpdateToHeadClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new UpdateEvent(null);
-			mController.onEvent(event);
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					ApplicationEvent event = new UpdateEvent(null);
+					mController.onEvent(event);
+					mWaitbarListener = WaitbarDialog.showDialog(View.this, "Update", "Updating to head.");
+					mWaitbarListener.show();
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
 		}
 		
 		@Override
