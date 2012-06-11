@@ -105,8 +105,8 @@ public abstract class FileSystem {
                 while ((line = in.readLine()) != null)
                         lines.add(line);
                 
-                if(lines.get(lines.size()-1).isEmpty())
-                	lines.add("");
+//                if((lines.size()==0) || (lines.get(lines.size()-1).isEmpty()))
+//                	lines.add("");
                 	
         } catch (IOException e) {
                 e.printStackTrace();
