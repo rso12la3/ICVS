@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import javax.mail.AuthenticationFailedException;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
@@ -116,35 +115,39 @@ public class LocalConnection
     private MailMessage[] getMessages(final SearchTerm searchTerm) throws MessagingException
     {
         Message messages[];
-        MailMessage result[];
+        MailMessage result[] = new MailMessage[0];
         synchronized(store)
         {
-            ensureConnection();
-            final Folder inbox = store.getFolder("Inbox");
-            inbox.open(Folder.READ_WRITE);
-            messages = inbox.search(searchTerm);
-            result = new MailMessage[messages.length];
-            int i=0;
-            for(final Message message : messages)
+            if (ensureConnection())
             {
-                try
-                {
-
-                    final MimeMessage mimeMessage = (MimeMessage)message;
-                    final MailMessage mailMessage = new MailMessage("", mimeMessage.getSubject(), mimeMessage.getContent().toString());
-                    result[i] = mailMessage;
-                    ++i;
-                    
-                }
-                catch(final IOException e)
-                {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
+                
             
-            final Flags flags = new Flags(Flag.SEEN);
-            inbox.setFlags(messages, flags, true);
+                final Folder inbox = store.getFolder("Inbox");
+                inbox.open(Folder.READ_WRITE);
+                messages = inbox.search(searchTerm);
+                result = new MailMessage[messages.length];
+                int i=0;
+                for(final Message message : messages)
+                {
+                    try
+                    {
+    
+                        final MimeMessage mimeMessage = (MimeMessage)message;
+                        final MailMessage mailMessage = new MailMessage("", mimeMessage.getSubject(), mimeMessage.getContent().toString());
+                        result[i] = mailMessage;
+                        ++i;
+                        
+                    }
+                    catch(final IOException e)
+                    {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+                
+                final Flags flags = new Flags(Flag.SEEN);
+                inbox.setFlags(messages, flags, true);
+            }
         }
         return result;
     }
@@ -153,17 +156,19 @@ public class LocalConnection
     {
         synchronized(store)
         {
-            ensureConnection();
-            final Folder inbox = store.getFolder("Inbox");
-            inbox.open(Folder.READ_WRITE);
-            final Message mailMessage = new MimeMessage(session);
-            mailMessage.setText(message.getBody());
-            mailMessage.setSubject(message.getSubject());
-            mailMessage.addRecipient(RecipientType.TO, new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
-            mailMessage.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
-            mailMessage.setFlag(Flag.SEEN, true);
-            final Message messages[] = {mailMessage};
-            inbox.appendMessages(messages);
+            if (ensureConnection())
+            {
+                final Folder inbox = store.getFolder("Inbox");
+                inbox.open(Folder.READ_WRITE);
+                final Message mailMessage = new MimeMessage(session);
+                mailMessage.setText(message.getBody());
+                mailMessage.setSubject(message.getSubject());
+                mailMessage.addRecipient(RecipientType.TO, new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
+                mailMessage.setFrom(new InternetAddress(repositoryConfiguration.getRepositoryAddress()));
+                mailMessage.setFlag(Flag.SEEN, true);
+                final Message messages[] = {mailMessage};
+                inbox.appendMessages(messages);
+            }
         }
     }
 
@@ -171,19 +176,21 @@ public class LocalConnection
     {
         synchronized(store)
         {
-            ensureConnection();
-            final Folder inbox = store.getFolder("Inbox");
-            inbox.open(Folder.READ_WRITE);
-            final Flags flags = new Flags(Flag.DELETED);
-            for(final String subject : messagesToDelete)
+            if (ensureConnection())
             {
-                final Message[] messages = inbox.search(new SubjectTerm(subject));
-                inbox.setFlags(messages, flags, true);
+                final Folder inbox = store.getFolder("Inbox");
+                inbox.open(Folder.READ_WRITE);
+                final Flags flags = new Flags(Flag.DELETED);
+                for(final String subject : messagesToDelete)
+                {
+                    final Message[] messages = inbox.search(new SubjectTerm(subject));
+                    inbox.setFlags(messages, flags, true);
+                }
             }
         }
     }
 
-    private void ensureConnection() throws MessagingException
+    private boolean ensureConnection() throws MessagingException
            
     {
         if (!store.isConnected())
@@ -192,31 +199,36 @@ public class LocalConnection
             {
                 store.connect("imap.gmail.com", repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryPass());
             }
-            catch(final AuthenticationFailedException e)
+            catch(final Exception e)
             {
                 try
                 {
-                    eventQueue.put(new ShowErrorEvent("Błędne dane logowania do repozytorium"));
+                    eventQueue.put(new ShowErrorEvent("Błędne dane logowania do repozytorium, lub brak połączenia z internetem"));
+                    return false;
                 }
                 catch(final InterruptedException e1)
                 {
+                    return false;
                 }
             }
         }
+        return true;
     }
 
     public Message getNewestCommitMessage() throws MessagingException
     {
         final SubjectTerm subjectTerm = new SubjectTerm(COMMIT_SUBJECT_PREFIX);
-        Message messages[];
+        Message messages[] = new Message[0];
         synchronized(store)
         {
-            ensureConnection();
-            final Folder inbox = store.getFolder("Inbox");
-            inbox.open(Folder.READ_WRITE);
-            messages = inbox.search(subjectTerm);
-            final Flags flags = new Flags(Flag.SEEN);
-            inbox.setFlags(messages, flags, true);
+            if (ensureConnection())
+            {
+                final Folder inbox = store.getFolder("Inbox");
+                inbox.open(Folder.READ_WRITE);
+                messages = inbox.search(subjectTerm);
+                final Flags flags = new Flags(Flag.SEEN);
+                inbox.setFlags(messages, flags, true);
+            }
         }
         if (messages.length==0)
             return null;
@@ -227,12 +239,14 @@ public class LocalConnection
     {
         synchronized(store)
         {
-            ensureConnection();
-            final Folder inbox = store.getFolder("Inbox");
-            inbox.open(Folder.READ_WRITE);
-            final Flags delete = new Flags(Flag.DELETED);
-            final Message[] messages = inbox.getMessages();
-            inbox.setFlags(messages, delete, true);
+            if (ensureConnection())
+            {
+                final Folder inbox = store.getFolder("Inbox");
+                inbox.open(Folder.READ_WRITE);
+                final Flags delete = new Flags(Flag.DELETED);
+                final Message[] messages = inbox.getMessages();
+                inbox.setFlags(messages, delete, true);
+            }
         }
     }
 

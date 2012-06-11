@@ -41,7 +41,7 @@ public class PushMailRequestHandler extends ApplicationHandler
 			    String body = controller.getModel().getRepository().OperationToXML(opResult);
 			    MailMessage message = new MailMessage(requestOperation.getEmailCallback(), "pushResponse", body);
 			    controller.getModel().getMailbox().putMessage(message);
-			    controller.onImportantEvent(new ShowInformationEvent(String.format("Wykonano operacje push/merge z adresu", requestOperation.getEmailCallback())));
+			    controller.onImportantEvent(new ShowInformationEvent(String.format("Wykonano operacje push z adresu %s \nWynik operacji: %s", requestOperation.getEmailCallback(), opResult.getResult())));
 			}
 			Log.o("PushMailRequestHandler stop");
 		}
