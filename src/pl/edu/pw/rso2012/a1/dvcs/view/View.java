@@ -87,15 +87,27 @@ public class View extends JFrame {
 	
 	public void showNoRepositoryView() {
 		Log.o(TAG, Log.getCurrentMethodName());
+		Runnable command = new Runnable() {
+			@Override
+			public void run() {
+				mMenuBar.setEnabledCreateRepository();
+			}
+		};
 		
-		mMenuBar.setEnabledCreateRepository();
+		SwingUtilities.invokeLater(command);
 	}
 	
-	public void showRepositoryFolderView(File rootDirectory, Set<String> versionedFilePaths) {
+	public void showRepositoryFolderView(final File rootDirectory, final Set<String> versionedFilePaths) {
 		Log.o(TAG, Log.getCurrentMethodName());
+		Runnable command = new Runnable() {
+			@Override
+			public void run() {
+				mMenuBar.setEnabledRepositoryCreated();
+				mFoldersTree.setFiles(rootDirectory, versionedFilePaths);
+			}
+		};
 		
-		mMenuBar.setEnabledRepositoryCreated();
-		mFoldersTree.setFiles(rootDirectory, versionedFilePaths);
+		SwingUtilities.invokeLater(command);
 	}
 	
 	public void onUpdateComplete() {
@@ -266,22 +278,21 @@ public class View extends JFrame {
 						mWaitbarListener = WaitbarDialog.showDialog(View.this, "Update",
 								String.format("Updating to revision: %s", revision));
 						mWaitbarListener.show();
-					}else{
+					} else {
 						showMessageDialogError("Incorrect revision's number format.");
 					}
 				}
 				
-				private boolean isValid(String str){
-					if(TextUtils.isEmpty(str))
-						return false;
+				private boolean isValid(String str) {
+					if (TextUtils.isEmpty(str)) return false;
 					
-					try{
+					try {
 						int revision = Integer.parseInt(str);
-						if(revision < 0)
-							return false;
+						if (revision < 0) return false;
 						
 						return true;
-					}catch (Exception e) {
+					}
+					catch (Exception e) {
 						return false;
 					}
 				}
@@ -290,16 +301,23 @@ public class View extends JFrame {
 			SwingUtilities.invokeLater(command);
 		}
 		
-		
-		
 		@Override
 		public void onUpdateToHeadClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			ApplicationEvent event = new UpdateEvent(null);
-			mController.onEvent(event);
+			Runnable command = new Runnable() {
+				@Override
+				public void run() {
+					ApplicationEvent event = new UpdateEvent(null);
+					mController.onEvent(event);
+					mWaitbarListener = WaitbarDialog.showDialog(View.this, "Update", "Updating to head.");
+					mWaitbarListener.show();
+				}
+			};
+			
+			SwingUtilities.invokeLater(command);
 		}
-
+		
 		@Override
 		public void onExitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
@@ -312,11 +330,12 @@ public class View extends JFrame {
 		public void onCommitClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
 			
-			//ApplicationEvent event = new CommitFilesEvent(mFoldersTree.getAllFilesInTree());
+			// ApplicationEvent event = new
+			// CommitFilesEvent(mFoldersTree.getAllFilesInTree());
 			ApplicationEvent event = new CommitFilesEvent(null);
 			mController.onEvent(event);
 		}
-
+		
 		@Override
 		public void onRefreshClicked() {
 			Log.o(TAG, Log.getCurrentMethodName());
@@ -340,7 +359,6 @@ public class View extends JFrame {
 		// ApplicationEvent event = new DeleteFilesEvent(null);
 		// mController.onEvent(event);
 		// }
-		
 		
 	};
 	
@@ -367,7 +385,7 @@ public class View extends JFrame {
 		SwingUtilities.invokeLater(command);
 	}
 	
-	public boolean showBlockingQuestionDialog(final String message, final String title){
+	public boolean showBlockingQuestionDialog(final String message, final String title) {
 		int option = JOptionPane.showConfirmDialog(View.this, message, title, JOptionPane.YES_NO_OPTION);
 		return option == JOptionPane.YES_OPTION;
 	}
