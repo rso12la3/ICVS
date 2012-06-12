@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
@@ -23,6 +24,7 @@ import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
+import javax.security.sasl.AuthenticationException;
 
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.ApplicationEvent;
 import pl.edu.pw.rso2012.a1.dvcs.controller.event.view.ShowErrorEvent;
@@ -211,7 +213,7 @@ public class LocalConnection
             {
                 store.connect("imap.gmail.com", repositoryConfiguration.getRepositoryAddress(), repositoryConfiguration.getRepositoryPass());
             }
-            catch(final Exception e)
+            catch(final AuthenticationFailedException e)
             {
                 try
                 {
@@ -223,6 +225,11 @@ public class LocalConnection
                     return false;
                 }
             }
+            catch(Exception e)
+            {
+            	return false;
+            }
+            
         }
         return true;
     }

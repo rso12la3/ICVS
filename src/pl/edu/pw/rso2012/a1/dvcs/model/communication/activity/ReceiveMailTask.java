@@ -60,11 +60,9 @@ public class ReceiveMailTask extends TimerTask
         }
         catch(final MessagingException e)
         {
-            e.printStackTrace();
         }
         catch(final InterruptedException e)
         {
-            e.printStackTrace();
         }
         
     }
