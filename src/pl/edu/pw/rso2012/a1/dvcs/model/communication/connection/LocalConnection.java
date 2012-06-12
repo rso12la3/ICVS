@@ -148,6 +148,10 @@ public class LocalConnection
                 final Flags flags = new Flags(Flag.SEEN);
                 inbox.setFlags(messages, flags, true);
             }
+            else
+            {
+                throw new MessagingException();
+            }
         }
         return result;
     }
@@ -169,6 +173,10 @@ public class LocalConnection
                 final Message messages[] = {mailMessage};
                 inbox.appendMessages(messages);
             }
+            else
+            {
+                throw new MessagingException();
+            }
         }
     }
 
@@ -186,6 +194,10 @@ public class LocalConnection
                     final Message[] messages = inbox.search(new SubjectTerm(subject));
                     inbox.setFlags(messages, flags, true);
                 }
+            }
+            else
+            {
+                throw new MessagingException();
             }
         }
     }
@@ -229,6 +241,10 @@ public class LocalConnection
                 final Flags flags = new Flags(Flag.SEEN);
                 inbox.setFlags(messages, flags, true);
             }
+            else
+            {
+                throw new MessagingException();
+            }
         }
         if (messages.length==0)
             return null;
@@ -246,6 +262,10 @@ public class LocalConnection
                 final Flags delete = new Flags(Flag.DELETED);
                 final Message[] messages = inbox.getMessages();
                 inbox.setFlags(messages, delete, true);
+            }
+            else
+            {
+                throw new MessagingException();
             }
         }
     }
